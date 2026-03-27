@@ -81,7 +81,7 @@ Put your logo file in the repo as: logo.png
 }
 
 
-       /* Consistent spacing between sections (Apple-style) */
+       /* Consistent spacing between sections */
 :root{
   --section-gap: 60px;
 }
@@ -786,7 +786,7 @@ h1{
 .behavior-title.green{ color: var(--accent2); }
 .behavior-title.blue{ color: var(--accent); }
 
-/* Multi-Listener Mode: make image big on iPhone */
+/* Multi-Listener Mode: make image big on mobile */
 @media (max-width: 820px){
   .cinema-grid{
     grid-template-columns: 1fr !important; /* stack */
@@ -946,7 +946,7 @@ h1{
   .behavior-image{ order:3; }
 }
 
-/* ✅ Hide Mac download button on mobile */
+/* ✅ Hide download button on mobile */
 @media (max-width: 820px){
 
   .download-dropdown{
@@ -955,7 +955,7 @@ h1{
 
 }
 
-/* ✅ Hide Mac-only footer badge on mobile */
+/* ✅ Hide desktop-only footer badge on mobile */
 @media (max-width: 820px){
 
   .footer-badge[href*="download"],
@@ -1158,11 +1158,11 @@ h1{
 
   <!-- Primary -->
   <button class="pill primary" type="button" disabled aria-disabled="true">
-  iOS app - coming soon
+  Mobile app - coming soon
 </button>
 
 
- <!-- Mac Download Dropdown -->
+ <!-- Download Dropdown -->
 <div class="download-dropdown">
   <button class="pill">
     Download for computer ▾
@@ -1468,7 +1468,7 @@ h1{
 
 
   <ul class="need-grid">
-  <li><span class="need-check">✓</span> A computer running macOS 13 or later</li>
+  <li><span class="need-check">✓</span> A compatible computer</li>
   <li><span class="need-check">✓</span> A mobile device with Wallas’ Stream installed</li>
   <li><span class="need-check">✓</span> A hearing device connected to your device</li>
   <li><span class="need-check">✓</span> Wi-Fi or a USB cable</li>
@@ -1600,8 +1600,7 @@ h1{
 
   <div class="faq-a">
     <p class="small" style="margin:0;">
-  Wallas’ Stream is currently available for macOS.
-  We’re actively working on expanding support to other platforms.
+  Wallas’ Stream is currently available for macOS and iOS devices. We’re actively working on expanding support to other platforms, including Android and Windows.
 </p>
 
 
@@ -1667,9 +1666,8 @@ h1{
     <div>
       <div class="footer-title">Wallas’ Stream</div>
 
-      <!-- Optional: replace with App Store badge later -->
       <div class="footer-badge">
-        iOS app - coming soon
+        Mobile app - coming soon
       </div>
       <a class="footer-badge" href="index.html#download">
   Download for computer now
