@@ -1,0 +1,23 @@
+{
+  "applinks": {
+    "details": [
+      {
+        "appIDs": ["63QJN3W2HF.com.wallas.stream.ios"],
+        "components": [
+          {
+            "/": "/connect",
+            "?": { "host": "?*" },
+            "comment": "Universal Link de conexión con parámetros"
+          },
+          {
+            "/": "/connect/*",
+            "comment": "Variante con path"
+          }
+        ]
+      }
+    ]
+  },
+  "webcredentials": {
+    "apps": ["63QJN3W2HF.com.wallas.stream.ios"]
+  }
+}
