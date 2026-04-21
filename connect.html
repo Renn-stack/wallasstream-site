@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wallas' Stream — Conectar</title>
+    <meta name="description" content="Recibe audio de tu Mac en tu iPhone con Wallas' Stream.">
+    
+    <!-- Apple smart banner (por si acaso) -->
+    <meta name="apple-itunes-app" content="app-id=REEMPLAZAR_APP_ID">
+    
+    <!-- Open Graph para cuando compartan el link -->
+    <meta property="og:title" content="Wallas' Stream">
+    <meta property="og:description" content="Audio en tiempo real de Mac a iPhone">
+    <meta property="og:type" content="website">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,500;0,600;1,500&family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        :root {
+            --bg: #000000;
+            --surface: #0E0E0E;
+            --surface-2: #1A1A1A;
+            --line: #222222;
+            --text: #F5EFE6;
+            --text-muted: #A8A39B;
+            --text-dim: #6B655C;
+            --display: 'Fraunces', Georgia, serif;
+            --body: 'Nunito', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+        
+        body {
+            font-family: var(--body);
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 32px 24px;
+            background-image:
+                radial-gradient(circle at 20% 20%, rgba(245, 239, 230, 0.03) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(245, 239, 230, 0.02) 0%, transparent 50%);
+        }
+        
+        .card {
+            max-width: 440px;
+            width: 100%;
+            text-align: center;
+        }
+        
+        .logo {
+            width: 88px;
+            height: 88px;
+            background: var(--text);
+            color: var(--bg);
+            border-radius: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--display);
+            font-weight: 700;
+            font-size: 48px;
+            margin: 0 auto 40px;
+            letter-spacing: -0.04em;
+            box-shadow: 0 20px 40px -20px rgba(245, 239, 230, 0.3);
+        }
+        
+        h1 {
+            font-family: var(--display);
+            font-weight: 500;
+            font-size: 36px;
+            line-height: 1.15;
+            letter-spacing: -0.02em;
+            margin-bottom: 14px;
+        }
+        
+        h1 em {
+            font-style: italic;
+            font-weight: 500;
+        }
+        
+        .subtitle {
+            font-size: 17px;
+            color: var(--text-muted);
+            line-height: 1.5;
+            margin-bottom: 36px;
+            font-weight: 500;
+        }
+        
+        .appstore-badge {
+            display: inline-block;
+            margin-bottom: 32px;
+            transition: transform 0.2s;
+        }
+        
+        .appstore-badge:hover {
+            transform: translateY(-2px);
+        }
+        
+        .appstore-badge img {
+            height: 60px;
+            width: auto;
+            display: block;
+        }
+        
+        .steps {
+            text-align: left;
+            background: var(--surface);
+            border: 1px solid var(--line);
+            border-radius: 20px;
+            padding: 8px 20px;
+            margin-bottom: 24px;
+        }
+        
+        .step {
+            display: flex;
+            gap: 14px;
+            padding: 16px 0;
+            font-size: 15px;
+            line-height: 1.4;
+            font-weight: 500;
+        }
+        
+        .step + .step {
+            border-top: 1px solid var(--line);
+        }
+        
+        .step-num {
+            width: 28px;
+            height: 28px;
+            background: var(--text);
+            color: var(--bg);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 13px;
+            flex-shrink: 0;
+        }
+        
+        .step-text {
+            padding-top: 3px;
+        }
+        
+        .step-text strong {
+            font-weight: 700;
+        }
+        
+        .session-info {
+            background: var(--surface);
+            border: 1px solid var(--line);
+            border-radius: 16px;
+            padding: 16px 20px;
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 24px;
+        }
+        
+        .session-info-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-dim);
+            margin-bottom: 6px;
+            font-weight: 700;
+        }
+        
+        .session-info-value {
+            color: var(--text);
+            font-weight: 600;
+            word-break: break-all;
+        }
+        
+        .footer {
+            margin-top: 32px;
+            font-size: 13px;
+            color: var(--text-dim);
+            line-height: 1.5;
+        }
+        
+        .footer a {
+            color: var(--text-muted);
+            text-decoration: none;
+            border-bottom: 1px solid var(--line);
+        }
+        
+        .footer a:hover {
+            color: var(--text);
+            border-color: var(--text-muted);
+        }
+        
+        /* Mensaje de "tienes la app pero no abrió" */
+        .retry-box {
+            display: none;
+            background: var(--surface-2);
+            border: 1px solid var(--line);
+            border-radius: 16px;
+            padding: 16px 20px;
+            margin-top: 20px;
+            font-size: 14px;
+        }
+        
+        .retry-box.show {
+            display: block;
+            animation: fadeIn 0.4s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .retry-link {
+            color: var(--text);
+            font-weight: 700;
+            text-decoration: underline;
+            cursor: pointer;
+            border: none;
+            background: none;
+            font-size: 14px;
+            font-family: inherit;
+        }
+        
+        /* En desktop / no-iOS, mensaje diferente */
+        .desktop-notice {
+            display: none;
+            background: var(--surface);
+            border: 1px solid var(--line);
+            border-radius: 16px;
+            padding: 24px;
+            margin-top: 24px;
+            font-size: 14px;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+        
+        @media (min-width: 900px) {
+            .is-desktop .desktop-notice { display: block; }
+            .is-desktop .appstore-badge,
+            .is-desktop .steps { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div class="logo">W</div>
+        
+        <h1>Conecta con tu <em>Mac</em></h1>
+        <p class="subtitle">Para recibir el audio, necesitas tener Wallas' Stream instalado en tu iPhone.</p>
+        
+        <a href="https://apps.apple.com/app/idREEMPLAZAR_APP_ID" class="appstore-badge" id="appStoreLink">
+            <img src="https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg" alt="Descargar en el App Store">
+        </a>
+        
+        <div class="steps">
+            <div class="step">
+                <div class="step-num">1</div>
+                <div class="step-text">Descarga <strong>Wallas' Stream</strong> gratis desde el App Store</div>
+            </div>
+            <div class="step">
+                <div class="step-num">2</div>
+                <div class="step-text">Abre la app en tu iPhone</div>
+            </div>
+            <div class="step">
+                <div class="step-num">3</div>
+                <div class="step-text">Regresa a tu Mac y <strong>escanea el código QR</strong> otra vez</div>
+            </div>
+        </div>
+        
+        <!-- Info de sesión (solo aparece si venimos de un QR) -->
+        <div class="session-info" id="sessionInfo" style="display: none;">
+            <div class="session-info-label">Sesión de tu Mac</div>
+            <div class="session-info-value" id="sessionHost">—</div>
+        </div>
+        
+        <!-- Retry box para usuarios que ya tienen la app -->
+        <div class="retry-box" id="retryBox">
+            <strong>¿Ya tienes la app?</strong><br>
+            <span style="color: var(--text-muted);">
+                <button class="retry-link" onclick="tryOpenApp()">Intenta abrirla de nuevo</button>
+                o vuelve a escanear el código QR desde la cámara.
+            </span>
+        </div>
+        
+        <!-- Desktop notice (cuando alguien abre el link en PC) -->
+        <div class="desktop-notice">
+            Este link está pensado para abrirse en un <strong>iPhone</strong>. 
+            Por favor, escanea el código QR con la cámara de tu iPhone o 
+            abre este enlace desde tu dispositivo móvil.
+        </div>
+        
+        <div class="footer">
+            <a href="https://wallasstream.com/">wallasstream.com</a>
+        </div>
+    </div>
+    
+    <script>
+        // Detectar plataforma
+        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+        const isDesktop = !isIOS && !/Android/.test(navigator.userAgent);
+        
+        if (isDesktop) {
+            document.body.classList.add('is-desktop');
+        }
+        
+        // Leer parámetros del Universal Link
+        const params = new URLSearchParams(window.location.search);
+        const host = params.get('host');
+        const port = params.get('port');
+        const token = params.get('token');
+        const ssid = params.get('ssid');
+        
+        // Si venimos de un QR con parámetros válidos, mostrar info
+        if (host && token) {
+            document.getElementById('sessionInfo').style.display = 'block';
+            document.getElementById('sessionHost').textContent = 
+                ssid ? `${ssid} · ${host}:${port || '8888'}` : `${host}:${port || '8888'}`;
+            
+            // Guardar los parámetros en sessionStorage para que la app los recupere
+            // después de instalarse (si el usuario vuelve a esta página)
+            try {
+                sessionStorage.setItem('wallasConnectParams', window.location.search);
+            } catch(e) {}
+            
+            // Si estamos en iOS, intentar abrir la app por custom scheme como fallback
+            // (el Universal Link debería haberse disparado antes, pero por si acaso)
+            if (isIOS) {
+                setTimeout(() => {
+                    // Si seguimos aquí después de 1.5s, mostrar opción de reintentar
+                    document.getElementById('retryBox').classList.add('show');
+                }, 1500);
+            }
+        }
+        
+        function tryOpenApp() {
+            // Reintentar abrir la app con el custom scheme (si lo defines en Info.plist)
+            const customSchemeUrl = 'wallasstream://connect' + window.location.search;
+            window.location.href = customSchemeUrl;
+            
+            // Si no funciona en 2 seg, llevar al App Store
+            setTimeout(() => {
+                window.location.href = document.getElementById('appStoreLink').href;
+            }, 2000);
+        }
+    </script>
+</body>
+</html>
