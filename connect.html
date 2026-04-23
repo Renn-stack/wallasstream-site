@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <!-- ✨ Smart App Banner de Apple -->
-  <meta name="apple-itunes-app" content="app-id=6749093177">
+  <meta name="apple-itunes-app" content="app-id=6759255823">
 
   <!-- Open Graph Preview for WhatsApp / Facebook -->
   <meta property="og:title" content="Wallas' Stream — Conectar" />
@@ -214,46 +214,6 @@
       word-break: break-all;
     }
 
-    /* Retry box */
-    .retry-box{
-      padding: 16px 20px;
-      margin-bottom: 20px;
-      display: none;
-      text-align: center;
-      font-size: 14px;
-      color: var(--muted);
-      line-height: 1.5;
-    }
-
-    .retry-box.show{
-      display: block;
-      animation: fadeIn 0.4s ease-out;
-    }
-
-    @keyframes fadeIn{
-      from{ opacity: 0; transform: translateY(8px); }
-      to{ opacity: 1; transform: translateY(0); }
-    }
-
-    .retry-box strong{
-      color: var(--text);
-      font-weight: 700;
-      display: block;
-      margin-bottom: 4px;
-    }
-
-    .retry-link{
-      color: var(--accent);
-      text-decoration: underline;
-      cursor: pointer;
-      border: none;
-      background: none;
-      font-size: 14px;
-      font-family: inherit;
-      font-weight: 600;
-      padding: 0;
-    }
-
     /* Footer */
     .footer{
       text-align: center;
@@ -308,7 +268,7 @@
 
     <!-- App Store Button -->
     <div class="appstore-wrap">
-      <a href="https://apps.apple.com/app/wallas-stream/id6749093177" class="appstore-badge" id="appStoreLink">
+      <a href="https://apps.apple.com/mx/app/wallas-stream/id6759255823" class="appstore-badge" id="appStoreLink">
         <img src="download-on-the-app-store.svg" alt="Descargar en el App Store">
       </a>
     </div>
@@ -333,13 +293,6 @@
     <div class="card-base session-info" id="sessionInfo">
       <div class="session-info-label">Sesión de tu Mac</div>
       <div class="session-info-value" id="sessionHost">—</div>
-    </div>
-
-    <!-- Retry box -->
-    <div class="card-base retry-box" id="retryBox">
-      <strong>¿Ya tienes la app?</strong>
-      <button class="retry-link" onclick="tryOpenApp()">Intenta abrirla de nuevo</button>
-      o vuelve a escanear el código QR desde la cámara.
     </div>
 
     <!-- Desktop notice -->
@@ -379,21 +332,6 @@
       try {
         sessionStorage.setItem('wallasConnectParams', window.location.search);
       } catch(e) {}
-
-      if (isIOS) {
-        setTimeout(() => {
-          document.getElementById('retryBox').classList.add('show');
-        }, 1500);
-      }
-    }
-
-    function tryOpenApp() {
-      const customSchemeUrl = 'wallasstream://connect' + window.location.search;
-      window.location.href = customSchemeUrl;
-
-      setTimeout(() => {
-        window.location.href = document.getElementById('appStoreLink').href;
-      }, 2000);
     }
   </script>
 </body>
