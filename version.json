@@ -1,7 +1,7 @@
 {
   "version": "1.0.1",
   "minVersion": "1.0.0",
-  "downloadURL": "https://www.wallasstream.com/downloads/WallasStream-1.0.1.dmg",
+  "downloadURL": "https://github.com/Renn-stack/wallasstream-site/releases/download/v1.0.1-test/WallasStream-1.0.1.dmg",
   "releaseNotes": "• Modo Internet ahora soporta múltiples usuarios con licencia Pro\n• Mejoras en latencia de transmisión USB\n• Corrección en detección de cambios de IP\n• Optimizaciones de rendimiento",
   "publishDate": "2026-04-25"
 }
