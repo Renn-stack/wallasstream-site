@@ -1,0 +1,47 @@
+# Cloudflare Workers Assets: what NOT to upload from the assets directory.
+#
+# The assets directory is the repo root, so without this file Wrangler
+# uploads everything it finds there. On Cloudflare's builder that includes
+# the node_modules it installs for Wrangler itself, and workerd inside it
+# is 144 MiB, well past the 25 MiB per-asset limit. That is what made the
+# deploy fail with "Asset too large".
+#
+# _headers and _redirects are deliberately absent from this list: Workers
+# Assets reads them for routing and does not serve them as files.
+
+# Build-time dependencies. The site itself has none.
+node_modules
+
+# Credentials and local tooling
+.env*
+.claude
+.agents
+.wrangler
+.vercel
+skills-lock.json
+
+# Source files that produce the site but are not part of it
+build.mjs
+package.json
+package-lock.json
+partials
+REDESIGN-PLAN.md
+
+# Local review artifacts and design benches
+_archive
+_*.html
+*-bench.html
+*-prototype.html
+usb-diagram.html
+wifi-diagram.html
+favicons/_originales
+
+# Working masters and source imagery the site does not serve
+assets/references
+assets/use-case-visuals/*.png
+assets/hero-cinematic/hero-master.mp4
+assets/hero-cinematic/hero-cine-corrected.mov
+assets/hero-cinematic/Orange_*.mp4
+assets/hero-cinematic/frames
+assets/hero-cinematic/refs
+assets/hero-cinematic/cp
