@@ -1,4 +1,4 @@
-# Cloudflare Pages routing. Ignored by Vercel, which uses vercel.json.
+# Cloudflare routing.
 # Format: <from> <to> <status>. First match wins, so the 200 rewrites that
 # give the Spanish pages their pretty URLs come before anything else.
 #

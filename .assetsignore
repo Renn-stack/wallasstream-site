@@ -17,7 +17,6 @@ node_modules
 .claude
 .agents
 .wrangler
-.vercel
 skills-lock.json
 
 # Source files that produce the site but are not part of it

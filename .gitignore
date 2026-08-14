@@ -12,16 +12,13 @@ _archive/
 node_modules/
 npm-debug.log*
 
-# Vercel CLI local link and build output
-.vercel/
-
 # Local review artifacts (never deploy): _implant-preview.html etc.
 _*.html
 favicons/_originales/
 
 # Design benches, prototypes and diagrams. Not linked from the site, but
-# Vercel serves the repo root as-is, so committing them would publish them
-# at wallasstream.com/device-bench.html and similar. Kept local.
+# the host serves the repo root as-is, so committing them would publish
+# them at wallasstream.com/device-bench.html and similar. Kept local.
 *-bench.html
 *-prototype.html
 usb-diagram.html
@@ -50,5 +47,7 @@ assets/use-case-visuals/*.png
 .claude/
 .agents/
 skills-lock.json
-.vercel
+
+# Wrangler local state, and any environment file. Never commit these.
+.wrangler/
 .env*

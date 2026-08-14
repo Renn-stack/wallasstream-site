@@ -1,5 +1,4 @@
-# Cloudflare Pages response headers. Ignored by Vercel, which uses the
-# "headers" block in vercel.json. Keep the two in sync.
+# Cloudflare response headers.
 
 # Apple's universal-links file must be served as JSON and never cached,
 # or a stale copy can break the app handoff from the site.
