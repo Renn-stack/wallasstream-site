@@ -1,0 +1,36 @@
+# Cloudflare Pages routing. Ignored by Vercel, which uses vercel.json.
+# Format: <from> <to> <status>. First match wins, so the 200 rewrites that
+# give the Spanish pages their pretty URLs come before anything else.
+#
+# Cloudflare Pages already serves /contact from contact.html and already
+# redirects /contact.html to /contact on its own, so the English pages need
+# no rules here. Only the Spanish slugs and the legacy URLs do.
+
+# Spanish pretty URLs. Status 200 rewrites: the URL stays as written and
+# Pages serves the *ES.html file behind it.
+/es             /indexES.html      200
+/contacto       /contactES.html    200
+/preguntas      /faqES.html        200
+/ayuda          /helpES.html       200
+/aviso-legal    /legalES.html      200
+/descargar      /downloadES.html   200
+
+# Old Spanish URLs kept working and pointed at the new slugs, so anything
+# already indexed or bookmarked lands on the right page instead of a 404.
+/indexES.html      /es             301
+/contactES.html    /contacto       301
+/faqES.html        /preguntas      301
+/helpES.html       /ayuda          301
+/legalES.html      /aviso-legal    301
+/downloadES.html   /descargar      301
+
+# Same again for the extensionless form Pages derives from those filenames.
+/indexES        /es                301
+/contactES      /contacto          301
+/faqES          /preguntas         301
+/helpES         /ayuda             301
+/legalES        /aviso-legal       301
+/downloadES     /descargar         301
+
+# The old home page file.
+/index.html     /                  301

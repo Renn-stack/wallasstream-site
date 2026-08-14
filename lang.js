@@ -1,22 +1,46 @@
 (function(){
-  // Every EN page that has a Spanish twin. A page missing from this map
-  // has no pair, and applyLanguageRedirect() then correctly leaves it
-  // alone rather than sending a visitor to a 404.
+  // Every EN page that has a Spanish twin, keyed by clean URL. A page
+  // missing from this map has no pair, and applyLanguageRedirect() then
+  // correctly leaves it alone rather than sending a visitor to a 404.
   const enToEs = {
-    "index.html": "indexES.html",
-    "download.html": "downloadES.html",
-    "faq.html": "faqES.html",
-    "help.html": "helpES.html",
-    "contact.html": "contactES.html",
-    "legal.html": "legalES.html"
+    "/": "/es",
+    "/download": "/descargar",
+    "/faq": "/preguntas",
+    "/help": "/ayuda",
+    "/contact": "/contacto",
+    "/legal": "/aviso-legal"
   };
 
   const esToEn = Object.fromEntries(Object.entries(enToEs).map(([en, es]) => [es, en]));
 
-  function getFileName(){
-    const path = window.location.pathname;
-    const last = (path.split("/").pop() || "").trim();
-    return last || "index.html";
+  // The old .html URLs stay indexed and bookmarked for a long time. The
+  // host redirects them, but that redirect lands after this script has
+  // already run on the first response, so map them here too rather than
+  // treat a legacy URL as an unpaired page.
+  const legacy = {
+    "/index.html": "/",
+    "/indexES.html": "/es",
+    "/download.html": "/download",
+    "/downloadES.html": "/descargar",
+    "/faq.html": "/faq",
+    "/faqES.html": "/preguntas",
+    "/help.html": "/help",
+    "/helpES.html": "/ayuda",
+    "/contact.html": "/contact",
+    "/contactES.html": "/contacto",
+    "/legal.html": "/legal",
+    "/legalES.html": "/aviso-legal",
+    "/connect.html": "/connect"
+  };
+
+  /* THE PAGE'S OWN CLEAN PATH.
+     Trailing slashes are stripped so /ayuda/ and /ayuda are one page,
+     and legacy .html paths are folded onto their clean equivalent. */
+  function getPath(){
+    let path = window.location.pathname || "/";
+    if (legacy[path]) return legacy[path];
+    if (path.length > 1) path = path.replace(/\/+$/, "");
+    return path || "/";
   }
 
   function normalizeLang(lang){
@@ -54,32 +78,32 @@
     return normalizeLang(q.get("lang"));
   }
 
-  function currentPageLang(file){
-    if (file.endsWith("ES.html")) return "es";
-    // connect.html is the QR deep-link landing page. It ships in Spanish
+  function currentPageLang(path){
+    if (esToEn[path]) return "es";
+    // /connect is the QR deep-link landing page. It ships in Spanish
     // only and has no English twin, so it never redirects; it is listed
     // here just so the switcher's active state reads correctly on it.
-    if (file === "connect.html") return "es";
+    if (path === "/connect") return "es";
     return "en";
   }
 
-  function counterpartFor(file, targetLang){
-    if (targetLang === "es") return enToEs[file] || null;
-    if (targetLang === "en") return esToEn[file] || null;
+  function counterpartFor(path, targetLang){
+    if (targetLang === "es") return enToEs[path] || null;
+    if (targetLang === "en") return esToEn[path] || null;
     return null;
   }
 
-  function redirectToFile(targetFile){
-    if (!targetFile) return;
+  function redirectToPath(targetPath){
+    if (!targetPath) return;
     const url = new URL(window.location.href);
-    url.pathname = url.pathname.replace(/[^/]*$/, targetFile);
+    url.pathname = targetPath;
     url.searchParams.delete("lang");
     window.location.replace(url.toString());
   }
 
   function applyLanguageRedirect(){
-    const file = getFileName();
-    const pageLang = currentPageLang(file);
+    const path = getPath();
+    const pageLang = currentPageLang(path);
 
     const queryLang = getQueryLang();
     if (queryLang === "auto") setStoredLang("auto");
@@ -87,20 +111,20 @@
 
     const stored = getStoredLang();
     const desired = stored === "es" || stored === "en" ? stored : detectBrowserLang();
-    const hasPair = Boolean(enToEs[file] || esToEn[file]);
+    const hasPair = Boolean(enToEs[path] || esToEn[path]);
 
     if (!hasPair) return;
     if (desired === pageLang) return;
 
-    const target = counterpartFor(file, desired);
+    const target = counterpartFor(path, desired);
     if (!target) return;
-    redirectToFile(target);
+    redirectToPath(target);
   }
 
   function applyActiveState(){
     const stored = getStoredLang();
     const currentPref = stored === "es" || stored === "en" ? stored : "auto";
-    const file = getFileName();
+    const path = getPath();
 
     document.querySelectorAll("[data-lang]").forEach((el) => {
       const v = normalizeLang(el.getAttribute("data-lang"));
@@ -119,7 +143,7 @@
 
          Pages with no twin keep the authored href and simply cross over
          at the home page. */
-      const target = v === "es" || v === "en" ? counterpartFor(file, v) : null;
+      const target = v === "es" || v === "en" ? counterpartFor(path, v) : null;
       if (target) el.setAttribute("href", target);
     });
   }
@@ -130,13 +154,13 @@
 
     setStoredLang(normalized);
 
-    const file = getFileName();
-    const pageLang = currentPageLang(file);
+    const path = getPath();
+    const pageLang = currentPageLang(path);
     const effective = normalized === "auto" ? detectBrowserLang() : normalized;
-    const target = counterpartFor(file, effective);
+    const target = counterpartFor(path, effective);
 
     if (target && effective !== pageLang){
-      redirectToFile(target);
+      redirectToPath(target);
       return;
     }
 

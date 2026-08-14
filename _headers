@@ -1,0 +1,23 @@
+# Cloudflare Pages response headers. Ignored by Vercel, which uses the
+# "headers" block in vercel.json. Keep the two in sync.
+
+# Apple's universal-links file must be served as JSON and never cached,
+# or a stale copy can break the app handoff from the site.
+/.well-known/apple-app-site-association
+  Content-Type: application/json
+  Cache-Control: no-cache, no-store, must-revalidate
+
+/apple-app-site-association
+  Content-Type: application/json
+
+# Images are content-addressed by name and change rarely: cache for 30 days.
+/assets/img/*
+  Cache-Control: public, max-age=2592000
+
+# CSS and JS carry no hash in their filenames, so they must revalidate on
+# every load or a deploy would not reach visitors who already have them.
+/assets/css/*
+  Cache-Control: public, max-age=0, must-revalidate
+
+/assets/js/*
+  Cache-Control: public, max-age=0, must-revalidate
