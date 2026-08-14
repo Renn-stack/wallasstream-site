@@ -66,7 +66,6 @@
   var FWD_RATE = 1.0;                 /* forward = the edit's own pace */
 
   var mqMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
-  var mqWidth = window.matchMedia("(min-width: 900px)");
 
   var state = 0;
   var enabled = false;
@@ -311,10 +310,18 @@
     video.pause();
   }
 
+  /* There was a min-width: 900px test here. The plate was desktop only,
+     so a phone got the static illustration instead. It now runs at every
+     width: hero-checkpoint.css has a max-width: 899px block that drops
+     the pinned stage and lets the plate sit in normal flow.
+
+     Reduced motion and Save-Data still opt out, and both still get the
+     static illustration. Save-Data matters more now than it did: this is
+     1.1MB on the small variant, and on a phone that is the visitor's own
+     allowance being spent. */
   function eligible() {
     var c = navigator.connection;
     return !mqMotion.matches &&
-           mqWidth.matches &&
            !(c && c.saveData === true) &&
            !!video.canPlayType &&
            video.canPlayType("video/mp4") !== "";
@@ -324,7 +331,7 @@
 
   sync();
 
-  [mqMotion, mqWidth].forEach(function (mq) {
+  [mqMotion].forEach(function (mq) {
     var listen = mq.addEventListener
       ? mq.addEventListener.bind(mq, "change")
       : mq.addListener.bind(mq);

@@ -1,7 +1,17 @@
-// /api/validate-license.js
+// functions/api/validate-license.js
 //
-// Endpoint serverless que valida licencias de Lemon Squeezy
-// de forma segura sin exponer la API Key al cliente.
+// Valida licencias de Lemon Squeezy sin exponer la API Key al cliente.
+// Cloudflare Pages sirve este archivo en /api/validate-license.
+//
+// Portado desde la función serverless de Vercel que vivía en
+// api/validate-license.js. La forma de la petición y de la respuesta se
+// mantiene idéntica: la app de Mac ya publicada depende de ella, así que
+// ninguna clave del JSON puede cambiar de nombre ni desaparecer.
+//
+// Diferencias con la versión de Vercel, todas de plataforma:
+//   - las variables de entorno llegan en context.env, no en process.env
+//   - el cuerpo se lee con request.json() en vez de req.body
+//   - se devuelve un Response en vez de usar res.status().json()
 //
 // Uso desde la app Mac:
 //
@@ -17,58 +27,78 @@
 //      POST https://www.wallasstream.com/api/validate-license
 //      Body: { "license_key": "XXXX", "instance_id": "abc-123", "action": "deactivate" }
 //
-// Variables de entorno requeridas en Vercel:
-//   - LEMON_SQUEEZY_API_KEY        (tu API key de Lemon Squeezy)
+// Secrets requeridos en Cloudflare Pages (Settings > Variables and Secrets),
+// y hay que definirlos tanto en Production como en Preview:
+//   - LEMON_SQUEEZY_API_KEY        (API key de Lemon Squeezy)
 //   - LEMON_SQUEEZY_STORE_ID       (329547)
 //   - LEMON_SQUEEZY_PRODUCT_ID     (997040 en test, cambiará en live)
 
-export default async function handler(req, res) {
-    // CORS headers
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+const CORS = {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Methods': 'POST, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type'
+};
 
-    if (req.method === 'OPTIONS') {
-        return res.status(200).end();
+function json(body, status = 200) {
+    return new Response(JSON.stringify(body), {
+        status,
+        headers: { ...CORS, 'Content-Type': 'application/json' }
+    });
+}
+
+export async function onRequest(context) {
+    const { request, env } = context;
+
+    if (request.method === 'OPTIONS') {
+        return new Response(null, { status: 200, headers: CORS });
     }
 
-    if (req.method !== 'POST') {
-        return res.status(405).json({
+    if (request.method !== 'POST') {
+        return json({
             valid: false,
             error: 'Method not allowed. Use POST.'
-        });
+        }, 405);
     }
 
     try {
-        const { license_key, instance_name, instance_id, action } = req.body;
+        // Un cuerpo ausente o mal formado no debe tumbar la función con un
+        // 500 genérico: se trata como falta la license_key, igual que antes.
+        let payload;
+        try {
+            payload = await request.json();
+        } catch {
+            payload = {};
+        }
+
+        const { license_key, instance_name, instance_id, action } = payload || {};
 
         // Validar input
         if (!license_key || typeof license_key !== 'string') {
-            return res.status(400).json({
+            return json({
                 valid: false,
                 error: 'License key is required.'
-            });
+            }, 400);
         }
 
         // Config desde variables de entorno
-        const LEMON_API_KEY = process.env.LEMON_SQUEEZY_API_KEY;
-        const EXPECTED_STORE_ID = process.env.LEMON_SQUEEZY_STORE_ID;
-        const EXPECTED_PRODUCT_ID = process.env.LEMON_SQUEEZY_PRODUCT_ID;
+        const LEMON_API_KEY = env.LEMON_SQUEEZY_API_KEY;
+        const EXPECTED_STORE_ID = env.LEMON_SQUEEZY_STORE_ID;
+        const EXPECTED_PRODUCT_ID = env.LEMON_SQUEEZY_PRODUCT_ID;
 
         if (!LEMON_API_KEY) {
             console.error('LEMON_SQUEEZY_API_KEY not configured');
-            return res.status(500).json({
+            return json({
                 valid: false,
                 error: 'Server configuration error.'
-            });
+            }, 500);
         }
 
         if (!EXPECTED_STORE_ID || !EXPECTED_PRODUCT_ID) {
             console.error('LEMON_SQUEEZY_STORE_ID or LEMON_SQUEEZY_PRODUCT_ID not configured');
-            return res.status(500).json({
+            return json({
                 valid: false,
                 error: 'Server configuration error.'
-            });
+            }, 500);
         }
 
         // Decidir endpoint según action
@@ -90,10 +120,10 @@ export default async function handler(req, res) {
         } else if (action === 'validate' || action === 'deactivate') {
             // Validación / desactivación: requiere instance_id
             if (!instance_id) {
-                return res.status(400).json({
+                return json({
                     valid: false,
                     error: 'instance_id is required for validate/deactivate.'
-                });
+                }, 400);
             }
             body.append('instance_id', instance_id);
         }
@@ -113,21 +143,21 @@ export default async function handler(req, res) {
 
         // Si Lemon Squeezy devuelve error
         if (!response.ok || data.error) {
-            return res.status(200).json({
+            return json({
                 valid: false,
                 error: data.error || 'License validation failed.'
             });
         }
 
-        // 🔒 VERIFICACIÓN CRÍTICA: la licencia pertenece a ESTE producto
-        // Protege contra uso de licencias de otros productos Lemon Squeezy
+        // VERIFICACIÓN CRÍTICA: la licencia pertenece a ESTE producto.
+        // Protege contra uso de licencias de otros productos Lemon Squeezy.
         const meta = data.meta || {};
         const storeId = String(meta.store_id || '');
         const productId = String(meta.product_id || '');
 
         if (storeId !== String(EXPECTED_STORE_ID)) {
             console.warn(`Store ID mismatch: got ${storeId}, expected ${EXPECTED_STORE_ID}`);
-            return res.status(200).json({
+            return json({
                 valid: false,
                 error: 'This license does not belong to Wallas\' Stream.'
             });
@@ -135,7 +165,7 @@ export default async function handler(req, res) {
 
         if (productId !== String(EXPECTED_PRODUCT_ID)) {
             console.warn(`Product ID mismatch: got ${productId}, expected ${EXPECTED_PRODUCT_ID}`);
-            return res.status(200).json({
+            return json({
                 valid: false,
                 error: 'This license is not for Wallas\' Stream Pro.'
             });
@@ -148,7 +178,7 @@ export default async function handler(req, res) {
             data.deactivated === true;    // deactivate
 
         // Respuesta exitosa
-        return res.status(200).json({
+        return json({
             valid: isValid,
             activated: data.activated || false,
             deactivated: data.deactivated || false,
@@ -164,9 +194,9 @@ export default async function handler(req, res) {
 
     } catch (error) {
         console.error('License validation error:', error);
-        return res.status(500).json({
+        return json({
             valid: false,
             error: 'Internal server error. Please try again.'
-        });
+        }, 500);
     }
 }

@@ -26,6 +26,10 @@ package-lock.json
 partials
 REDESIGN-PLAN.md
 
+# Pages compiles functions/ into the /api routes and does not serve it as
+# files. Listing it here only stops the source being uploaded alongside.
+functions
+
 # Local review artifacts and design benches
 _archive
 _*.html

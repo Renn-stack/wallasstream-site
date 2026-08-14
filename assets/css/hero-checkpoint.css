@@ -384,6 +384,87 @@
   }
 }
 
+/* ---- Narrow screens ----
+   Everything above this point was written for a wide frame and had no
+   width breakpoint at all, because the plate used to be desktop only.
+   The plate now runs here too, so this undoes the parts that cannot
+   survive a phone.
+
+   WHY THE PIN GOES: the plate is 16:9 and is fitted with object-fit
+   contain, which is deliberate. Framing and grade are never altered.
+   Contained inside a 100dvh box on a 390x844 phone that leaves a 390x219
+   band floating in 625px of black, with the copy sitting on top of it.
+   So the hero stops being a pinned stage and becomes an ordinary
+   section: the plate takes the illustration's place at its own 16:9, and
+   the copy stacks under it.
+
+   The copy is also visible from the start rather than waiting for the
+   payoff at 6.00s. The staged reveal needs a stage to happen on; in a
+   stacked column a visitor would just be looking at a headline that is
+   not there yet.
+
+   .hero__flow is hidden, not deleted. It is still what a visitor with
+   reduced motion or without JavaScript gets, and on this site that is
+   not a hypothetical audience. */
+@media (max-width: 899px) {
+  .js-hero-cp .hero--cp {
+    height: auto;
+    overflow: visible;
+    margin-top: 0;
+  }
+
+  .js-hero-cp .hero--cp .hero__pin { height: auto; overflow: visible; }
+
+  /* The navbar belongs to the document again: with no pinned stage there
+     is no cinematic act for it to stay out of. */
+  .js-hero-cp .topbar {
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+  }
+
+  .js-hero-cp .hero--cp .hero__cine {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    margin-bottom: clamp(1.5rem, 5vw, 2.5rem);
+  }
+
+  /* The left scrim exists to seat copy over the plate. Nothing sits over
+     it here, so it would just be a dark patch. */
+  .js-hero-cp .hero--cp[data-payoff="on"] .hero__cine::after,
+  .js-hero-cp .hero--cp[data-cp="1"] .hero__cine::after { opacity: 0; }
+
+  .js-hero-cp .hero--cp .hero__flow,
+  .js-hero-cp .hero--cp .hero__hints { display: none; }
+
+  .js-hero-cp .hero--cp .hero__question,
+  .js-hero-cp .hero--cp .hero__payoff,
+  .js-hero-cp .hero--cp .hero__cta {
+    position: static;
+    left: auto;
+    top: auto;
+    translate: none;
+    width: auto;
+    visibility: visible;
+    opacity: 1;
+    text-align: center;
+    justify-items: center;
+  }
+
+  /* The question leads the section instead of leaving when the plate
+     starts: in a stacked column its exit would open a hole. */
+  .js-hero-cp .hero--cp[data-q="off"] .hero__question { opacity: 1; }
+
+  .js-hero-cp .hero--cp .hero__headline-line,
+  .js-hero-cp .hero--cp .hero__payoff .lede,
+  .js-hero-cp .hero--cp .hero__cta .btn,
+  .js-hero-cp .hero--cp .hero__meta {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
 /* ---- Reduced motion ----
    The script never adds .js-hero-cp under reduced motion, so this is
    belt-and-braces: if the class somehow leaked, undo the pin entirely
