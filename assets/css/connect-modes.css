@@ -1,0 +1,675 @@
+/* ============================================================
+   connect-modes.css — "Ways to connect" expanding two-panel stage
+   Loaded by index.html.
+
+   This section answers HOW TO CONNECT — Wi-Fi or Cable — and
+   nothing else. No signal path, no hearing device: the hero owns
+   that story.
+
+   PANEL MODEL — a switch above two stacked panels.
+   The mode is chosen from a segmented pill over the stage; the two
+   panels occupy the same grid cell and cross-fade. No card, no border,
+   no fill: the devices sit straight on the black page, lit only by the
+   warm pools behind them, so nothing frames the thing being demonstrated.
+
+   THE STAGE PLAYS ITSELF. The demo used to be dragged by hand; it now
+   runs on a five-second loop and nothing inside it is grabbable. So
+   there is no cursor, no instruction cue and no keyboard fallback in
+   here any more — connect-modes.js drives the whole thing, and the only
+   control left in the section is the mode switch above.
+
+   This replaced an expand/collapse pair where the inactive mode was a
+   132px vertical sliver you clicked to open. That gave the stage less
+   width, hid one of only two options behind a rotated label, and needed
+   a card border to make the sliver legible at all.
+   ============================================================ */
+
+.cm {
+  --cm-h: clamp(500px, 58vh, 640px);
+
+  --cm-dur: 620ms;
+  --cm-ease: cubic-bezier(0.22, 1, 0.36, 1);   /* no overshoot */
+
+  /* THE WARMTH IS CLIPPED HERE, AT THE SECTION, NOT AT THE PANEL.
+     The pools and the ambient wash hang well past whatever contains
+     them, and something has to stop them widening the document — but
+     the panel is only as wide as the RAIL, and cutting light at the
+     rail draws the rail. That is exactly what it did: the phone's pool
+     was still painting at alpha 0.09 when it met the panel's right
+     edge, and the wash at 0.01 when it met the top and bottom, so the
+     section showed a warm rectangle with three hard sides.
+
+     The section runs the full width of the page, which is far enough
+     out that every pool has faded to nothing (or to 0.017, at the
+     screen's own edge) before it arrives. `clip` rather than `hidden`:
+     it never becomes a scroll container, so it cannot be scrolled
+     sideways when something inside takes focus. */
+  overflow: clip;
+}
+
+/* The rail width is stated once, on elements whose containing block is
+   the section itself. */
+.cm__intro,
+.cm__track {
+  width: min(1500px, calc(100% - 2 * clamp(48px, 6%, 160px)));
+  margin-inline: auto;
+}
+
+.cm__intro { margin-bottom: clamp(1.5rem, 3vw, 2.25rem); }
+
+/* ---------- Mode switch ----------
+   One pill holding two segments. The active segment carries the ring and
+   the warm glow; the pill's own hairline is the only border left in the
+   section, and it is what makes the pair read as one control rather than
+   two loose buttons. */
+.cm__switch {
+  display: flex;
+  gap: 4px;
+  width: max-content;
+  max-width: calc(100% - 2rem);
+  margin: 0 auto clamp(1.75rem, 3.5vw, 3rem);
+  padding: 5px;
+  border: 1px solid var(--ws-line);
+  border-radius: var(--ws-radius-pill);
+}
+
+.cm__switch-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.85rem 1.9rem;
+  border: 1px solid transparent;
+  border-radius: var(--ws-radius-pill);
+  background: transparent;
+  color: var(--ws-text-secondary);
+  font: inherit;
+  font-size: var(--ws-step-1);
+  font-weight: 650;
+  line-height: 1;
+  cursor: pointer;
+  transition: color var(--ws-dur-base) var(--cm-ease),
+              border-color var(--ws-dur-base) var(--cm-ease),
+              background-color var(--ws-dur-base) var(--cm-ease),
+              box-shadow var(--ws-dur-base) var(--cm-ease);
+}
+
+.cm__switch-btn svg { width: 22px; height: 22px; }
+
+.cm__switch-btn:hover:not(.is-active) { color: var(--ws-text); }
+
+.cm__switch-btn.is-active {
+  color: var(--ws-accent);
+  border-color: var(--ws-orange-700);
+  background: rgba(224, 150, 91, 0.07);
+  box-shadow: 0 0 22px rgba(224, 150, 91, 0.22),
+              inset 0 0 18px rgba(224, 150, 91, 0.06);
+}
+
+.cm__switch-btn:focus-visible { outline: 2px solid var(--ws-accent); outline-offset: 3px; }
+
+/* ---------- Stage ---------- */
+.cm__track {
+  display: grid;
+  height: var(--cm-h);
+  /* Query container: the stage's internals size from the RAIL. */
+  container-type: inline-size;
+}
+
+/* ---------- Panel ----------
+   Both stacked in one cell, so switching cannot reflow the section and
+   the height is fixed by --cm-h rather than by whichever mode is open. */
+.cm__panel {
+  grid-area: 1 / 1;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  /* NOT clipped. The ambient wash is inset:-25% and the pools hang past
+     every edge, and this box is only as wide as the rail — clipping the
+     light here is what drew the rail as a warm rectangle. The document
+     is still protected from the overspill; that job moved up to .cm,
+     which is wide enough that the light has faded out before it. */
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity calc(var(--cm-dur) * 0.55) var(--cm-ease);
+}
+
+.cm__panel.is-active { opacity: 1; pointer-events: auto; }
+
+/* Ambient: a very slow warm wash drifting behind the card, so the section
+   is alive before anyone touches it. Its own layer with a compositor
+   transform rather than an animated background-position, which would
+   repaint the whole panel every frame. */
+.cm__panel::before {
+  content: "";
+  position: absolute;
+  inset: -25%;
+  z-index: 0;
+  pointer-events: none;
+  background: radial-gradient(closest-side, rgba(224, 150, 91, 0.13), transparent 72%);
+  opacity: 0;
+  transition: opacity var(--cm-dur) var(--cm-ease);
+}
+
+.cm__panel.is-active::before {
+  opacity: 1;
+  animation: cm-drift 26s var(--ws-ease-in-out) infinite;
+}
+
+@keyframes cm-drift {
+  0%, 100% { translate: -7% -4%; }
+  50%      { translate: 7% 5%; }
+}
+
+/* ---------- Panel content ----------
+   Copy left, stage right. No padding to speak of: with the card gone
+   there is no edge to hold away from, and the stage wants the width. */
+.cm__full {
+  position: absolute;
+  inset: 0;
+  z-index: 1;              /* above the ambient wash */
+  display: grid;
+  grid-template-columns: minmax(230px, 28%) 1fr;
+  align-items: center;
+  gap: clamp(20px, 2.6%, 44px);
+}
+
+/* ---------- Panel copy ---------- */
+.cm__copy { display: grid; gap: var(--ws-space-5); justify-items: start; }
+
+.cm__title {
+  font-size: clamp(1.7rem, 1.2rem + 1.4vw, 2.3rem);
+  line-height: 1.08;
+  letter-spacing: -0.03em;
+  font-weight: 700;
+  color: var(--ws-text);
+}
+
+.cm__body {
+  font-size: var(--ws-step-0);
+  line-height: 1.55;
+  color: var(--ws-text-secondary);
+  max-width: 32ch;
+}
+
+/* ---------- Demo stage ---------- */
+/* Nothing here is interactive, so the stage must never take a gesture
+   off the page: on a phone, a swipe that starts on the devices has to
+   scroll the section like any other picture. */
+.cm__stage {
+  position: relative;
+  height: 100%;
+}
+
+/* The X shift is the deck's own overhang. A keyboard laid away from the
+   camera projects its near edge ~15.8% of the machine's width past the
+   left of its box (see components.css — it is a property of the lens,
+   not of this section), and at left:0 that put the front-left corner of
+   the keyboard on top of .cm__body. Percentages in `translate` resolve
+   against the ELEMENT's own width, and this element is exactly the
+   machine wide, so one number holds at every viewport and keeps holding
+   when the width below hits its 520px cap.
+
+   Everything aimed at the Mac rides along: the QR glow and the floor
+   pool are children, and connect-modes.js re-reads this element's rect
+   at the top of every cycle. */
+.cm__mac {
+  position: absolute;
+  left: 0;
+  top: 44%;
+  translate: 15.8% -50%;
+  width: min(84%, 520px);
+}
+
+/* Grounds the machine. The iPhone already casts, and a Mac with no
+   shadow beside it reads as a sticker next to a solid object — the
+   warm pool behind them makes the difference plainly visible.
+   Scoped to .cm__mac, so the duplicate inside the camera viewport
+   never casts a second one. */
+.cm__mac .device--mac {
+  filter: drop-shadow(0 24px 42px rgba(0, 0, 0, 0.62));
+}
+
+/* The same lamp that rims the hardware reaches whatever it is standing
+   on. Not a mirror image — no surface is drawn here, and one would have
+   to be lit and textured to survive the scrutiny. Just the pool of
+   warmth an object throws onto a dark desk, tight under the base, which
+   is all it takes to stop the machine floating. */
+.cm__mac::after {
+  content: "";
+  position: absolute;
+  /* Anchored to the DECK's front edge, which is where the machine
+     actually touches the desk — and, since the box was corrected, is
+     also the bottom of this element. It used to sit at 96% of a box that
+     ended above the keyboard, which put the pool across the middle of
+     the keys. Pulled left of centre because the deck is: the near edge
+     spreads to the left under the yaw. */
+  left: -8%;
+  top: 99%;
+  width: 108%;
+  height: 15%;
+  z-index: -1;
+  pointer-events: none;
+  background: radial-gradient(closest-side,
+              rgba(255, 158, 88, 0.22),
+              rgba(255, 145, 70, 0.07) 46%,
+              transparent 74%);
+}
+
+/* ONE WIDTH FOR BOTH MODES. Wi-Fi used to override this to 78%/486px,
+   because at the shared 520px the Mac and the phone left a 26px slot on
+   what was then a 675px stage and the phone read as crowding the
+   machine. The stage is 772px now, so the same 520px machine leaves 48px
+   — a real gap — and the override had stopped paying for itself.
+
+   What it cost: the panels cross-fade in place, so two widths meant the
+   machine visibly grew 7% (34px wider, 26px taller, the lid jumping up
+   13px) every time the switch was used. A hardware prop that changes
+   size when you press a tab reads as a glitch, not as composition. The
+   two panels are the same machine seen twice; it has to be one size. */
+
+/* Static iPhone (cable panel) — the CONNECTOR moves, not the phone. */
+.cm__phone {
+  position: absolute;
+  z-index: 3;
+  right: 1%;
+  bottom: 10%;
+  width: clamp(92px, 21%, 122px);
+  filter: drop-shadow(0 14px 30px rgba(0, 0, 0, 0.55));
+}
+
+/* Both screens are stacked and cross-faded, so nothing is requested
+   mid-interaction and the swap cannot shift layout. */
+/* Pulled down a touch so the panels sit on the black band instead of
+   glowing off it — the hardware should read brighter than what's on it. */
+.cm__screen {
+  transition: opacity var(--ws-dur-slow) var(--cm-ease);
+  filter: brightness(0.88);
+}
+.cm__screen--connected { opacity: 0; }
+.cm__stage.is-connected .cm__screen--setup { opacity: 0; }
+.cm__stage.is-connected .cm__screen--connected { opacity: 1; }
+
+/* ---------- The travelling object (iPhone on Wi-Fi, connector on Cable) ----------
+   --dx/--dy are written every frame by the tween in connect-modes.js, so
+   there is deliberately NO transition here: a transition on top would
+   fight the tween and lag the cable behind its own connector.
+
+   Inert to the pointer — it is a moving picture, not a control. */
+.cm__drag {
+  position: absolute;
+  z-index: 4;
+  padding: 0;
+  border: 0;
+  background: none;
+  pointer-events: none;
+  translate: var(--dx, 0px) var(--dy, 0px);
+}
+
+/* ---------- Wi-Fi: the whole iPhone travels ----------
+   NEVER give this element, or the inner .cm__phone-dev, a transform or a
+   filter. .cm__phone-dev owns the blend group (isolation:isolate around
+   the `mix-blend-mode: screen` scanner chrome), and either property on
+   that stack makes the browser composite the whole handset as a flat
+   black slab: bezel, camera viewport and scanner all disappear. The
+   `translate` property is safe — it is what the tween writes. */
+.cm__drag--phone {
+  /* Rests clear of the Mac, at the far right — the loop starts and ends
+     here, so the phone reads as "about to go", never as already
+     overlapping the code. Vertical placement mirrors Cable. */
+  right: 0;
+  bottom: 10%;
+  width: clamp(92px, 21%, 122px);
+}
+
+/* NO `filter` on this element — see above. `filter` + a 3D transform on
+   the same box, with a mix-blend-mode descendant inside, composites the
+   whole handset black. So the cast shadow and the warm glow are drawn as
+   sibling layers behind the phone instead of as filters. Same look, and
+   opacity is cheaper to animate than a drop-shadow anyway. */
+.cm__drag--phone::after {          /* cast shadow */
+  content: "";
+  position: absolute;
+  inset: 6% 8% -3%;
+  z-index: -2;
+  border-radius: 22% / 10%;
+  background: #000;
+  opacity: 0.62;
+  filter: blur(17px);
+  pointer-events: none;
+}
+
+.cm__drag--phone::before {         /* warm glow: breathing, then reading */
+  content: "";
+  position: absolute;
+  inset: -10%;
+  z-index: -1;
+  border-radius: 24% / 11%;
+  background: radial-gradient(closest-side, rgba(242, 164, 100, 0.55), transparent 74%);
+  opacity: 0;
+  transition: opacity var(--ws-dur-base) var(--cm-ease);
+  pointer-events: none;
+}
+
+/* ============================================================
+   SCANNER VIEWPORT — the "looking through the camera" illusion
+   ============================================================
+   .cm__view is a hole cut in the moving iPhone, sized to the phone's
+   real screen area. Inside it sits a 1:1 DUPLICATE of the Mac. The
+   duplicate counter-translates by exactly the phone's drag offset, so
+   in world space it never moves: the phone slides across a stationary
+   scene and the viewport reveals whatever is geometrically behind it.
+
+   --dx/--dy are set once per frame on .cm__drag by the drag helper and
+   INHERIT down to the scene, so the illusion costs no extra JS and
+   stays on the compositor.
+   ============================================================ */
+.cm__view {
+  position: absolute;
+  left: 3%;
+  top: 1.43%;
+  width: 94%;
+  height: 97.15%;
+  border-radius: 11% / 5.2%;
+  overflow: hidden;              /* the window frame */
+  background: #050506;           /* unlit camera */
+  z-index: 1;
+  transition: box-shadow var(--ws-dur-base) var(--cm-ease);
+}
+
+.cm__view-scene {
+  position: absolute;
+  transform-origin: 0 0;
+  translate: calc(var(--dx, 0px) * -1) calc(var(--dy, 0px) * -1);
+}
+
+/* The duplicate Mac lives INSIDE .device--phone, which used to mean the
+   phone's screen insets won and the scene rendered at the wrong scale.
+   components.css now carries the screen box in custom properties set on
+   each device element, so the nested Mac takes its own box from the
+   nearer ancestor and there is nothing to restate here. */
+
+/* Camera exposure: a real viewfinder is dimmer and cooler than the
+   screen it points at. Sells the illusion far better than a 1:1 copy. */
+.cm__view-scene .device__chrome { opacity: 0.55; }
+.cm__view-scene .device__screen { filter: brightness(0.72) contrast(1.06); }
+
+/* Once the code is read the camera stops, exactly as it does in the app.
+   Without this the live viewport keeps compositing the scene under the
+   Connected screen and the old QR bleeds through it. */
+.cm__stage.is-connected .cm__view {
+  opacity: 0;
+  transition: opacity var(--ws-dur-slow) var(--cm-ease);
+}
+
+.cm__stage.is-armed .cm__view {
+  box-shadow: inset 0 0 0 2.5px var(--ws-orange-400),
+              inset 0 0 30px rgba(242, 164, 100, 0.28);
+}
+
+.cm__drag--phone.is-armed::before { opacity: 0.85; }
+
+/* Real iOS scanner chrome, unmodified.
+   The PNG is white UI on pure black, so `screen` blending drops the
+   black to fully transparent and keeps the reticle, label, Back
+   control and status bar — no recut, no redraw, no second scanner. */
+.cm__scanner {
+  z-index: 2;
+  mix-blend-mode: screen;
+  pointer-events: none;
+}
+
+/* Keeps the blend inside the phone instead of reaching the page. */
+.cm__phone-dev { isolation: isolate; }
+
+.cm__phone-dev .cm__screen--connected { z-index: 3; }
+
+/* One short pass while the code is read — feedback, not decoration. */
+.cm__sweep {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  border-radius: 11% / 5.2%;
+  background: linear-gradient(180deg,
+              transparent 0%,
+              rgba(242, 164, 100, 0.34) 48%,
+              transparent 96%);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.cm__drag.is-scanning .cm__sweep { animation: cm-sweep 620ms var(--ws-ease-in-out) 1; }
+
+@keyframes cm-sweep {
+  0%   { opacity: 0; translate: 0 -80%; }
+  18%  { opacity: 1; }
+  82%  { opacity: 1; }
+  100% { opacity: 0; translate: 0 80%; }
+}
+
+/* ============================================================
+   CABLE — anchored at the Mac, free connector end
+   ============================================================ */
+.cm__cable {
+  position: absolute;
+  inset: 0;
+  /* Behind the phone (z-3) but in front of the Mac: a real lead runs
+     under the handset and only the connector sits proud of it. */
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.cm__cable-core {
+  fill: none;
+  stroke: #101317;
+  stroke-width: 7.5;
+  stroke-linecap: round;
+}
+
+.cm__cable-hi {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.16);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  transition: stroke var(--ws-dur-base) var(--cm-ease);
+}
+
+.cm__stage.is-armed .cm__cable-hi { stroke: var(--ws-orange-400); }
+.cm__stage.is-connected .cm__cable-hi { stroke: rgba(242, 164, 100, 0.5); }
+
+/* The travelling plug. Rotation is driven by JS so it always points
+   along the cable, and lands square in the port on connect.
+
+   Position is written per frame and must stay exact; rotation is a
+   secondary attribute, so it gets a short transition of its own. That
+   is what turns the swing from "hanging along the lead" to "upright in
+   the port" into a hinge rather than a jump. */
+.cm__drag--plug {
+  /* Starts loose, clear of the Mac and well short of the phone —
+     the lead must read as unplugged at the top of every loop. */
+  left: 44%;
+  top: 84%;
+  width: 40px;
+  height: 17px;
+  translate: var(--dx, 0px) var(--dy, 0px);
+  rotate: var(--rot, 0deg);
+  /* Pivots about the TIP, which is also the point the connect aligns to —
+     so rotation never moves the reference the geometry uses. */
+  transform-origin: 94% 50%;
+  transition: rotate 280ms var(--cm-ease);
+}
+
+/* Lit by the same warm lamp as the hardware it plugs into — a cool
+   silver connector in this scene reads as borrowed from another photo. */
+.cm__plug-body {
+  position: absolute;
+  inset: 0 0 0 22%;
+  border-radius: 3px;
+  background: linear-gradient(180deg, #cfa984, #4e535a 52%, #2c3036);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
+}
+
+.cm__plug-collar {
+  position: absolute;
+  inset: -22% 62% -22% 0;
+  border-radius: 4px;
+  background: linear-gradient(180deg, #23262b, #121417);
+}
+
+.cm__drag--plug.is-armed .cm__plug-body {
+  background: linear-gradient(180deg, #f6c093, var(--ws-orange-400) 52%, #b9713d);
+}
+
+/* An instruction cue lived here — "Drag the iPhone to the QR code",
+   with a nudging arrow. The stage no longer waits for anyone, so there
+   is nothing to instruct: the loop shows the action instead of asking
+   for it. The markup went with it. */
+
+
+/* ============================================================
+   AMBIENT WARMTH
+   ============================================================
+   Soft pools of warm light behind the parts of the scene that matter.
+   They sit BEHIND the hardware (z-index 0 against devices at 3–8), so
+   what the visitor sees is light spilling AROUND the Mac and the phone
+   rather than a panel that has turned orange. Static — no pulsing —
+   so there is nothing here for reduced-motion to switch off.
+   ============================================================ */
+.cm__glow {
+  position: absolute;
+  z-index: 0;
+  translate: -50% -50%;
+  border-radius: 50%;
+  pointer-events: none;
+  background: radial-gradient(circle,
+              rgba(255, 145, 70, 0.16),
+              rgba(255, 145, 70, 0.06) 42%,
+              transparent 68%);
+}
+
+/* Wi-Fi — behind the QR, positioned inside .cm__mac so the percentages
+   track the Mac itself. Sits under the opaque screen and reads as spill
+   around the machine.
+
+   37.07% is the QR's height inside the WHOLE machine: the lid takes the
+   top 73.88% of the box and the screen centre sits at 50.18% of the lid.
+   connect-modes.js aims the travelling iPhone at the same number — if
+   one moves, both move. */
+.cm__glow--qr {
+  left: 50%;
+  top: 37.07%;   /* QR centre against the machine's full box — see below */
+  width: 116%;
+  height: 150%;
+  z-index: -1;
+}
+
+/* Wi-Fi — behind the iPhone's resting place. */
+.cm__glow--phone {
+  left: 91%;
+  top: 67%;
+  width: 46%;
+  height: 62%;
+}
+
+/* Cable — behind the loose connector. */
+.cm__glow--plug {
+  left: 46%;
+  top: 86%;
+  width: 34%;
+  height: 46%;
+  background: radial-gradient(circle,
+              rgba(255, 145, 70, 0.18),
+              rgba(255, 145, 70, 0.06) 40%,
+              transparent 66%);
+}
+
+/* Cable — around the iPhone's charging port. */
+.cm__glow--port {
+  left: 89%;
+  top: 92%;
+  width: 30%;
+  height: 34%;
+}
+
+/* ---------- Success ----------
+   There is no confirmation card. The real Connected screens, the plugged
+   cable and the charging state ARE the feedback — anything else is the
+   interface explaining what the visitor just watched happen.
+
+   A "Scan without dragging" button used to sit here as the keyboard
+   equivalent of the gesture. With nothing to operate, it has no job. */
+
+
+/* ============================================================
+   AMBIENT MOTION — alive, never busy
+   ============================================================
+   A 2.5px drift on the hardware and a slow breath on the grabbable
+   object. Deliberately NOT applied to the Wi-Fi iPhone: that phone
+   carries the camera viewport, and moving it without moving the
+   duplicate scene inside would break the 1:1 world alignment the
+   illusion depends on. It gets the breathing glow instead.
+
+   The Mac's float IS mirrored onto the duplicate inside the viewport,
+   with identical timing, so the two stay in phase and the scene keeps
+   registering with the real Mac to the pixel.
+   ============================================================ */
+@keyframes cm-float {
+  0%, 100% { translate: 0 0; }
+  50%      { translate: 0 -2.5px; }
+}
+
+@keyframes cm-breathe {
+  0%, 100% { filter: drop-shadow(0 0 0 rgba(242, 164, 100, 0)); }
+  50%      { filter: drop-shadow(0 0 9px rgba(242, 164, 100, 0.28)); }
+}
+
+/* Phone variant: opacity on the glow layer, because the handset must
+   never carry a filter while it is tilted. */
+@keyframes cm-breathe-glow {
+  0%, 100% { opacity: 0; }
+  50%      { opacity: 0.45; }
+}
+
+.cm__panel.is-active .cm__mac .device,
+.cm__panel.is-active .cm__view-scene .device--mac {
+  animation: cm-float 7.5s var(--ws-ease-in-out) infinite;
+}
+
+.cm__panel.is-active .cm__phone .device {
+  animation: cm-float 9.5s var(--ws-ease-in-out) -3s infinite;
+}
+
+/* Only while the object is still waiting to set off — once it is reading
+   the code or plugged in, the connected state owns the light. */
+.cm__panel.is-active .cm__stage:not(.is-connected):not(.is-armed) .cm__drag--plug {
+  animation: cm-breathe 4.6s var(--ws-ease-in-out) infinite;
+}
+
+.cm__panel.is-active .cm__stage:not(.is-connected):not(.is-armed) .cm__drag--phone::before {
+  animation: cm-breathe-glow 4.6s var(--ws-ease-in-out) infinite;
+}
+
+/* ---------- Reduced motion ----------
+   The JS never starts the loop here: it places both modes in their
+   finished, connected state and leaves them there. This switches off
+   everything that would still read as travel around that state — every
+   ambient loop, the scan sweep, the connector's swing — and clears the
+   delays base.css does not touch. Nothing is lost: the section's point
+   is WHICH devices connect and what they end up showing. */
+@media (prefers-reduced-motion: reduce) {
+  .cm__drag.is-scanning .cm__sweep,
+  .cm__panel.is-active::before,
+  .cm__panel.is-active .cm__mac .device,
+  .cm__panel.is-active .cm__view-scene .device--mac,
+  .cm__panel.is-active .cm__phone .device,
+  .cm__panel.is-active .cm__stage .cm__drag--plug,
+  .cm__panel.is-active .cm__stage .cm__drag--phone::before {
+    animation: none;
+  }
+
+  .cm__drag--plug { transition: none; }
+  .cm__full,
+  .cm__screen { transition-delay: 0s; }
+}

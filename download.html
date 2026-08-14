@@ -1,0 +1,702 @@
+<!-- =========================
+FILE: download.html
+Rebuilt on the shared design system (tokens / base / components /
+sections), the same one the redesigned homepage uses. Nav and footer
+come from partials/. Run `npm run build` after editing those.
+========================= -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Download Wallas&rsquo; Stream | Get started on Mac and iPhone</title>
+  <meta name="description" content="Download the Wallas' Stream Mac app and the Wallas Audio driver, install the iPhone app, and start listening over Wi-Fi or cable. 7 days of Pro included." />
+
+  <meta name="apple-itunes-app" content="app-id=6759255823">
+  <link rel="icon" href="favicons/favicon.ico" sizes="32x32" />
+  <link rel="icon" type="image/png" sizes="32x32" href="favicons/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="favicons/favicon-16x16.png" />
+  <link rel="apple-touch-icon" href="favicons/apple-touch-icon.png" />
+  <link rel="manifest" href="favicons/manifest.json" />
+
+  <link rel="alternate" hreflang="en" href="https://wallasstream.com/download.html" />
+  <link rel="alternate" hreflang="es" href="https://wallasstream.com/downloadES.html" />
+  <link rel="alternate" hreflang="x-default" href="https://wallasstream.com/download.html" />
+
+  <meta property="og:title" content="Download Wallas&rsquo; Stream" />
+  <meta property="og:description" content="Hear your Mac through your hearing device. Free over Wi-Fi." />
+  <meta property="og:image" content="https://wallasstream.com/preview.png" />
+  <meta property="og:url" content="https://wallasstream.com/download.html" />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary_large_image" />
+
+  <link rel="stylesheet" href="assets/css/tokens.css" />
+  <link rel="stylesheet" href="assets/css/base.css" />
+  <link rel="stylesheet" href="assets/css/components.css" />
+  <link rel="stylesheet" href="assets/css/sections.css" />
+  <link rel="stylesheet" href="assets/css/download.css" />
+  <script src="lang.js" defer></script>
+</head>
+
+<body id="top">
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <!-- Device frame sprite: shared hardware geometry, same as the homepage. -->
+  <svg width="0" height="0" aria-hidden="true" focusable="false" style="position:absolute">
+    <defs>
+      <!--#include devices-->
+<!-- ============================================================
+     Device frames: shared hardware geometry
+     ============================================================
+     Three <symbol>s and the gradients they need. Every page that shows
+     a Mac or an iPhone <use>es these, so the geometry ships once and
+     can never drift between pages.
+
+     THESE ARE FLAT ELEVATIONS. The 3/4 view is not drawn here; the
+     perspective is applied by components.css, which stands the lid up
+     and lays the deck down as two planes in one CSS 3D scene. That is
+     why the deck is drawn STRAIGHT DOWN, as if you were above the
+     machine looking at the keyboard: the foreshortening happens at
+     render time.
+
+     Drawing the perspective into the art instead would mean the screen
+     became a quadrilateral, and a real screenshot cannot be poured into
+     a quadrilateral without solving a homography per device size. Let
+     the browser project both the chrome and the screenshot with the
+     same matrix and they line up by construction.
+
+     THE SCREEN RECT IS LOAD-BEARING. components.css positions the
+     screenshot from it and connect-modes.js aims the Wi-Fi demo at the
+     QR through the same numbers. Everything around it is free.
+
+     The screenshot <img> covers the screen exactly, so anything drawn
+     inside it is invisible in practice, which is why all the detail
+     here is bezel, rail, hinge and deck. The glass sheen that sits OVER
+     the screenshot is a CSS overlay, in components.css.
+
+     WHY GRADIENTS AND NOT A PNG: these are hardware props behind real UI
+     screenshots. Drawn, they stay sharp at any size, recolour with the
+     page, weigh nothing and never need a 2x variant.
+     ============================================================ -->
+
+<!-- ============================================================
+     LIGHTING
+     ============================================================
+     One warm lamp, high and to the RIGHT, in an otherwise dark room,
+     the same light the rest of the page is lit by. That single decision
+     drives every gradient below, and it is what the eye reads as "a
+     photograph of an object" rather than "a drawing of one".
+
+     Two rules it has to obey to stay convincing:
+
+       · The body is nearly black. A rim light only reads as light if
+         the surface it wraps is darker than it is. Bodies were a mid
+         grey before, which left the edges looking like borders.
+
+       · The rim FALLS OFF. It is hot at the top right corner and gone
+         by the bottom left. A rim of even brightness all the way round
+         is a stroke, and the eye knows it instantly.
+
+     Highlights run warm-white to amber, not white: a specular takes the
+     colour of the lamp, not of the metal.
+     ============================================================ -->
+
+<!-- Lid face: dark anodised aluminium, barely catching the room. -->
+<linearGradient id="ws-alu" x1="0" y1="0" x2="0" y2="1">
+  <stop offset="0" stop-color="#41454c" />
+  <stop offset="0.35" stop-color="#26292e" />
+  <stop offset="1" stop-color="#15171a" />
+</linearGradient>
+
+<!-- Both vertical edges roll away from the light. Laid over the face, it
+     is what turns a flat slab into something with a thickness. -->
+<linearGradient id="ws-alu-side" x1="0" y1="0" x2="1" y2="0">
+  <stop offset="0" stop-color="#000" stop-opacity="0.55" />
+  <stop offset="0.06" stop-color="#000" stop-opacity="0" />
+  <stop offset="0.94" stop-color="#000" stop-opacity="0" />
+  <stop offset="1" stop-color="#000" stop-opacity="0.45" />
+</linearGradient>
+
+<!-- The machined top edge under the lamp: hot towards the right, dying
+     out before the far corner. Deliberately NOT symmetrical: a
+     highlight centred on the object is the giveaway of a light that
+     does not exist anywhere in particular. -->
+<linearGradient id="ws-spec" x1="0" y1="0" x2="1" y2="0">
+  <stop offset="0" stop-color="#A36029" stop-opacity="0.06" />
+  <stop offset="0.42" stop-color="#F4C29A" stop-opacity="0.4" />
+  <stop offset="0.84" stop-color="#FFE6C6" stop-opacity="0.92" />
+  <stop offset="1" stop-color="#F2A464" stop-opacity="0.3" />
+</linearGradient>
+
+<!-- The rim itself: traced diagonally so the top-right corner burns and
+     the bottom-left falls into shadow, which is the whole trick. -->
+<linearGradient id="ws-rim" x1="1" y1="0" x2="0.12" y2="1">
+  <stop offset="0" stop-color="#FFE6C6" stop-opacity="0.95" />
+  <stop offset="0.16" stop-color="#F2A464" stop-opacity="0.78" />
+  <stop offset="0.46" stop-color="#D07D39" stop-opacity="0.34" />
+  <stop offset="0.72" stop-color="#A36029" stop-opacity="0.12" />
+  <stop offset="1" stop-color="#000" stop-opacity="0.45" />
+</linearGradient>
+
+<!-- Deck front: the lit top lip, then the face falling into shadow.
+     Kept well under the lid: a deck brighter than the screen half
+     pulls the eye to the furniture instead of the product. -->
+<linearGradient id="ws-alu-base" x1="0" y1="0" x2="0" y2="1">
+  <stop offset="0" stop-color="#5f646d" />
+  <stop offset="0.12" stop-color="#3a3e45" />
+  <stop offset="0.58" stop-color="#24272c" />
+  <stop offset="1" stop-color="#121416" />
+</linearGradient>
+
+<!-- The top edge of the deck. Same lamp, so the warmth pools to the
+     right here too rather than sitting evenly across the front. -->
+<linearGradient id="ws-lip" x1="0" y1="0" x2="1" y2="0">
+  <stop offset="0" stop-color="#A36029" stop-opacity="0.18" />
+  <stop offset="0.22" stop-color="#F4C29A" stop-opacity="0.34" />
+  <stop offset="0.72" stop-color="#FFE6C6" stop-opacity="0.62" />
+  <stop offset="1" stop-color="#F2A464" stop-opacity="0.24" />
+</linearGradient>
+
+<!-- Titanium rail, seen end-on: two thin edges where the curve turns
+     back, a broad dark face between. The right edge faces the lamp and
+     burns warm; the left one only picks up what the room gives back. -->
+<linearGradient id="ws-ti" x1="0" y1="0" x2="1" y2="0">
+  <stop offset="0" stop-color="#6b7079" />
+  <stop offset="0.08" stop-color="#33373d" />
+  <stop offset="0.45" stop-color="#43474e" />
+  <stop offset="0.72" stop-color="#3a3e44" />
+  <stop offset="0.9" stop-color="#8a6743" />
+  <stop offset="1" stop-color="#FFDCB0" />
+</linearGradient>
+
+<!-- The top and bottom rails face the lamp more squarely than the long
+     sides, so they take a wash the sides do not. -->
+<linearGradient id="ws-ti-v" x1="0" y1="0" x2="0" y2="1">
+  <stop offset="0" stop-color="#FFE6C6" stop-opacity="0.22" />
+  <stop offset="0.13" stop-color="#fff" stop-opacity="0" />
+  <stop offset="0.87" stop-color="#fff" stop-opacity="0" />
+  <stop offset="1" stop-color="#F2A464" stop-opacity="0.12" />
+</linearGradient>
+
+<!-- Side buttons: rounded stock, catching the same warm top light. -->
+<linearGradient id="ws-btn" x1="0" y1="0" x2="0" y2="1">
+  <stop offset="0" stop-color="#c9a483" />
+  <stop offset="0.5" stop-color="#4e535a" />
+  <stop offset="1" stop-color="#2e3238" />
+</linearGradient>
+
+<!-- Deck surface, seen straight down. The open lid shades the back of
+     it and the lamp reaches the front right, so the sheen runs corner
+     to corner rather than straight down the page. -->
+<linearGradient id="ws-deck" x1="0.08" y1="0" x2="0.92" y2="1">
+  <stop offset="0" stop-color="#171a1e" />
+  <stop offset="0.4" stop-color="#282c31" />
+  <stop offset="0.78" stop-color="#3b4048" />
+  <stop offset="1" stop-color="#4b505a" />
+</linearGradient>
+
+<linearGradient id="ws-key" x1="0" y1="0" x2="0" y2="1">
+  <stop offset="0" stop-color="#282c31" />
+  <stop offset="1" stop-color="#131518" />
+</linearGradient>
+
+<!-- One row of keys, reused down the keyboard. Fourteen rects defined
+     once and <use>d five times is a fraction of the bytes of a full
+     drawn keyboard, and at the angle this deck is seen from, nobody can
+     tell that every row has the same key widths. -->
+<g id="ws-keyrow">
+  <rect x="160" y="0" width="44" height="38" rx="6" fill="url(#ws-key)" />
+  <rect x="209" y="0" width="44" height="38" rx="6" fill="url(#ws-key)" />
+  <rect x="258" y="0" width="44" height="38" rx="6" fill="url(#ws-key)" />
+  <rect x="307" y="0" width="44" height="38" rx="6" fill="url(#ws-key)" />
+  <rect x="356" y="0" width="44" height="38" rx="6" fill="url(#ws-key)" />
+  <rect x="405" y="0" width="44" height="38" rx="6" fill="url(#ws-key)" />
+  <rect x="454" y="0" width="44" height="38" rx="6" fill="url(#ws-key)" />
+  <rect x="503" y="0" width="44" height="38" rx="6" fill="url(#ws-key)" />
+  <rect x="552" y="0" width="44" height="38" rx="6" fill="url(#ws-key)" />
+  <rect x="601" y="0" width="44" height="38" rx="6" fill="url(#ws-key)" />
+  <rect x="650" y="0" width="44" height="38" rx="6" fill="url(#ws-key)" />
+  <rect x="699" y="0" width="44" height="38" rx="6" fill="url(#ws-key)" />
+  <rect x="748" y="0" width="44" height="38" rx="6" fill="url(#ws-key)" />
+  <rect x="797" y="0" width="44" height="38" rx="6" fill="url(#ws-key)" />
+</g>
+
+<!-- MacBook lid: viewBox 1000x560, screen at 76,16 -> 848x530 (16:10).
+     Stood upright by components.css. -->
+<symbol id="frame-mac-lid" viewBox="0 0 1000 560">
+  <!-- Face, edge roll-off, then the rim in two passes: a wide faint
+       one for the bloom a bright edge throws into the air around it, a
+       fine bright one for the edge itself. Two strokes cost nothing; an
+       SVG blur on a symbol used a dozen times does. -->
+  <rect x="60" y="0" width="880" height="560" rx="24" fill="url(#ws-alu)" />
+  <rect x="60" y="0" width="880" height="560" rx="24" fill="url(#ws-alu-side)" />
+  <rect x="61.5" y="1.5" width="877" height="557" rx="22.5" fill="none"
+        stroke="url(#ws-rim)" stroke-width="5" stroke-opacity="0.28" />
+  <rect x="60.8" y="0.8" width="878.4" height="558.4" rx="23.2" fill="none"
+        stroke="url(#ws-rim)" stroke-width="1.6" />
+  <path d="M88 1.8 H912" stroke="url(#ws-spec)" stroke-width="2.6" stroke-linecap="round" />
+
+  <!-- Bezel, then the fine catch where black plastic meets glass. Warm,
+       because the only light in the room is. -->
+  <rect x="70" y="9" width="860" height="542" rx="16" fill="#0a0a0b" />
+  <rect x="73.6" y="13.6" width="852.8" height="534.8" rx="11.5" fill="none"
+        stroke="#F4C29A" stroke-opacity="0.09" stroke-width="1.2" />
+
+  <!-- Screen well. The screenshot covers this exactly; it is seen only
+       while that image is still on its way. The corner radius is echoed
+       by --screen-r in components.css, which rounds the screenshot to
+       match: a square-cornered image inside a rounded bezel is the
+       single loudest tell that a device is drawn rather than
+       photographed. -->
+  <rect x="76" y="16" width="848" height="530" rx="14" fill="#050506" />
+
+  <!-- The hinge barrel, in the lid's own shadow at the fold. -->
+  <path d="M66 546 H934 L930 560 H70 Z" fill="#0d0f12" />
+</symbol>
+
+<!-- MacBook deck: viewBox 1000x520, drawn STRAIGHT DOWN. y=0 is the
+     hinge, y=520 is the front edge nearest the viewer; components.css
+     lays it away from the lid, so this is seen at a hard rake and every
+     detail here ends up compressed to a fraction of its drawn height.
+     That is the budget this art is drawn to. -->
+<symbol id="frame-mac-deck" viewBox="0 0 1000 520">
+  <rect x="60" y="0" width="880" height="520" rx="18" fill="url(#ws-deck)" />
+
+  <!-- Speaker grilles either side of the keyboard. -->
+  <rect x="92" y="40" width="52" height="248" rx="10" fill="#000" opacity="0.34" />
+  <rect x="856" y="40" width="52" height="248" rx="10" fill="#000" opacity="0.34" />
+
+  <!-- Keyboard well, then the rows. -->
+  <rect x="150" y="28" width="700" height="256" rx="12" fill="#0b0c0e" />
+  <g opacity="0.95">
+    <rect x="165" y="38" width="40" height="18" rx="4" fill="url(#ws-key)" />
+    <rect x="214" y="38" width="40" height="18" rx="4" fill="url(#ws-key)" />
+    <rect x="263" y="38" width="40" height="18" rx="4" fill="url(#ws-key)" />
+    <rect x="312" y="38" width="40" height="18" rx="4" fill="url(#ws-key)" />
+    <rect x="361" y="38" width="40" height="18" rx="4" fill="url(#ws-key)" />
+    <rect x="410" y="38" width="40" height="18" rx="4" fill="url(#ws-key)" />
+    <rect x="459" y="38" width="40" height="18" rx="4" fill="url(#ws-key)" />
+    <rect x="508" y="38" width="40" height="18" rx="4" fill="url(#ws-key)" />
+    <rect x="557" y="38" width="40" height="18" rx="4" fill="url(#ws-key)" />
+    <rect x="606" y="38" width="40" height="18" rx="4" fill="url(#ws-key)" />
+    <rect x="655" y="38" width="40" height="18" rx="4" fill="url(#ws-key)" />
+    <rect x="704" y="38" width="40" height="18" rx="4" fill="url(#ws-key)" />
+    <rect x="753" y="38" width="40" height="18" rx="4" fill="url(#ws-key)" />
+    <rect x="802" y="38" width="40" height="18" rx="4" fill="url(#ws-key)" />
+
+    <use href="#ws-keyrow" y="64" />
+    <use href="#ws-keyrow" y="108" />
+    <use href="#ws-keyrow" y="152" />
+    <use href="#ws-keyrow" y="196" />
+
+    <!-- Bottom row: modifiers, spacebar, modifiers, arrow cluster. -->
+    <rect x="160" y="240" width="44" height="38" rx="6" fill="url(#ws-key)" />
+    <rect x="209" y="240" width="44" height="38" rx="6" fill="url(#ws-key)" />
+    <rect x="258" y="240" width="54" height="38" rx="6" fill="url(#ws-key)" />
+    <rect x="317" y="240" width="240" height="38" rx="6" fill="url(#ws-key)" />
+    <rect x="562" y="240" width="54" height="38" rx="6" fill="url(#ws-key)" />
+    <rect x="621" y="240" width="44" height="38" rx="6" fill="url(#ws-key)" />
+    <rect x="699" y="259" width="44" height="19" rx="5" fill="url(#ws-key)" />
+    <rect x="748" y="240" width="44" height="19" rx="5" fill="url(#ws-key)" />
+    <rect x="748" y="259" width="44" height="19" rx="5" fill="url(#ws-key)" />
+    <rect x="797" y="259" width="44" height="19" rx="5" fill="url(#ws-key)" />
+  </g>
+
+  <!-- Trackpad: a shade lighter than the deck, with the hairline groove
+       that separates it from the palm rest. -->
+  <rect x="370" y="316" width="260" height="172" rx="14" fill="#2e3238" />
+  <rect x="370.6" y="316.6" width="258.8" height="170.8" rx="13.4" fill="none"
+        stroke="#000" stroke-opacity="0.55" stroke-width="1.2" />
+  <rect x="372" y="318" width="256" height="168" rx="12.6" fill="none"
+        stroke="#fff" stroke-opacity="0.05" stroke-width="1" />
+
+  <!-- The front edge catches the lamp before it rolls under. -->
+  <path d="M96 518 H904" stroke="url(#ws-lip)" stroke-width="3" stroke-linecap="round" />
+  <rect x="61" y="1" width="878" height="518" rx="17" fill="none"
+        stroke="url(#ws-rim)" stroke-width="1.4" />
+</symbol>
+
+<!-- iPhone: viewBox 400x841, screen at 12,12 -> 376x817 -->
+<symbol id="frame-phone" viewBox="0 0 400 841">
+  <!-- Buttons are drawn UNDER the rail, so only the sliver that clears
+       the body shows. Painted on top they read as stickers. -->
+  <rect x="0" y="150" width="7" height="34" rx="3.5" fill="url(#ws-btn)" />
+  <rect x="0" y="206" width="7" height="58" rx="3.5" fill="url(#ws-btn)" />
+  <rect x="0" y="280" width="7" height="58" rx="3.5" fill="url(#ws-btn)" />
+  <rect x="393" y="250" width="7" height="86" rx="3.5" fill="url(#ws-btn)" />
+
+  <rect x="2" y="2" width="396" height="837" rx="62" fill="url(#ws-ti)" />
+  <rect x="2" y="2" width="396" height="837" rx="62" fill="url(#ws-ti-v)" />
+
+  <!-- Antenna seams. Tiny, and the thing the eye uses to decide a phone
+       is a real object rather than an icon of one. -->
+  <rect x="2" y="120" width="5" height="3.4" fill="#15181c" opacity="0.85" />
+  <rect x="2" y="712" width="5" height="3.4" fill="#15181c" opacity="0.85" />
+  <rect x="393" y="196" width="5" height="3.4" fill="#15181c" opacity="0.85" />
+
+  <!-- Same two-pass rim as the Mac: bloom, then edge. -->
+  <rect x="3.4" y="3.4" width="393.2" height="834.2" rx="60.6" fill="none"
+        stroke="url(#ws-rim)" stroke-width="4" stroke-opacity="0.3" />
+  <rect x="2.8" y="2.8" width="394.4" height="835.4" rx="61.2" fill="none"
+        stroke="url(#ws-rim)" stroke-width="1.5" />
+
+  <rect x="9" y="9" width="382" height="823" rx="54" fill="#0a0a0b" />
+  <rect x="10.6" y="10.6" width="378.8" height="819.8" rx="52.6" fill="none"
+        stroke="#F4C29A" stroke-opacity="0.1" stroke-width="1.2" />
+
+  <rect x="12" y="12" width="376" height="817" rx="50" fill="#050506" />
+  <rect x="158" y="26" width="84" height="24" rx="12" fill="#0a0a0b" />
+</symbol>
+<!--#endinclude devices-->
+    </defs>
+  </svg>
+
+  <!--#include nav-sub-->
+<!-- Subpage nav. Identical chrome to partials/nav.html; the section links
+     are absolute to index.html because a bare #listen would resolve against
+     the subpage, which has no such section. The CTA is Unlock Pro rather
+     than "Try free", since the download page IS the free trial. -->
+<header class="topbar">
+  <div class="container topbar__inner">
+    <a class="brand" href="index.html">
+      <img src="assets/img/brand/logo-96.webp" alt="" width="96" height="70" />
+      <span>Wallas&rsquo; Stream</span>
+    </a>
+
+    <nav class="nav" aria-label="Primary">
+      <a href="index.html#listen">Wi-Fi &amp; Cable</a>
+      <a href="index.html#pricing">Free vs Pro</a>
+      <a href="index.html#founder">Founder</a>
+      <a href="faq.html">FAQ</a>
+      <a href="contact.html">Support</a>
+    </nav>
+
+    <div class="topbar__actions">
+      <a class="lang-link" href="indexES.html" data-lang="es" hreflang="es" lang="es"
+         aria-label="Ver esta página en español">ES</a>
+      <a class="btn btn--outline btn--sm" href="https://wallasstreamapp.lemonsqueezy.com/checkout/buy/6d7caf78-7cae-4540-91c7-9a2c2e016b05">Unlock Pro</a>
+      <button class="hamburger" id="menuBtn" type="button"
+              aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+             stroke-linecap="round" aria-hidden="true">
+          <path d="M3 6h18M3 12h18M3 18h18" />
+        </svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<div class="mobile-menu" id="mobileMenu" role="dialog" aria-modal="true"
+     aria-label="Menu" aria-hidden="true">
+  <button class="menu-close" id="menuClose" type="button" aria-label="Close menu">&#10005;</button>
+  <a href="index.html">Home</a>
+  <a href="index.html#listen">Wi-Fi &amp; Cable</a>
+  <a href="index.html#pricing">Free vs Pro</a>
+  <a href="index.html#founder">Founder</a>
+  <a href="faq.html">FAQ</a>
+  <a href="contact.html">Support</a>
+  <a href="indexES.html" data-lang="es" hreflang="es" lang="es">Español</a>
+  <a class="btn btn--outline" href="https://wallasstreamapp.lemonsqueezy.com/checkout/buy/6d7caf78-7cae-4540-91c7-9a2c2e016b05">Unlock Pro</a>
+</div>
+<!--#endinclude nav-sub-->
+
+  <main id="main">
+
+    <!-- ============ Header ============ -->
+    <section class="dlhero" data-section="download-hero">
+      <div class="container dlhero__inner">
+
+        <div class="dlhero__copy">
+          <p class="eyebrow">Get started</p>
+          <h1>Download Wallas&rsquo; Stream</h1>
+          <p class="lede">
+            Two installs on your Mac, one on your iPhone.
+            Follow the steps in order and you&rsquo;ll be listening in a few minutes.
+          </p>
+
+          <ul class="dlhero__meta">
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
+                   stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <circle cx="12" cy="12" r="9" />
+                <path d="m8 12.4 2.7 2.7L16 9.8" />
+              </svg>
+              7 days of Pro
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
+                   stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <rect x="2.5" y="5.5" width="19" height="13" rx="2.5" />
+                <path d="M2.5 10h19" />
+              </svg>
+              No credit card
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
+                   stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <rect x="2.5" y="4.5" width="19" height="12" rx="2" />
+                <path d="M1.5 20h21" />
+              </svg>
+              Intel &amp; Apple Silicon
+            </li>
+          </ul>
+
+          <a class="btn btn--primary btn--lg" href="#steps">
+            Start with step 1
+            <svg class="btn__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M12 4v14M6 12.5l6 6 6-6" />
+            </svg>
+          </a>
+        </div>
+
+        <div class="dlhero__stage" aria-hidden="true">
+          <span class="dlhero__glow"></span>
+
+          <div class="dlhero__mac">
+            <div class="device device--mac">
+              <div class="device__scene">
+                <div class="device__lid">
+                  <svg class="device__chrome" viewBox="0 0 1000 560"><use href="#frame-mac-lid" /></svg>
+                  <img class="device__screen" src="assets/img/ui/mac-home.webp"
+                       alt="" width="1200" height="750" fetchpriority="high" decoding="async" />
+                </div>
+                <div class="device__deck">
+                  <svg class="device__chrome" viewBox="0 0 1000 520"><use href="#frame-mac-deck" /></svg>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="dlhero__phone">
+            <div class="device device--phone">
+              <svg class="device__chrome" viewBox="0 0 400 841"><use href="#frame-phone" /></svg>
+              <img class="device__screen" src="assets/img/ui/ios-home.webp"
+                   alt="" width="480" height="1044" decoding="async" />
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ============ The five steps ============ -->
+    <section class="section section--tight" id="steps" data-section="steps">
+      <div class="container container--narrow section__inner">
+
+        <div class="section-head section-head--center">
+          <p class="eyebrow">Setup</p>
+          <h2>Five steps, in order</h2>
+          <p class="lede">From installing on your Mac to listening on your hearing device.</p>
+        </div>
+
+        <ol class="dl-steps">
+
+          <!-- 1 -->
+          <li class="dl-step panel">
+            <span class="dl-step__n" aria-hidden="true">1</span>
+            <div class="dl-step__body">
+              <h3 class="dl-step__title">Download Wallas&rsquo; Stream for Mac</h3>
+              <p>The main app that streams your Mac&rsquo;s audio. Compatible with Intel and Apple Silicon.</p>
+              <a class="btn btn--primary" href="downloads/Wallas%20Stream%201.0.0.dmg">
+                Download the Mac app
+                <svg class="btn__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M12 4v13M6.5 11.5l5.5 5.5 5.5-5.5M5 20h14" />
+                </svg>
+              </a>
+              <p class="dl-step__file">Wallas Stream 1.0.0 &middot; .dmg &middot; macOS</p>
+            </div>
+          </li>
+
+          <!-- 2 -->
+          <li class="dl-step panel">
+            <span class="dl-step__n" aria-hidden="true">2</span>
+            <div class="dl-step__body">
+              <h3 class="dl-step__title">Download Wallas Audio</h3>
+              <p>The virtual audio driver that routes your Mac&rsquo;s sound into Wallas&rsquo; Stream. Required for audio to reach your device.</p>
+              <a class="btn btn--outline" href="downloads/Wallas%20Audio%201.0.0%20(English).dmg">
+                Download Wallas Audio
+                <svg class="btn__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M12 4v13M6.5 11.5l5.5 5.5 5.5-5.5M5 20h14" />
+                </svg>
+              </a>
+              <p class="dl-step__file">Wallas Audio 1.0.0 (English) &middot; .dmg &middot; macOS</p>
+            </div>
+          </li>
+
+          <!-- 3 -->
+          <li class="dl-step panel">
+            <span class="dl-step__n" aria-hidden="true">3</span>
+            <div class="dl-step__body">
+              <h3 class="dl-step__title">Restart your Mac</h3>
+              <p>Restart so the virtual audio device appears. Then, in System Settings, choose
+                 <b>Wallas Virtual Audio</b> as your Mac&rsquo;s sound output.</p>
+            </div>
+          </li>
+
+          <!-- 4 -->
+          <li class="dl-step panel">
+            <span class="dl-step__n" aria-hidden="true">4</span>
+            <div class="dl-step__body">
+              <h3 class="dl-step__title">Download Wallas&rsquo; Stream for iPhone</h3>
+              <p>The companion app for your phone. It receives the audio and sends it to your hearing device.</p>
+              <a class="dl-step__appstore" href="https://apps.apple.com/mx/app/wallas-stream/id6759255823"
+                 target="_blank" rel="noopener" aria-label="Download on the App Store">
+                <img src="download-on-the-app-store.svg" alt="Download on the App Store" />
+              </a>
+            </div>
+          </li>
+
+          <!-- 5 -->
+          <li class="dl-step panel">
+            <span class="dl-step__n" aria-hidden="true">5</span>
+            <div class="dl-step__body">
+              <h3 class="dl-step__title">Start streaming: Wi-Fi or cable</h3>
+              <p>On your iPhone, open Wallas&rsquo; Stream and choose how you want to connect.</p>
+
+              <div class="dl-modes">
+                <div class="dl-mode">
+                  <p class="dl-mode__head">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                         stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <path d="M2.5 8.5a15 15 0 0 1 19 0" />
+                      <path d="M5.8 12.3a10 10 0 0 1 12.4 0" />
+                      <path d="M9.1 16a5 5 0 0 1 5.8 0" />
+                      <circle cx="12" cy="19.4" r="1.1" fill="currentColor" stroke="none" />
+                    </svg>
+                    Wi-Fi mode
+                  </p>
+                  <ol>
+                    <li>Open Wallas&rsquo; Stream for Mac</li>
+                    <li>Choose Wi-Fi mode</li>
+                    <li>Put both devices on the same 5 GHz Wi-Fi network</li>
+                    <li>Scan the QR code shown in the Mac app</li>
+                  </ol>
+                </div>
+
+                <div class="dl-mode">
+                  <p class="dl-mode__head">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                         stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <path d="M9 2.5v5M15 2.5v5" />
+                      <path d="M6.5 7.5h11v3.5a5.5 5.5 0 0 1-11 0Z" />
+                      <path d="M12 16.5v5" />
+                    </svg>
+                    USB mode
+                  </p>
+                  <ol>
+                    <li>Open Wallas&rsquo; Stream for Mac</li>
+                    <li>Select USB mode</li>
+                    <li>Connect your iPhone to your Mac with a Lightning or USB-C cable</li>
+                  </ol>
+                </div>
+              </div>
+            </div>
+          </li>
+
+        </ol>
+
+        <p class="dl-note">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="9" />
+            <path d="M12 11.2v5.2M12 7.7h.01" />
+          </svg>
+          <span>Both the Mac app and Wallas Audio are required for streaming to work.</span>
+        </p>
+
+      </div>
+    </section>
+
+    <!-- ============ Help ============ -->
+    <section class="section section--tight" data-section="download-help">
+      <div class="container container--narrow">
+        <div class="dl-help">
+          <div class="section-head section-head--center">
+            <p class="eyebrow">Need a hand?</p>
+            <h2>Stuck on a step?</h2>
+            <p class="lede">The setup guide walks through each screen, and the FAQ answers what people ask first.</p>
+          </div>
+
+          <div class="dl-help__links">
+            <a class="btn btn--ghost" href="help.html">Help Center</a>
+            <a class="btn btn--ghost" href="faq.html">FAQ</a>
+            <a class="btn btn--ghost" href="contact.html">Contact support</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!--#include footer-sub-->
+<!-- Subpage footer. Same content as partials/footer.html; the Product
+     links point at index.html's sections, which a subpage cannot reach
+     with a bare fragment. -->
+<footer class="site-footer" id="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-col">
+        <a class="brand" href="index.html">
+          <img src="assets/img/brand/logo-96.webp" alt="" width="96" height="70" />
+          <span>Wallas&rsquo; Stream</span>
+        </a>
+        <p class="fineprint" style="margin-top:1rem;max-width:30ch">
+          Hear your Mac through your hearing device.
+        </p>
+      </div>
+
+      <div class="footer-col">
+        <h2>Product</h2>
+        <ul class="footer-links">
+          <li><a href="index.html#listen">Wi-Fi &amp; Cable</a></li>
+          <li><a href="index.html#pricing">Free vs Pro</a></li>
+          <li><a href="index.html#founder">Founder</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h2>Download</h2>
+        <ul class="footer-links">
+          <li><a href="download.html">Wallas&rsquo; Stream for Mac</a></li>
+          <li><a href="https://apps.apple.com/mx/app/wallas-stream/id6759255823" target="_blank" rel="noopener">Wallas&rsquo; Stream for iPhone</a></li>
+          <li><a href="help.html">Help</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h2>Connect</h2>
+        <ul class="footer-links">
+          <li><a href="contact.html">Contact</a></li>
+          <li><a href="faq.html">FAQ</a></li>
+          <li><a href="legal.html">Privacy Policy</a></li>
+          <li><a href="legal.html#terms">Terms of Use</a></li>
+          <li><a href="https://www.instagram.com/wallasstream?igsh=MXQxenIyZ3d1eG9sNg%3D%3D&amp;utm_source=qr" target="_blank" rel="noopener">Instagram</a></li>
+          <li><a href="https://www.tiktok.com/@wallasstream" target="_blank" rel="noopener">TikTok</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="legal-note">
+      <p>Independent tool • Not a medical device • Not affiliated with Cochlear.</p>
+      <p>Cochlear™ and Nucleus™ are trademarks of Cochlear Limited.</p>
+    </div>
+
+    <div class="footer-bottom">
+      <div>© <span id="year">2026</span> Wallas&rsquo; Stream. All rights reserved.</div>
+      <div class="footer-bottom__end">
+        <a href="indexES.html" data-lang="es" hreflang="es" lang="es">Español</a>
+        <span aria-hidden="true"> · </span>
+        <a href="#top">Back to top</a>
+      </div>
+    </div>
+  </div>
+</footer>
+<!--#endinclude footer-sub-->
+
+  <script src="assets/js/nav.js" defer></script>
+  <script src="assets/js/home.js" defer></script>
+</body>
+</html>

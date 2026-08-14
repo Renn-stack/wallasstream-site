@@ -1,0 +1,230 @@
+/* ============================================================
+   download.css — the Get-started page
+   Depends on tokens.css + base.css + components.css + sections.css.
+
+   Everything here is layout that only this page needs. Surfaces,
+   buttons, type and the device frames all come from the shared
+   components, so the page inherits the homepage's look for free and
+   moves with it when the system changes.
+   ============================================================ */
+
+/* ---------- Header band ---------- */
+.dlhero {
+  padding-block: clamp(3rem, 7vw, 5.5rem) clamp(2rem, 4vw, 3rem);
+}
+
+.dlhero__inner {
+  display: grid;
+  gap: clamp(2.5rem, 5vw, 4rem);
+  align-items: center;
+}
+
+@media (min-width: 900px) {
+  .dlhero__inner { grid-template-columns: 1.02fr 0.98fr; }
+}
+
+.dlhero__copy { display: grid; gap: clamp(1.1rem, 2.4vw, 1.7rem); justify-items: start; }
+
+.dlhero__copy .lede { max-width: 34rem; }
+
+/* Same reassurance line as the homepage hero, same shape. */
+.dlhero__meta {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ws-space-4) var(--ws-space-5);
+  font-size: var(--ws-step--1);
+  color: var(--ws-text-tertiary);
+}
+
+.dlhero__meta li { display: inline-flex; align-items: center; gap: 0.5rem; }
+.dlhero__meta svg { width: 1.15rem; height: 1.15rem; flex: none; color: var(--ws-accent); }
+
+/* ---------- Header visual ----------
+   The two machines the page is about, shot with the site's shared
+   camera. Decorative: the steps below say everything this shows. */
+.dlhero__stage {
+  position: relative;
+  width: min(520px, 100%);
+  margin-inline: auto;
+  isolation: isolate;
+}
+
+.dlhero__mac { width: 100%; }
+
+.dlhero__phone {
+  position: absolute;
+  right: -1%;
+  bottom: 4%;
+  width: 21%;
+  z-index: 2;
+}
+
+/* Warmth behind the handset, so the pair sits in a room rather than on
+   a flat page. Behind both devices, never over them. */
+.dlhero__glow {
+  position: absolute;
+  right: -6%;
+  bottom: -6%;
+  width: 48%;
+  aspect-ratio: 1;
+  z-index: 0;
+  pointer-events: none;
+  background: radial-gradient(circle,
+              rgba(224, 150, 91, 0.22) 0%,
+              rgba(224, 150, 91, 0.07) 45%,
+              transparent 72%);
+}
+
+/* ---------- The steps ----------
+   One ordered list, because that is exactly what this is: the order
+   matters, and a screen reader should say "5 items".
+   --------------------------------------------------------------- */
+.dl-steps {
+  --dl-pad: clamp(1.5rem, 3vw, 2.5rem);
+  --dl-gap: var(--ws-space-6);
+  --dl-node: 2.6rem;
+
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: var(--dl-gap);
+}
+
+.dl-step {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: clamp(1rem, 2.5vw, 1.6rem);
+  align-items: start;
+}
+
+/* The rail. Drops from each node to the top edge of the next card, so
+   the five panels read as one sequence rather than five siblings. It
+   stops AT that edge on purpose: run it further and the next card's
+   own background paints over it. */
+.dl-step:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  left: calc(var(--dl-pad) + var(--dl-node) / 2 - 0.5px);
+  top: calc(var(--dl-pad) + var(--dl-node) + 0.4rem);
+  height: calc(100% - var(--dl-pad) - var(--dl-node) - 0.4rem + var(--dl-gap));
+  width: 1px;
+  background: linear-gradient(180deg, var(--ws-orange-700), rgba(255, 255, 255, 0.06));
+  opacity: 0.6;
+}
+
+.dl-step__n {
+  display: grid;
+  place-items: center;
+  width: var(--dl-node);
+  height: var(--dl-node);
+  flex: none;
+  border: 1px solid var(--ws-orange-700);
+  border-radius: var(--ws-radius-pill);
+  background: rgba(224, 150, 91, 0.08);
+  color: var(--ws-accent);
+  font-size: var(--ws-step-0);
+  font-weight: 700;
+  line-height: 1;
+}
+
+.dl-step__body { display: grid; gap: var(--ws-space-3); justify-items: start; min-width: 0; }
+
+.dl-step__title { font-size: var(--ws-step-1); font-weight: 650; }
+
+.dl-step__body p { color: var(--ws-text-tertiary); max-width: var(--ws-measure); }
+.dl-step__body p b { color: var(--ws-text); font-weight: 650; }
+
+.dl-step .btn { margin-top: var(--ws-space-2); }
+
+/* Apple's badge art has its own padding and colour; it must not be
+   restyled, only sized. */
+.dl-step__appstore { display: inline-block; margin-top: var(--ws-space-2); line-height: 0; }
+.dl-step__appstore img { height: 46px; width: auto; }
+
+.dl-step__file {
+  font-size: var(--ws-step--1);
+  color: var(--ws-text-muted);
+}
+
+/* ---------- Step 5: the two connection modes ---------- */
+.dl-modes {
+  display: grid;
+  gap: var(--ws-space-4);
+  width: 100%;
+  margin-top: var(--ws-space-2);
+}
+
+@media (min-width: 720px) {
+  .dl-modes { grid-template-columns: 1fr 1fr; }
+}
+
+.dl-mode {
+  display: grid;
+  gap: var(--ws-space-3);
+  align-content: start;
+  padding: var(--ws-space-5);
+  border: 1px solid var(--ws-line);
+  border-radius: var(--ws-radius-md);
+  background: rgba(255, 255, 255, 0.025);
+}
+
+.dl-mode__head {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ws-text);
+}
+
+.dl-mode__head svg { width: 1.15rem; height: 1.15rem; flex: none; color: var(--ws-accent); }
+
+.dl-mode ol {
+  margin: 0;
+  padding-left: 1.15rem;
+  display: grid;
+  gap: var(--ws-space-2);
+  font-size: var(--ws-step--1);
+  color: var(--ws-text-tertiary);
+}
+
+.dl-mode ol::marker { color: var(--ws-text-muted); }
+
+/* ---------- Closing note ---------- */
+.dl-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.7rem;
+  margin-top: clamp(1.75rem, 4vw, 2.5rem);
+  padding: var(--ws-space-5) var(--ws-space-6);
+  border: 1px solid var(--ws-orange-700);
+  border-radius: var(--ws-radius-md);
+  background: rgba(224, 150, 91, 0.06);
+  color: var(--ws-text-secondary);
+  font-size: var(--ws-step--1);
+}
+
+.dl-note svg { width: 1.2rem; height: 1.2rem; flex: none; color: var(--ws-accent); }
+
+/* ---------- Help footer of the page ---------- */
+.dl-help {
+  display: grid;
+  gap: var(--ws-space-4);
+  justify-items: center;
+  text-align: center;
+}
+
+.dl-help__links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--ws-space-3) var(--ws-space-4);
+}

@@ -1,0 +1,146 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 850 952" role="img"
+     aria-labelledby="hd-title hd-desc" class="ws-implant">
+  <title id="hd-title">Cochlear implant sound processor</title>
+  <desc id="hd-desc">A behind-the-ear sound processor with a transparent ear hook, joined by a slack cable to a circular external coil.</desc>
+
+  <defs>
+    <linearGradient id="hd-body" x1="0.08" y1="0.05" x2="0.82" y2="0.95">
+      <stop offset="0"    stop-color="#3C424A" />
+      <stop offset="0.26" stop-color="#242830" />
+      <stop offset="0.62" stop-color="#14171B" />
+      <stop offset="1"    stop-color="#08090B" />
+    </linearGradient>
+
+    <linearGradient id="hd-coil" x1="0.18" y1="0.05" x2="0.82" y2="1">
+      <stop offset="0"   stop-color="#363B44" />
+      <stop offset="0.5" stop-color="#191C21" />
+      <stop offset="1"   stop-color="#0A0B0D" />
+    </linearGradient>
+
+    <linearGradient id="hd-trim" x1="0" y1="0" x2="1" y2="0.4">
+      <stop offset="0"    stop-color="#6E747E" />
+      <stop offset="0.38" stop-color="#EDF0F4" />
+      <stop offset="0.7"  stop-color="#A8AEB8" />
+      <stop offset="1"    stop-color="#666C76" />
+    </linearGradient>
+
+    <!-- Clear silicone. On a near-black page a transparent object reads by
+         its EDGES, not its fill — so presence comes from the rim strokes
+         below, with the fill kept light enough to stay glassy. A faint cool
+         tint separates it from the neutral processor body it sits against. -->
+    <linearGradient id="hd-hook" x1="0" y1="0" x2="1" y2="0.85">
+      <stop offset="0"    stop-color="#FFFFFF" stop-opacity="0.56" />
+      <stop offset="0.40" stop-color="#D6E2F0" stop-opacity="0.33" />
+      <stop offset="1"    stop-color="#FFFFFF" stop-opacity="0.46" />
+    </linearGradient>
+
+    <radialGradient id="hd-signal">
+      <stop offset="0"   stop-color="#F2A464" stop-opacity="0.26" />
+      <stop offset="0.5" stop-color="#E0965B" stop-opacity="0.08" />
+      <stop offset="1"   stop-color="#E0965B" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+
+  <g class="ws-implant__signal">
+    <ellipse cx="300" cy="205" rx="205" ry="192" fill="url(#hd-signal)" />
+  </g>
+
+  <!-- ============ COIL ASSEMBLY ============ -->
+  <path d="M231 284 C225 332 233 372 246 396 L289 396
+           C301 365 327 343 353 319 C335 295 302 283 267 282 Z"
+        fill="url(#hd-coil)" />
+  <circle cx="300" cy="205" r="129" fill="url(#hd-coil)" />
+  <path d="M214 116 A129 129 0 0 0 175 232" fill="none"
+        stroke="#6A707A" stroke-opacity="0.38" stroke-width="4" stroke-linecap="round" />
+
+  <circle cx="300" cy="205" r="67" fill="#1A1D22" />
+  <circle cx="300" cy="205" r="67" fill="none" stroke="#4E545E" stroke-opacity="0.38" stroke-width="2.5" />
+  <circle cx="300" cy="205" r="45" fill="#0D0F12" />
+  <circle cx="300" cy="205" r="45" fill="none" stroke="#3A4048" stroke-opacity="0.45" stroke-width="1.5" />
+  <g stroke="#5C626C" stroke-opacity="0.45" stroke-width="2.5" stroke-linecap="round">
+    <path d="M283 178 l6 9" />
+    <path d="M330 210 l-11 1" />
+    <path d="M289 236 l5 -9" />
+  </g>
+
+  <!-- ============ CABLE ============ -->
+  <g fill="none" stroke-linecap="round">
+    <path d="M258 396 C246 432 220 458 188 486 C140 528 80 572 77 624
+             C74 674 120 702 168 701 C216 700 260 660 290 610
+             C310 574 322 548 336 528"
+          stroke="#0D0F12" stroke-width="19" />
+    <path d="M262 400 C250 434 224 460 193 488 C147 528 90 570 87 622
+             C84 668 124 693 168 692"
+          stroke="#454B54" stroke-opacity="0.45" stroke-width="3.5" />
+  </g>
+
+  <!-- Rubber cable retention, tucked against the arch shoulder -->
+  <path d="M310 506 C328 487 358 486 376 502 C392 516 392 546 374 560
+           C354 575 324 570 311 552 C300 538 301 517 310 506 Z"
+        fill="#111418" />
+  <path d="M317 510 C333 495 356 494 370 507" fill="none"
+        stroke="#4A505A" stroke-opacity="0.4" stroke-width="2.5" stroke-linecap="round" />
+
+  <!-- ============ PROCESSOR — one continuous silhouette ============
+       Battery hangs from the left; the arch hooks right, leaving the
+       concave underside that gives the device its recognisable shape. -->
+  <path d="M334 848
+           C334 866 348 876 366 876
+           H460
+           C478 876 492 866 492 848
+           L492 662
+           C494 632 507 614 532 604
+           C566 591 614 585 654 576
+           C688 568 712 550 710 522
+           C708 495 682 475 638 463
+           C568 444 470 449 416 473
+           C354 501 326 564 334 646
+           Z"
+        fill="url(#hd-body)" />
+
+  <!-- Top edge highlight along the arch -->
+  <path d="M348 600 C364 540 420 496 492 482 C566 468 640 480 680 504"
+        fill="none" stroke="#787F89" stroke-opacity="0.38" stroke-width="3.5" stroke-linecap="round" />
+
+  <!-- Chrome trim strip -->
+  <path d="M366 596 C388 548 438 512 500 499 C568 485 644 497 686 518"
+        fill="none" stroke="url(#hd-trim)" stroke-width="7" stroke-linecap="round" />
+
+  <!-- Control button on top of the arch -->
+  <rect x="486" y="454" width="28" height="15" rx="6" fill="#7E848E" />
+  <rect x="486" y="454" width="28" height="15" rx="6" fill="none"
+        stroke="#C9CFD7" stroke-opacity="0.42" stroke-width="1.5" />
+
+  <!-- Battery module: seam and surface detail (no hard edges) -->
+  <path d="M338 610 C382 604 448 604 490 608" fill="none"
+        stroke="#4C525B" stroke-opacity="0.34" stroke-width="2.5" stroke-linecap="round" />
+  <circle cx="466" cy="646" r="4.5" fill="#3E444D" fill-opacity="0.75" />
+  <path d="M348 654 v94" stroke="#000000" stroke-opacity="0.4" stroke-width="9" stroke-linecap="round" />
+  <path d="M472 692 C478 752 476 804 464 842" fill="none"
+        stroke="#787F89" stroke-opacity="0.2" stroke-width="6" stroke-linecap="round" />
+
+  <!-- ============ TRANSPARENT EAR HOOK ============ -->
+  <path d="M660 498
+           C700 498 728 521 741 560
+           C754 602 749 654 731 692
+           C723 709 710 715 702 709
+           C695 703 696 691 701 678
+           C714 644 717 604 707 574
+           C698 547 681 527 658 516 Z"
+        fill="url(#hd-hook)" />
+  <!-- soft outer halo: lifts the hook off the background without adding mass -->
+  <path d="M663 500 C702 501 730 524 742 562 C754 604 749 655 731 692"
+        fill="none" stroke="#DCE7F5" stroke-opacity="0.13" stroke-width="9" stroke-linecap="round" />
+  <!-- primary rim light — the edge that makes it read as clear plastic -->
+  <path d="M663 500 C702 501 730 524 742 562 C754 604 749 655 731 692"
+        fill="none" stroke="#FFFFFF" stroke-opacity="0.66" stroke-width="3.2" stroke-linecap="round" />
+  <!-- inner edge, dimmer, gives the material thickness -->
+  <path d="M659 515 C680 526 697 547 707 575 C717 606 714 646 701 680"
+        fill="none" stroke="#FFFFFF" stroke-opacity="0.24" stroke-width="2" stroke-linecap="round" />
+  <!-- rounded tip catch, so the hook doesn't fade out at the bottom -->
+  <path d="M731 692 C723 709 710 715 702 709" fill="none"
+        stroke="#FFFFFF" stroke-opacity="0.38" stroke-width="2.6" stroke-linecap="round" />
+  <!-- specular catch near the top of the hook -->
+  <path d="M690 522 C706 532 718 548 725 568" fill="none"
+        stroke="#FFFFFF" stroke-opacity="0.36" stroke-width="4" stroke-linecap="round" />
+</svg>

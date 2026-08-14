@@ -1,0 +1,268 @@
+/* ============================================================
+   use-cases.css — "Ways to listen" editorial carousel
+   Loaded by index.html.
+
+   Replaces the old technical Wi-Fi/Cable card grid. This section
+   answers "when would I use Wi-Fi, and when Cable?" with situation
+   photography rather than a diagram — the hero already told the
+   Mac -> iPhone -> hearing device story.
+
+   GEOMETRY NOTE (why the width math looks the way it does):
+   the card must be centred with a symmetrical sliver of the
+   neighbouring cards visible at both edges. Deriving the gutter
+   FROM the card width (rather than the reverse) is what keeps it
+   symmetrical once the card hits its 1520px cap on wide screens.
+   Every percentage below resolves against the same box — the
+   viewport-width rail — so translate, flex-basis and the intro
+   width all agree. Using 100vw instead would disagree with them
+   by the scrollbar width.
+   ============================================================ */
+
+.uc {
+  --uc-gap: 24px;
+
+  /* Card width: viewport minus a proportional gutter, capped. */
+  --uc-slide-w: min(1520px, calc(100% - 2 * clamp(80px, 8%, 210px)));
+
+  /* Gutter DERIVED from the final card width => always symmetrical. */
+  --uc-inset: calc((100% - var(--uc-slide-w)) / 2);
+
+  --uc-dur: 620ms;
+  --uc-ease: cubic-bezier(0.22, 1, 0.36, 1);   /* no overshoot */
+
+  overflow: clip;   /* contains the peeking slides without a scrollbar */
+}
+
+/* ---------- Section intro ----------
+   Width-matched to the card so the eyebrow sits on the card's own
+   left edge instead of a narrower content container. */
+.uc__intro {
+  width: var(--uc-slide-w);
+  margin-inline: auto;
+  margin-bottom: clamp(2rem, 4vw, 3.25rem);
+}
+
+/* ---------- Rail / track ---------- */
+.uc__viewport { position: relative; width: 100%; }
+
+.uc__track {
+  display: flex;
+  width: 100%;
+  gap: var(--uc-gap);
+  transform: translate3d(
+    calc(var(--uc-inset) - var(--uc-i, 0) * (var(--uc-slide-w) + var(--uc-gap))),
+    0, 0);
+  transition: transform var(--uc-dur) var(--uc-ease);
+  will-change: transform;
+}
+
+/* ---------- Slide ---------- */
+.uc__slide {
+  position: relative;
+  flex: 0 0 var(--uc-slide-w);
+  aspect-ratio: 16 / 9;          /* matches the source files exactly: 1672x941 */
+  max-height: 82vh;              /* only engages on unusually short viewports */
+  border-radius: var(--ws-radius-xl);
+  overflow: hidden;
+  background: var(--ws-bg-900);
+  box-shadow: var(--ws-shadow-lg);
+  isolation: isolate;
+}
+
+/* Inactive slides read as secondary depth, not as content. This is
+   also the "different rate" the image moves at relative to the copy:
+   the track translates while the plate settles out of its scale. */
+.uc__slide::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  background: rgba(7, 7, 7, 0.55);
+  opacity: 1;
+  transition: opacity var(--uc-dur) var(--uc-ease);
+  pointer-events: none;
+}
+
+.uc__slide.is-active::after { opacity: 0; }
+
+.uc__img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 50%;
+  transform: scale(1.045);
+  transition: transform var(--uc-dur) var(--uc-ease);
+}
+
+.uc__slide.is-active .uc__img { transform: scale(1); }
+
+/* ---------- Localised readability scrim ----------
+   Dark at the left edge, fully transparent by 48% — the MacBook,
+   iPhone and cable all sit beyond that point in all three plates,
+   so the photography itself is never flattened by an overlay. */
+.uc__scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(96deg,
+              rgba(3, 3, 4, 0.92) 0%,
+              rgba(3, 3, 4, 0.80) 16%,
+              rgba(3, 3, 4, 0.46) 28%,
+              rgba(3, 3, 4, 0.14) 38%,
+              rgba(3, 3, 4, 0) 48%);
+  pointer-events: none;
+}
+
+/* ---------- Slide copy ---------- */
+.uc__copy {
+  position: absolute;
+  z-index: 2;
+  left: 5.2%;
+  top: 50%;
+  translate: 0 -50%;
+  width: min(31%, 420px);
+  display: grid;
+  gap: var(--ws-space-4);
+  justify-items: start;
+  text-align: left;
+}
+
+.uc__eyebrow { font-size: 0.7rem; letter-spacing: 0.16em; }
+
+.uc__title {
+  font-size: clamp(1.75rem, 1.2rem + 1.6vw, 2.55rem);
+  line-height: 1.08;
+  letter-spacing: -0.03em;
+  font-weight: 700;
+  color: var(--ws-text);
+  text-wrap: balance;
+}
+
+.uc__body {
+  font-size: var(--ws-step-0);
+  line-height: 1.5;
+  color: var(--ws-text-secondary);
+  text-wrap: pretty;
+}
+
+.uc__badges { display: flex; flex-wrap: wrap; gap: var(--ws-space-3); }
+
+/* Staggered entrance. Held off the active slide so the copy arrives
+   after the plate has started moving, not with it. */
+.uc__copy > * {
+  opacity: 0;
+  translate: 0 12px;
+  transition: opacity var(--uc-dur) var(--uc-ease),
+              translate var(--uc-dur) var(--uc-ease);
+}
+
+.uc__slide.is-active .uc__copy > * { opacity: 1; translate: 0 0; }
+
+.uc__slide.is-active .uc__copy > :nth-child(1) { transition-delay:  90ms; }
+.uc__slide.is-active .uc__copy > :nth-child(2) { transition-delay: 150ms; }
+.uc__slide.is-active .uc__copy > :nth-child(3) { transition-delay: 210ms; }
+.uc__slide.is-active .uc__copy > :nth-child(4) { transition-delay: 270ms; }
+
+/* The copy block is translated by -50% for centring, so the entrance
+   offset has to live on the children (above), never on .uc__copy. */
+
+/* ---------- Circular prev / next ----------
+   Centred in the gutter, so they sit over the peeking neighbour
+   exactly as the editorial reference does. */
+.uc__nav {
+  position: absolute;
+  top: 50%;
+  z-index: 4;
+  translate: 0 -50%;
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  padding: 0;
+  border: 1px solid var(--ws-line-strong);
+  border-radius: var(--ws-radius-pill);
+  background: rgba(12, 12, 13, 0.62);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: var(--ws-text);
+  cursor: pointer;
+  transition: background var(--ws-dur-base) var(--uc-ease),
+              border-color var(--ws-dur-base) var(--uc-ease),
+              opacity var(--ws-dur-base) var(--uc-ease);
+}
+
+.uc__nav svg { width: 20px; height: 20px; }
+
+.uc__nav:hover {
+  background: rgba(20, 20, 21, 0.86);
+  border-color: var(--ws-orange-700);
+}
+
+.uc__nav:disabled { opacity: 0.28; cursor: default; }
+.uc__nav:disabled:hover {
+  background: rgba(12, 12, 13, 0.62);
+  border-color: var(--ws-line-strong);
+}
+
+.uc__nav--prev { left: calc(var(--uc-inset) / 2); translate: -50% -50%; }
+.uc__nav--next { right: calc(var(--uc-inset) / 2); translate: 50% -50%; }
+
+/* ---------- Pagination dots ----------
+   Positioned against the viewport, not the track, so they stay put
+   while the slides move underneath them. */
+.uc__dots {
+  position: absolute;
+  z-index: 4;
+  left: 50%;
+  translate: -50% 0;
+  bottom: clamp(20px, 3.2%, 34px);
+  display: flex;
+  gap: 10px;
+}
+
+.uc__dot {
+  width: 8px;
+  height: 8px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--ws-radius-pill);
+  background: rgba(255, 255, 255, 0.34);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.55);
+  cursor: pointer;
+  transition: background var(--ws-dur-base) var(--uc-ease),
+              width var(--ws-dur-base) var(--uc-ease);
+}
+
+.uc__dot:hover { background: rgba(255, 255, 255, 0.62); }
+
+.uc__dot[aria-selected="true"] {
+  width: 22px;
+  background: var(--ws-accent);
+}
+
+/* ---------- Reduced motion ----------
+   base.css already forces every transition-duration to 0.01ms, so the
+   carousel is functional without this block. It exists to drop the
+   entrance offsets and the inactive-plate scale outright, rather than
+   playing them instantly. */
+@media (prefers-reduced-motion: reduce) {
+  /* Drop the entrance OFFSET everywhere, but keep opacity scoped to the
+     active slide — a blanket opacity:1 also reveals the copy on the
+     peeking neighbours, which reads as three competing headlines. */
+  .uc__copy > * { translate: none; }
+  .uc__slide.is-active .uc__copy > * { opacity: 1; }
+  .uc__img,
+  .uc__slide.is-active .uc__img { transform: none; }
+  .uc__track { will-change: auto; }
+
+  /* base.css zeroes transition-DURATION globally but leaves DELAY
+     alone, so without this the 90-270ms copy stagger survives as
+     sequenced pop-in — motion by another name. */
+  .uc__slide.is-active .uc__copy > *,
+  .uc__slide.is-active .uc__copy > :nth-child(1),
+  .uc__slide.is-active .uc__copy > :nth-child(2),
+  .uc__slide.is-active .uc__copy > :nth-child(3),
+  .uc__slide.is-active .uc__copy > :nth-child(4) { transition-delay: 0s; }
+}

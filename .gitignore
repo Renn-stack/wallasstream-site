@@ -1,0 +1,49 @@
+# macOS
+.DS_Store
+**/.DS_Store
+
+# Local archive of files removed from the live site during the redesign.
+# Kept on disk (not committed, not deployed) because most of these were
+# never tracked by git and would otherwise be unrecoverable.
+# Safe to delete once the redesign is signed off:  rm -rf _archive
+_archive/
+
+# Node
+node_modules/
+npm-debug.log*
+
+# Local review artifacts (never deploy): _implant-preview.html etc.
+_*.html
+favicons/_originales/
+
+# Design benches, prototypes and diagrams. Not linked from the site, but
+# Vercel serves the repo root as-is, so committing them would publish them
+# at wallasstream.com/device-bench.html and similar. Kept local.
+*-bench.html
+*-prototype.html
+usb-diagram.html
+wifi-diagram.html
+
+# Video working masters for the cinematic hero. The site only ships the
+# encoded derivatives (hero-cine-*.mp4 and their posters); these sources add
+# ~56M to the repo and would also be publicly served. Kept on disk.
+assets/hero-cinematic/hero-master.mp4
+assets/hero-cinematic/hero-cine-corrected.mov
+assets/hero-cinematic/Orange_*.mp4
+assets/hero-cinematic/frames/
+assets/hero-cinematic/refs/
+assets/hero-cinematic/cp/
+
+# Source and reference imagery used while designing (device photos, mockups,
+# implant renders). Nothing on the site links to it. ~13M.
+assets/references/
+
+# Uncompressed originals of the use-case visuals. The site serves only the
+# .webp derivatives next to them. ~5.5M.
+assets/use-case-visuals/*.png
+
+# Local tooling: machine-specific permissions, dev server helper and
+# third-party skill checkouts. Not part of the site.
+.claude/
+.agents/
+skills-lock.json

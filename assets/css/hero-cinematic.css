@@ -1,0 +1,239 @@
+/* ============================================================
+   hero-cinematic.css — PROTOTYPE ONLY, not loaded by index.html
+   Choreography for the manually-graded cinematic plate.
+
+   The plate's own edit defines the beats. Measured from the supplied
+   file (8.37s, sampled at 10Hz):
+
+     0.00–0.35s  pure black (mean luma 0.3)
+     0.40–0.70s  imagery fades up (luma 6.8 → 33.5)
+     0.70–3.20s  Mac, waveform travelling right
+     3.20–4.60s  camera transitions toward the iPhone
+     4.60–6.70s  iPhone + hearing device composition
+     6.70–8.37s  the manual grade: scene falls away (luma 46.6 → 7.3)
+                 while the coil holds at x 73% / y 55% — the frame's
+                 only bright element
+
+   So the hero has two moments, and the plate hands off between them:
+
+     MOMENT 1  the question alone, centred, over the black opening —
+               present at full opacity on load, fading only on scroll
+     (beat)    the plate breathes with no copy at all
+     MOMENT 2  the payoff, left-anchored, arriving as the grade darkens
+               and the coil isolates
+
+   Copy is kept out of the right third entirely so the coil stays the
+   focal point, and nothing here adds a glow that would compete with it.
+
+   Gated on html.js-hero-cine, which hero-cinematic.js adds only when
+   video is genuinely appropriate. Without that class this file changes
+   nothing and the approved SVG hero runs.
+   ============================================================ */
+
+.js-hero-cine .hero--cine {
+  /* Moment 1: the question is an opening TITLE CARD, not an animation.
+     It is fully opaque at --hp 0 and stays that way until the visitor
+     actually scrolls; only --qo (fade out) exists. Because --hp falls
+     back to 0, this resolves to opacity 1 even before scroll-progress.js
+     has written a value — the card is up on first paint.
+       0.00–0.10  hold at full opacity
+       0.10–0.22  fade 1 → 0 */
+  --qo:  clamp(0, calc((var(--hp, 0) - 0.100) / 0.120), 1);
+
+  /* Moment 2: five staggered steps, in the order the copy reads.
+     Short overlaps so it cascades rather than ticking. */
+  --c1:  clamp(0, calc((var(--hp, 0) - 0.775) / 0.060), 1);  /* Now you can. */
+  --c2:  clamp(0, calc((var(--hp, 0) - 0.805) / 0.060), 1);  /* wordmark     */
+  --c3:  clamp(0, calc((var(--hp, 0) - 0.835) / 0.060), 1);  /* claim        */
+  --c4:  clamp(0, calc((var(--hp, 0) - 0.865) / 0.060), 1);  /* lede         */
+  --c5:  clamp(0, calc((var(--hp, 0) - 0.895) / 0.060), 1);  /* CTA + trial  */
+}
+
+/* ---- The plate ---- */
+.hero__cine {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  display: none;
+}
+
+.js-hero-cine .hero--cine .hero__cine { display: block; }
+
+.hero__cine-stage {
+  position: absolute;
+  inset: 0;
+  /* Poster as a background, not an <img>: a background inside a
+     display:none subtree is never fetched, so visitors who don't get
+     the plate pay nothing for it. */
+  background: var(--ws-bg, #000000) center / contain no-repeat
+              url("../hero-cinematic/hero-cine-poster.jpg");
+}
+
+.hero__cine video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  /* contain: the plate is shown whole, at the framing it was graded in.
+     Cover would crop the sides and enlarge the device. The letterbox
+     contain leaves is page black on a black page, so it reads as
+     nothing. Framing and grade are never altered here. */
+  object-fit: contain;
+  object-position: center;
+  display: block;
+}
+
+/* Left scrim only — a flat darkening under the copy column, no warm
+   light anywhere. The right third is deliberately untouched so the
+   coil remains the brightest thing in the frame. */
+.hero__cine::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(to right,
+    rgba(0, 0, 0, 0.55) 0%,
+    rgba(0, 0, 0, 0.32) 26%,
+    transparent 46%);
+  opacity: var(--c1, 0);
+}
+
+/* ---- What the plate replaces ----
+   The plate supplies the Mac, the iPhone, the signal and the hearing
+   device, so the SVG flow stands down. Hidden only, never moved, so
+   nothing reflows. */
+.js-hero-cine .hero--cine .hero__flow { display: none; }
+
+/* No ambient wash: the plate carries all the light, and a warm radial
+   here would compete with the coil. */
+.js-hero-cine .hero--cine .hero__pin::before { opacity: 0; }
+
+/* ---- Frame ---- */
+.js-hero-cine .hero--cine .hero__pin {
+  padding-block: 0;
+  align-content: stretch;
+}
+
+/* static, deliberately: the question and payoff are positioned against
+   the PIN (the full viewport), not against the centred .container. If
+   .hero__layout stayed a containing block, `left: 7vw` would measure
+   from the container's inner edge and land near 15vw. */
+.js-hero-cine .hero--cine .hero__layout {
+  display: block;
+  height: 100%;
+  position: static;
+  transform: none;
+}
+
+/* ---- MOMENT 1 · the question, as an opening title card ----
+   Dead centre of the viewport, large, white, alone. Absolutely
+   positioned from first paint, so introducing it costs no layout
+   shift. */
+.js-hero-cine .hero--cine .hero__question {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  translate: -50% -50%;
+  z-index: 3;
+  margin: 0;
+  width: min(19ch, 86vw);
+  max-width: none;
+  font-size: clamp(2.4rem, 4.6vw, 4.4rem);
+  line-height: 1.08;
+  letter-spacing: -0.035em;
+  text-align: center;
+  color: #fff;
+  text-shadow: 0 2px 40px rgba(0, 0, 0, 0.6);
+  /* No entrance: no fade-in, no translate-in, no scale-in. Present at
+     full opacity from the first frame the page paints. */
+  opacity: calc(1 - var(--qo));
+  transform: none;
+}
+
+/* ---- MOMENT 2 · the payoff, left-anchored ----
+   Pinned to the viewport's left edge rather than the centred container,
+   so the safe margin is a true 7vw. Vertically centred at 52% to sit
+   opposite the coil (y 55%), which is what builds the left-to-right
+   relationship between the orange "Now you can." and the orange coil. */
+.js-hero-cine .hero--cine .hero__payoff {
+  position: absolute;
+  left: 7vw;
+  top: 52%;
+  translate: 0 -50%;
+  z-index: 3;
+  width: min(34vw, 27rem);
+  max-width: none;
+  margin: 0;
+  padding: 0;
+  gap: clamp(0.5rem, 1.4dvh, 1rem);
+  justify-items: start;
+  text-align: left;
+  transform: none;
+}
+
+.js-hero-cine .hero--cine .hero__answer,
+.js-hero-cine .hero--cine .hero__cta {
+  justify-items: start;
+  text-align: left;
+  margin: 0;
+}
+
+.js-hero-cine .hero--cine .hero__payoff .lede,
+.js-hero-cine .hero--cine .hero__claim,
+.js-hero-cine .hero--cine .hero__cta .fineprint {
+  max-width: none;
+  text-align: left;
+}
+
+/* Restrained: opacity plus a few pixels of rise. The plate supplies the
+   cinematic movement; the typography stays still. */
+.js-hero-cine .hero--cine .hero__answer {
+  opacity: 1;
+  transform: none;
+}
+
+.js-hero-cine .hero--cine .hero__now {
+  opacity: var(--c1);
+  transform: translateY(calc((1 - var(--c1)) * 8px));
+}
+
+.js-hero-cine .hero--cine .hero__wordmark {
+  opacity: var(--c2);
+  transform: translateY(calc((1 - var(--c2)) * 8px));
+}
+
+.js-hero-cine .hero--cine .hero__claim {
+  opacity: var(--c3);
+  transform: translateY(calc((1 - var(--c3)) * 8px));
+}
+
+.js-hero-cine .hero--cine .hero__payoff .lede {
+  opacity: var(--c4);
+  transform: translateY(calc((1 - var(--c4)) * 8px));
+}
+
+.js-hero-cine .hero--cine .hero__cta {
+  opacity: var(--c5);
+  transform: translateY(calc((1 - var(--c5)) * 8px));
+}
+
+/* Short viewports: pull the copy column in and tighten it rather than
+   letting it run past the frame. */
+@media (max-height: 760px) {
+  .js-hero-cine .hero--cine .hero__payoff {
+    top: 50%;
+    width: min(36vw, 24rem);
+    gap: clamp(0.4rem, 1.1dvh, 0.8rem);
+  }
+  .js-hero-cine .hero--cine .hero__question { font-size: clamp(2rem, 4vw, 3.4rem); }
+}
+
+/* Very wide frames: the plate letterboxes at the sides, so hold the
+   copy against the plate rather than the viewport edge. */
+@media (min-aspect-ratio: 16/9) {
+  .js-hero-cine .hero--cine .hero__payoff {
+    left: max(7vw, calc(50vw - 88.9dvh + 6dvh));
+  }
+}

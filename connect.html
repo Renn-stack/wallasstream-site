@@ -5,7 +5,7 @@
   <meta name="apple-itunes-app" content="app-id=6759255823">
 
   <!-- Open Graph Preview for WhatsApp / Facebook -->
-  <meta property="og:title" content="Wallas' Stream — Conectar" />
+  <meta property="og:title" content="Wallas' Stream | Conectar" />
   <meta property="og:description" content="Conecta tu iPhone con tu Mac para recibir audio" />
   <meta property="og:image" content="https://wallasstream.com/preview.png" />
   <meta property="og:url" content="https://wallasstream.com/connect" />
@@ -13,7 +13,7 @@
 
   <!-- Twitter Preview -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Wallas' Stream — Conectar" />
+  <meta name="twitter:title" content="Wallas' Stream | Conectar" />
   <meta name="twitter:description" content="Conecta tu iPhone con tu Mac para recibir audio" />
   <meta name="twitter:image" content="https://wallasstream.com/preview.png" />
 
@@ -22,13 +22,19 @@
   <title>Conectar - Wallas' Stream</title>
 
   <!-- Favicon -->
-  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="icon" href="favicons/favicon.ico" sizes="32x32" />
+  <link rel="icon" type="image/png" sizes="32x32" href="favicons/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="favicons/favicon-16x16.png" />
+  <link rel="apple-touch-icon" href="favicons/apple-touch-icon.png" />
+  <link rel="manifest" href="favicons/manifest.json" />
+  <link rel="stylesheet" href="styles.css">
+  <script src="lang.js" defer></script>
 
   <meta name="description" content="Conecta tu iPhone con tu Mac para recibir audio en tiempo real con Wallas' Stream." />
 
   <style>
     :root{
-      --bg:#0b0b0b;
+      --bg:#000000;
       --card:#111214;
       --muted:#9aa0a6;
       --text:#f2f2f2;
@@ -60,6 +66,21 @@
       background:
         radial-gradient(1200px 700px at 50% 45%, transparent 40%, rgba(0,0,0,.65) 78%, rgba(0,0,0,.85) 100%);
       z-index:-1;
+    }
+    body::after{
+      content:"";
+      position:fixed;
+      top:-10%;
+      left:50%;
+      transform:translateX(-50%);
+      width:900px;
+      height:500px;
+      pointer-events:none;
+      background:
+        radial-gradient(500px 300px at 50% 50%, rgba(77,163,255,.10), transparent 70%),
+        radial-gradient(420px 260px at 58% 55%, rgba(32,201,151,.08), transparent 70%);
+      z-index:-1;
+      filter: blur(20px);
     }
     a{color:var(--accent); text-decoration:none}
     a:hover{text-decoration:underline}
@@ -292,7 +313,7 @@
     <!-- Session info -->
     <div class="card-base session-info" id="sessionInfo">
       <div class="session-info-label">Sesión de tu Mac</div>
-      <div class="session-info-value" id="sessionHost">—</div>
+      <div class="session-info-value" id="sessionHost">&hellip;</div>
     </div>
 
     <!-- Desktop notice -->

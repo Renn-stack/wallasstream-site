@@ -1,0 +1,115 @@
+/* ============================================================
+   tokens.css — Wallas' Stream design tokens
+   Phase 1 foundation. Defines the system; Phase 2 applies it.
+
+   Colour values are SAMPLED from real sources, not invented:
+     orange-500  #E0965B  = dominant accent in the approved mockup
+                            (assets/references/mockup/, hue 27deg)
+     orange-400  #F2A464  = the real "Silence in silence" state in
+                            Wallas' Stream for iPhone (hue 27deg)
+     connected   #76D67D  = the real "Connected" state in the product UI
+
+   The website accent and the app's Silence-in-silence orange share
+   hue 27deg. That is a genuine brand tie-in, not a coincidence.
+   ============================================================ */
+
+:root {
+  /* ---- Brand: warm orange (primary accent) ---- */
+  --ws-orange-300: #F4C29A;
+  --ws-orange-400: #F2A464;   /* matches the product's Silence-in-silence state */
+  --ws-orange-500: #E0965B;   /* PRIMARY ACCENT — matches the approved mockup */
+  --ws-orange-600: #D07D39;   /* hover / pressed */
+  --ws-orange-700: #A36029;   /* deep accent, borders */
+
+  --ws-accent:        var(--ws-orange-500);
+  --ws-accent-hover:  var(--ws-orange-400);
+  --ws-accent-on:     #0B0B0B;  /* text ON an orange fill — 8.14:1, AA-pass */
+
+  /* ---- Product state colours ----
+     RESERVED. These represent real states in the Wallas' Stream apps.
+     Never use --ws-state-connected as a website accent. */
+  --ws-state-connected: #76D67D;  /* real "Connected" green from the iOS UI */
+
+  /* ---- Surfaces: black ramp ----
+     The page is pure black, not a near-black. That also puts it in the
+     same black as the hero's graded footage, so the letterboxing on the
+     cinematic plate stops reading as lighter strips beside the video.
+     900 and 850 are equal because nothing can sit deeper than the page;
+     the ramp's real separation starts at 800. */
+  --ws-bg-900: #000000;
+  --ws-bg-850: #000000;   /* page background */
+  --ws-bg-800: #111214;   /* raised card */
+  --ws-bg-700: #161616;
+  --ws-bg-600: #1D1D1D;
+
+  /* ---- Hairlines & borders ---- */
+  --ws-line:        rgba(255, 255, 255, 0.10);
+  --ws-line-strong: rgba(255, 255, 255, 0.18);
+
+  /* ---- Type colours ----
+     AA floor on --ws-bg-850 is alpha 0.46 (4.58:1).
+
+     That floor went UP when the page moved to pure black, which is not
+     the intuitive direction. Translucent white loses more luminance from
+     the darker backdrop than the backdrop itself gives back, so below
+     roughly alpha 0.55 the contrast falls rather than rises: 0.45 was
+     4.51:1 on #0B0B0B and is 4.41:1 on black, i.e. no longer AA. Every
+     token below still passes — --ws-text-muted is 5.28:1 — but the
+     margin under it is thinner than it was.
+
+     Never go below --ws-text-muted for body-size text. */
+  --ws-text:           #F2F2F2;                    /* 17.9:1 */
+  --ws-text-secondary: rgba(255, 255, 255, 0.72);  /* 11.0:1 */
+  --ws-text-tertiary:  rgba(255, 255, 255, 0.62);  /*  8.4:1 */
+  --ws-text-muted:     rgba(255, 255, 255, 0.50);  /*  5.3:1 — AA floor for small text */
+
+  /* ---- Type scale ---- */
+  --ws-font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text",
+                  "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+
+  --ws-step--1: clamp(0.83rem, 0.80rem + 0.15vw, 0.90rem);
+  --ws-step-0:  clamp(0.95rem, 0.92rem + 0.18vw, 1.05rem);
+  --ws-step-1:  clamp(1.15rem, 1.05rem + 0.45vw, 1.40rem);
+  --ws-step-2:  clamp(1.45rem, 1.25rem + 0.90vw, 2.00rem);
+  --ws-step-3:  clamp(1.90rem, 1.50rem + 1.80vw, 2.90rem);
+  --ws-step-4:  clamp(2.40rem, 1.70rem + 3.10vw, 4.20rem);
+
+  /* ---- Spacing ---- */
+  --ws-space-1: 0.25rem;
+  --ws-space-2: 0.5rem;
+  --ws-space-3: 0.75rem;
+  --ws-space-4: 1rem;
+  --ws-space-5: 1.25rem;
+  --ws-space-6: 1.5rem;
+  --ws-space-8: 2rem;
+  --ws-space-12: 3rem;
+  --ws-space-16: 4rem;
+  --ws-space-24: 6rem;
+  --ws-space-32: 8rem;
+
+  /* ---- Radii ---- */
+  --ws-radius-sm: 6px;
+  --ws-radius-md: 14px;
+  --ws-radius-lg: 22px;
+  --ws-radius-xl: 30px;
+  --ws-radius-pill: 999px;
+
+  /* ---- Layout ---- */
+  --ws-measure: 62ch;
+  --ws-container: 1200px;
+
+  /* ---- Motion ----
+     Every duration below collapses to 0.01ms under reduced motion
+     (see base.css). Author animations against these, never literals. */
+  --ws-dur-fast: 160ms;
+  --ws-dur-base: 260ms;
+  --ws-dur-slow: 520ms;
+  --ws-dur-cinematic: 900ms;
+
+  --ws-ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ws-ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+
+  /* ---- Glow (used by the signal system in Phase 3) ---- */
+  --ws-glow-accent: 0 0 32px rgba(224, 150, 91, 0.32);
+  --ws-shadow-lg: 0 10px 35px rgba(0, 0, 0, 0.55);
+}

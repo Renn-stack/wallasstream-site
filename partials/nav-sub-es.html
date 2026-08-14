@@ -1,0 +1,47 @@
+<!-- Barra de subpágina en español. Espejo de partials/nav-sub.html: los
+     enlaces de sección son absolutos a indexES.html porque un #listen
+     suelto se resolvería contra la subpágina, que no tiene esa sección.
+     El botón es "Desbloquear Pro" y no "Prueba gratis", porque la página
+     de descarga ES la prueba gratis. -->
+<header class="topbar">
+  <div class="container topbar__inner">
+    <a class="brand" href="indexES.html">
+      <img src="assets/img/brand/logo-96.webp" alt="" width="96" height="70" />
+      <span>Wallas&rsquo; Stream</span>
+    </a>
+
+    <nav class="nav" aria-label="Principal">
+      <a href="indexES.html#listen">Wi-Fi y cable</a>
+      <a href="indexES.html#pricing">Gratis vs Pro</a>
+      <a href="indexES.html#founder">Fundadora</a>
+      <a href="faqES.html">Preguntas</a>
+      <a href="contactES.html">Soporte</a>
+    </nav>
+
+    <div class="topbar__actions">
+      <a class="lang-link" href="index.html" data-lang="en" hreflang="en" lang="en"
+         aria-label="View this page in English">EN</a>
+      <a class="btn btn--outline btn--sm" href="https://wallasstreamapp.lemonsqueezy.com/checkout/buy/6d7caf78-7cae-4540-91c7-9a2c2e016b05">Desbloquear Pro</a>
+      <button class="hamburger" id="menuBtn" type="button"
+              aria-label="Abrir menú" aria-expanded="false" aria-controls="mobileMenu">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+             stroke-linecap="round" aria-hidden="true">
+          <path d="M3 6h18M3 12h18M3 18h18" />
+        </svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<div class="mobile-menu" id="mobileMenu" role="dialog" aria-modal="true"
+     aria-label="Menú" aria-hidden="true">
+  <button class="menu-close" id="menuClose" type="button" aria-label="Cerrar menú">&#10005;</button>
+  <a href="indexES.html">Inicio</a>
+  <a href="indexES.html#listen">Wi-Fi y cable</a>
+  <a href="indexES.html#pricing">Gratis vs Pro</a>
+  <a href="indexES.html#founder">Fundadora</a>
+  <a href="faqES.html">Preguntas frecuentes</a>
+  <a href="contactES.html">Soporte</a>
+  <a href="index.html" data-lang="en" hreflang="en" lang="en">English</a>
+  <a class="btn btn--outline" href="https://wallasstreamapp.lemonsqueezy.com/checkout/buy/6d7caf78-7cae-4540-91c7-9a2c2e016b05">Desbloquear Pro</a>
+</div>

@@ -1,0 +1,334 @@
+/* ============================================================
+   legal.css — long-form document layout (Privacy & Terms)
+   Depends on tokens.css + base.css + components.css + sections.css.
+
+   Everything a legal page needs that the marketing sections don't:
+   a persistent table of contents, and prose typography for text that
+   is read in order rather than scanned in cards.
+
+   WHY A CONTENTS RAIL: this page is two documents of a dozen clauses
+   each. Without one, the only way to reach clause 11 is to scroll past
+   ten others, and a deep link from an app store listing or a receipt
+   lands the reader in the middle of a wall with no sense of where they
+   are. The rail gives every clause its own address and keeps the
+   current one marked while reading.
+
+   The rail is PROGRESSIVE. It is plain anchors that work with no
+   JavaScript; legal.js only adds the is-current highlight.
+   ============================================================ */
+
+:root {
+  /* Sticky topbar is 68px; this clears it for both the sticky rail and
+     :target / anchor scrolling. One number, so they can't disagree. */
+  --doc-offset: 5.5rem;
+}
+
+/* ---------- Document shell ---------- */
+.doc {
+  display: grid;
+  gap: clamp(2.5rem, 5vw, 4rem);
+  align-items: start;
+}
+
+@media (min-width: 1000px) {
+  .doc {
+    grid-template-columns: minmax(0, 15rem) minmax(0, 1fr);
+    gap: clamp(3rem, 6vw, 5rem);
+  }
+}
+
+/* ---------- Contents rail ---------- */
+.doc__toc { position: relative; }
+
+@media (min-width: 1000px) {
+  .doc__toc {
+    position: sticky;
+    top: var(--doc-offset);
+    /* Its own scroller: 25 clauses are taller than most viewports, and
+       a rail that overflows the screen hides exactly the entries a
+       reader deep in the document needs. */
+    max-height: calc(100dvh - var(--doc-offset) - 2rem);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding-right: var(--ws-space-2);
+
+    /* A default scrollbar here is a bright grey slab against a black
+       page, and it sits closer to the reader's eye than anything it
+       scrolls. Thin and dim, so it reports the rail's length without
+       competing with the clause titles. */
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.10) transparent;
+  }
+
+  .doc__toc::-webkit-scrollbar { width: 6px; }
+  .doc__toc::-webkit-scrollbar-track { background: transparent; }
+  .doc__toc::-webkit-scrollbar-thumb {
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.14);
+  }
+  .doc__toc:hover::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.24); }
+
+  /* Wide screens have the room to keep the rail open permanently, so the
+     heading stops being a control and goes back to being a label. */
+  .doc__toc-title { pointer-events: none; cursor: default; }
+  .doc__toc-title::after { display: none; }
+}
+
+/* The rail's heading is a <summary>, so it is the fold control on
+   phones and an inert label on desktop (see the pointer-events rule in
+   the wide-screen block). */
+.doc__toc-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ws-space-4);
+  margin: 0 0 var(--ws-space-4);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ws-text-muted);
+  cursor: pointer;
+  list-style: none;
+}
+
+.doc__toc-title::-webkit-details-marker { display: none; }
+
+/* Chevron: the same one the FAQ accordions use, at rail scale. */
+.doc__toc-title::after {
+  content: "";
+  flex: none;
+  width: 8px;
+  height: 8px;
+  margin-bottom: 3px;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  transform: rotate(45deg);
+  transition: transform var(--ws-dur-fast) var(--ws-ease-out);
+}
+
+.doc__toc-shell[open] .doc__toc-title::after { transform: rotate(-135deg); }
+
+.doc__toc-shell[open] .doc__toc-title { margin-bottom: var(--ws-space-4); }
+
+.doc__toc-group + .doc__toc-group { margin-top: var(--ws-space-6); }
+
+.doc__toc-group > a {
+  display: block;
+  font-size: var(--ws-step-0);
+  font-weight: 650;
+  letter-spacing: -0.015em;
+  color: var(--ws-text);
+  text-decoration: none;
+}
+
+.doc__toc-group > a:hover { color: var(--ws-accent); }
+
+.doc__toc ol {
+  list-style: none;
+  margin: var(--ws-space-3) 0 0;
+  padding: 0 0 0 var(--ws-space-4);
+  display: grid;
+  gap: 1px;
+  /* The hairline the current-marker rides on. */
+  border-left: 1px solid var(--ws-line);
+  counter-reset: doc-toc;
+}
+
+.doc__toc ol li { counter-increment: doc-toc; }
+
+/* Numbered to match the clause headings, which carry the same counter.
+   Without it the rail says "Permissions used" and the page says "6",
+   and the reader has to count rows to connect the two. */
+.doc__toc ol a {
+  display: grid;
+  grid-template-columns: 1.1rem 1fr;
+  gap: var(--ws-space-2);
+  margin-left: -1px;
+  padding: 0.3rem 0 0.3rem var(--ws-space-3);
+  border-left: 2px solid transparent;
+  font-size: var(--ws-step--1);
+  line-height: 1.4;
+  color: var(--ws-text-muted);
+  text-decoration: none;
+  transition: color var(--ws-dur-fast) var(--ws-ease-out),
+              border-color var(--ws-dur-fast) var(--ws-ease-out);
+}
+
+.doc__toc ol a::before {
+  content: counter(doc-toc);
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  color: inherit;
+  opacity: 0.65;
+}
+
+.doc__toc ol a:hover { color: var(--ws-text-secondary); }
+
+.doc__toc ol a.is-current {
+  border-left-color: var(--ws-accent);
+  color: var(--ws-text);
+}
+
+.doc__toc ol a.is-current::before { color: var(--ws-accent); opacity: 1; }
+
+/* On phones the rail becomes a plain contents card above the text —
+   sticky would eat a third of a small screen for navigation nobody
+   asked to keep on screen. */
+@media (max-width: 999px) {
+  .doc__toc {
+    border: 1px solid var(--ws-line);
+    border-radius: var(--ws-radius-lg);
+    background: rgba(255, 255, 255, 0.02);
+    padding: clamp(1.25rem, 4vw, 1.75rem);
+  }
+}
+
+/* ---------- Prose ---------- */
+.doc__body { display: grid; gap: clamp(3rem, 6vw, 4.5rem); }
+
+.doc__part { scroll-margin-top: var(--doc-offset); }
+
+.doc__part-head {
+  display: grid;
+  gap: var(--ws-space-3);
+  padding-bottom: var(--ws-space-6);
+  margin-bottom: var(--ws-space-8);
+  border-bottom: 1px solid var(--ws-line);
+}
+
+.doc__part-head h2 { font-size: var(--ws-step-2); }
+
+.doc__clause {
+  scroll-margin-top: var(--doc-offset);
+  display: grid;
+  gap: var(--ws-space-3);
+  max-width: var(--ws-measure);
+}
+
+.doc__clause + .doc__clause { margin-top: var(--ws-space-8); }
+
+/* Clause heading: the number sits in the margin as a quiet accent so
+   the title itself stays the thing you read. */
+.doc__clause h3 {
+  display: grid;
+  grid-template-columns: 2.25rem 1fr;
+  align-items: baseline;
+  font-size: var(--ws-step-1);
+  letter-spacing: -0.02em;
+  scroll-margin-top: var(--doc-offset);
+}
+
+.doc__clause h3::before {
+  content: counter(doc-clause);
+  font-size: var(--ws-step--1);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--ws-accent);
+}
+
+.doc__part { counter-reset: doc-clause; }
+.doc__clause { counter-increment: doc-clause; }
+
+/* Body copy is indented to the clause title, not the number, so the
+   numbers form their own column down the page. */
+.doc__clause > :not(h3) { margin-left: 2.25rem; }
+
+@media (max-width: 560px) {
+  .doc__clause h3 { grid-template-columns: 1.6rem 1fr; }
+  .doc__clause > :not(h3) { margin-left: 0; }
+}
+
+.doc__clause p {
+  color: var(--ws-text-secondary);
+  text-wrap: pretty;
+}
+
+.doc__clause strong { color: var(--ws-text); font-weight: 650; }
+
+.doc__clause a {
+  color: var(--ws-accent);
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
+  text-decoration-thickness: 1px;
+}
+
+.doc__clause a:hover { color: var(--ws-accent-hover); }
+
+/* Bulleted lists carry the same accent dot the mode lists use. */
+.doc__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: var(--ws-space-2);
+}
+
+/* The dot is POSITIONED, not a grid column. A grid item per bullet is
+   what the mode lists use, and it works there because every item is one
+   run of text — but here some items are a bold label followed by a
+   sentence, and in a two-column grid that second run becomes its own
+   grid item and wraps onto the next row, under the bullet. Absolute
+   positioning takes any content, block or inline. */
+.doc__list li {
+  position: relative;
+  padding-left: calc(var(--ws-space-4) + 6px);
+  color: var(--ws-text-secondary);
+}
+
+.doc__list li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.6em;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--ws-accent);
+}
+
+.doc__list li strong { display: block; color: var(--ws-text); }
+
+/* A label above a list ("Desktop app", "Transmission can occur via")
+   that belongs to it rather than to the paragraph flow. */
+.doc__label {
+  font-size: var(--ws-step--1);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ws-text-tertiary);
+  margin-top: var(--ws-space-3);
+}
+
+/* Closing acknowledgement of each document: set apart from the clauses
+   because it is addressed to the reader, not a numbered term. */
+.doc__ack {
+  margin-top: var(--ws-space-12);
+  padding: var(--ws-space-6);
+  border: 1px solid var(--ws-line);
+  border-radius: var(--ws-radius-md);
+  background: rgba(255, 255, 255, 0.02);
+  color: var(--ws-text-secondary);
+  font-size: var(--ws-step--1);
+  max-width: var(--ws-measure);
+}
+
+/* ---------- Header meta ---------- */
+.doc__meta {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ws-space-2);
+  padding: 0.4rem 0.85rem;
+  border: 1px solid var(--ws-line);
+  border-radius: var(--ws-radius-pill);
+  font-size: var(--ws-step--1);
+  color: var(--ws-text-muted);
+}
+
+.doc__meta::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--ws-accent);
+}

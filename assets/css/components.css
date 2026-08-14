@@ -1,0 +1,752 @@
+/* ============================================================
+   components.css — reusable UI for the Wallas' Stream homepage
+   Phase 2. Depends on tokens.css + base.css.
+   No animation in this file: Phase 3 owns motion.
+   ============================================================ */
+
+/* ---------- Page shell ---------- */
+body {
+  margin: 0;
+  background: var(--ws-bg-850);
+  color: var(--ws-text);
+  font-family: var(--ws-font-sans);
+  font-size: var(--ws-step-0);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+.container {
+  width: 100%;
+  max-width: var(--ws-container);
+  margin-inline: auto;
+  padding-inline: clamp(1.25rem, 4vw, 2.5rem);
+}
+
+.container--narrow { max-width: 860px; }
+
+/* ---------- Typography ---------- */
+h1, h2, h3, h4 {
+  margin: 0;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  font-weight: 700;
+  text-wrap: balance;
+}
+
+h1 { font-size: var(--ws-step-4); letter-spacing: -0.035em; }
+h2 { font-size: var(--ws-step-3); letter-spacing: -0.03em; }
+h3 { font-size: var(--ws-step-1); }
+
+p { margin: 0; }
+
+a { color: inherit; }
+
+.lede {
+  font-size: var(--ws-step-1);
+  line-height: 1.55;
+  color: var(--ws-text-secondary);
+  text-wrap: pretty;
+}
+
+.muted { color: var(--ws-text-tertiary); }
+.fineprint { font-size: var(--ws-step--1); color: var(--ws-text-muted); }
+
+.accent { color: var(--ws-accent); }
+
+/* ---------- Eyebrow ---------- */
+.eyebrow {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ws-accent);
+}
+
+/* ---------- Section heading block ---------- */
+.section-head {
+  display: grid;
+  gap: var(--ws-space-4);
+  max-width: 46rem;
+}
+
+.section-head--center {
+  margin-inline: auto;
+  text-align: center;
+  justify-items: center;
+}
+
+/* ---------- Buttons ---------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55em;
+  padding: 0.95em 1.7em;
+  border: 1px solid transparent;
+  border-radius: var(--ws-radius-pill);
+  font-size: var(--ws-step-0);
+  font-weight: 650;
+  line-height: 1;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color var(--ws-dur-fast) var(--ws-ease-out),
+              border-color var(--ws-dur-fast) var(--ws-ease-out),
+              color var(--ws-dur-fast) var(--ws-ease-out);
+}
+
+.btn--primary {
+  background: var(--ws-accent);
+  color: var(--ws-accent-on);
+  box-shadow: var(--ws-glow-accent);
+}
+
+.btn--primary:hover { background: var(--ws-accent-hover); }
+
+.btn--ghost {
+  background: transparent;
+  border-color: var(--ws-line-strong);
+  color: var(--ws-text);
+}
+
+.btn--ghost:hover { border-color: var(--ws-text); }
+
+/* Accent outline: the quieter half of a two-button choice, still clearly
+   the brand's own control rather than a neutral secondary. */
+.btn--outline {
+  background: transparent;
+  border-color: var(--ws-orange-700);
+  color: var(--ws-accent);
+}
+
+.btn--outline:hover {
+  border-color: var(--ws-accent);
+  background: rgba(224, 150, 91, 0.08);
+}
+
+.btn--block { display: flex; width: 100%; }
+
+.btn--sm { padding: 0.7em 1.2em; font-size: var(--ws-step--1); }
+
+.btn--lg { padding: 1.05em 2.1em; font-size: var(--ws-step-1); }
+
+/* Trailing arrow. Nudges on hover only — the transform is on the arrow,
+   never the button, so the hit target never moves. */
+.btn__arrow {
+  width: 1em;
+  height: 1em;
+  flex: none;
+  transition: transform var(--ws-dur-base) var(--ws-ease-out);
+}
+
+.btn:hover .btn__arrow { transform: translateX(3px); }
+
+/* A row of buttons that wraps rather than shrinking. Used by the closing
+   CTA on the subpages; inside a .section-head--center it inherits the
+   centring, so it needs no variant of its own. */
+.cta-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--ws-space-3);
+}
+
+/* ---------- Surfaces ---------- */
+.panel {
+  border: 1px solid var(--ws-line);
+  border-radius: var(--ws-radius-lg);
+  background: linear-gradient(180deg,
+              rgba(255, 255, 255, 0.045),
+              rgba(255, 255, 255, 0.012));
+  padding: clamp(1.5rem, 3vw, 2.5rem);
+}
+
+.panel--flush { padding: 0; overflow: hidden; }
+
+/* ---------- Tag / pill ---------- */
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  padding: 0.4em 0.85em;
+  border: 1px solid var(--ws-line-strong);
+  border-radius: var(--ws-radius-pill);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ws-text-secondary);
+  white-space: nowrap;
+}
+
+.tag--free { border-color: rgba(255, 255, 255, 0.28); color: var(--ws-text); }
+
+.tag--pro {
+  border-color: var(--ws-orange-700);
+  background: rgba(224, 150, 91, 0.12);
+  color: var(--ws-orange-300);
+}
+
+/* ---------- Device frames -------------------------------------------
+   SVG chrome (from partials/devices.html) provides the hardware; the
+   real product screenshot is a normal <img> layered inside the screen
+   area. Keeping the screenshot as an <img> preserves lazy loading, alt
+   text and sharp UI text — the SVG only draws bezel, rail, hinge, deck.
+
+   THE PERSPECTIVE IS HERE, NOT IN THE ART. The symbols are flat
+   elevations; this file stands the lid up, lays the deck away from it
+   and turns the whole machine. The screenshot is a child of the lid, so
+   the browser projects chrome and UI with the SAME matrix and they line
+   up at every size, on every device, for free. Drawing the 3/4 view
+   into the SVG instead would turn the screen into a quadrilateral, and
+   an <img> cannot be poured into a quadrilateral without solving a
+   homography per rendered size.
+
+   THE SCREEN BOX IS STATED ONCE, as four custom properties on whichever
+   element is the screen plane — the lid for a Mac, the whole body for a
+   phone — and everything that must line up with it reads them.
+
+   Because the properties are set ON that element, a Mac nested inside a
+   phone (the Wi-Fi camera viewport does exactly that) picks up the
+   Mac's own box from the nearer ancestor. No specificity fight, no
+   override needed at the nesting site.
+   -------------------------------------------------------------------- */
+
+/* ---------- The camera ----------
+   One rig for every device on the site, so a Mac and an iPhone standing
+   next to each other are photographed from the same spot. Turn these
+   four numbers and the whole site turns with them.
+
+   --dev-yaw is NEGATIVE (turned to show the machine's left side) so the
+   lamp in the SVG art, which comes from the upper right, stays on the
+   face that is turning towards the viewer.
+
+   WHY THE YAW IS A ROTATION ABOUT THE LID'S OWN CENTRE LINE: a point on
+   that axis projects exactly where it sat before the rotation. The QR
+   code in the Wi-Fi demo sits on it, which is why connect-modes.js can
+   still aim at 50%/37.07% of the Mac's box and be right to the pixel
+   with the machine turned. Pitch the lid as well and that stops being
+   true — so the pitch lives on the deck alone.
+
+   --dev-eye IS A PERCENTAGE OF THE BOX, so it is the one number here
+   that is not free: move the box height and the camera slides up or
+   down the machine unless this moves with it. 21.27% of 758 is the same
+   physical point 26% of 620 used to be, which is why the eye did not
+   actually move when the box was corrected below.
+
+   --dev-persp IS IN MACHINE WIDTHS, not pixels — 535 means the eye
+   stands 5.35 machine-widths away, which is 2600px at the 486px Mac in
+   the Wi-Fi demo, i.e. exactly the lens the site was tuned on. Stated
+   this way it is a property of the photograph rather than of the render
+   size, so every Mac on the page is shot with the same lens whatever
+   size it is drawn at. See .device--mac for why that matters. */
+:root {
+  --dev-yaw: -15deg;      /* how far the machine is turned from head-on */
+  --dev-open: 76deg;      /* how far the deck falls away from the lid   */
+  --dev-eye: 21.27%;      /* height of the eye: lower % = more top-down */
+  --dev-persp: 535;       /* distance to the eye, in machine widths     */
+}
+
+.device {
+  position: relative;
+  display: block;
+  width: 100%;
+
+  /* Neutral fallback: a device with no model class fills its own box
+     rather than collapsing to auto. */
+  --screen-x: 0%;
+  --screen-y: 0%;
+  --screen-w: 100%;
+  --screen-h: 100%;
+  --screen-r: 0;
+}
+
+.device__chrome,
+.device__deck > svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.device__screen,
+.device__lid::after,
+.device--phone::after {
+  position: absolute;
+  left: var(--screen-x);
+  top: var(--screen-y);
+  width: var(--screen-w);
+  height: var(--screen-h);
+  border-radius: var(--screen-r);
+}
+
+.device__screen {
+  display: block;
+  object-fit: cover;
+  object-position: top center;
+}
+
+/* ---------- Glass ----------
+   A screen sits behind glass, and glass catches the room. This has to
+   be a CSS overlay rather than part of the SVG: the chrome is painted
+   BEHIND the screenshot, so a highlight drawn there would be covered by
+   the very thing it is supposed to be reflecting off.
+
+   One soft diagonal, kept faint on purpose. These are product
+   screenshots first and props second — the UI inside them has to stay
+   readable, so the sheen stops well before the middle of the panel. */
+.device__lid::after,
+.device--phone::after {
+  content: "";
+  z-index: 4;          /* over every stacked screen, including the Wi-Fi
+                          phone's blended scanner chrome at 2 and 3 */
+  pointer-events: none;
+  /* Tinted, not white: the sheen is a reflection of the warm lamp the
+     SVG rim is lit by, and a neutral one would read as a different room
+     from the one the hardware is standing in. */
+  background: linear-gradient(107deg,
+              rgba(255, 232, 206, 0.09) 0%,
+              rgba(255, 232, 206, 0.072) 24%,
+              rgba(255, 232, 206, 0.018) 37%,
+              transparent 52%);
+  /* The bezel stands slightly proud of the glass and shades it. This
+     inner shadow is what puts the screen UNDER something rather than
+     flush with the frame around it. */
+  box-shadow: inset 0 3px 14px rgba(0, 0, 0, 0.4),
+              inset 0 0 0 1px rgba(255, 255, 255, 0.045);
+}
+
+/* ---------- MacBook: two planes hinged in one 3D scene ----------
+   THE BOX IS THE MACHINE'S FOOTPRINT, NOT THE LID'S. The flat drawing
+   was 1000x620 — a 560-unit lid over a 60-unit sliver of base — and the
+   box was first carried over unchanged, on the assumption that a deck
+   laid down at --dev-open would project into roughly that same sliver.
+   It does not: 520 units of keyboard laid down at --dev-open project to
+   ~198, so the machine hung 13.6% below the box it was given and text
+   underneath ran into the keyboard on three sections at once.
+
+   560 + 198 -> 758. The box now ends where the deck's front edge does,
+   so a section that reserves room for a Mac reserves room for the whole
+   Mac. Nothing about how the machine LOOKS changed here — only how much
+   space the page knows it takes.
+
+   What it costs: three percentages below, --dev-eye above, and two
+   constants aimed at the screen from outside (the QR glow in
+   connect-modes.css, ty in connect-modes.js). All of them are the same
+   physical point re-expressed against the taller box — change the box
+   and all five have to move together or the phone stops landing on the
+   QR. device-bench.html measures whether they still agree.
+
+   The deck still overhangs ~12.6% to the LEFT, and always will — the
+   near edge of a surface laid away from the camera projects wider than
+   the box it hinges from, and the -15deg yaw throws that spread to one
+   side. It is left overhanging on purpose: pushing it into the box
+   would mean either a narrower machine or a yaw of zero. Sections that
+   put something immediately left of a Mac need to know it.
+
+   FOR ANY FIXED BOX TO BE RIGHT, THE LENS HAS TO SCALE WITH THE
+   MACHINE. A perspective stated in px is a camera at a fixed distance,
+   so a Mac rendered at 486px was being shot from much closer, in
+   machine-widths, than the same Mac at 142px: the deck projected 7% past
+   its box at the large size and 0% at the small one, and no single
+   aspect-ratio could satisfy both. Stating the distance in cqw — 1% of
+   the machine's own width — makes the projection depend on the shape of
+   the machine and not on how big it happens to be rendered. Every Mac on
+   the site is now photographed with the same lens, and 705 is exact at
+   every size.
+
+   The px value is kept as a first declaration so a browser without
+   container queries falls back to the old fixed lens rather than to no
+   perspective at all. */
+.device--mac {
+  aspect-ratio: 1000 / 758;
+
+  /* So the scene below can measure the lens in machine widths. */
+  container-type: inline-size;
+}
+
+.device--mac .device__scene {
+  position: absolute;
+  inset: 0;
+  perspective: 2600px;                          /* fallback */
+  perspective: calc(var(--dev-persp) * 1cqw);
+  perspective-origin: 50% var(--dev-eye);
+  transform-style: preserve-3d;
+}
+
+/* Lid: viewBox 1000x560, screen at x=76 y=16 w=848 h=530 rx=14 */
+.device--mac .device__lid {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 73.88%;                 /* 560 / 758 */
+  transform-origin: 50% 100%;     /* the hinge line */
+  transform: rotateY(var(--dev-yaw));
+
+  --screen-x: 7.6%;
+  --screen-y: 2.857%;
+  --screen-w: 84.8%;
+  --screen-h: 94.643%;
+  --screen-r: 1.65% / 2.5%;
+}
+
+/* Deck: hinged at the lid's bottom edge and laid away from the viewer.
+   rotateX runs FIRST (the list applies right to left), so the deck lies
+   down in the machine's own frame and the yaw then turns the pair
+   together — the two planes stay welded at the hinge at any angle. */
+.device--mac .device__deck {
+  position: absolute;
+  left: 0;
+  top: 73.88%;
+  width: 100%;
+  height: 68.60%;                 /* 520 / 758 */
+  transform-origin: 50% 0;
+  transform: rotateY(var(--dev-yaw)) rotateX(var(--dev-open));
+  transform-style: preserve-3d;
+}
+
+/* The chassis front, standing down from the deck's near edge. Without
+   it the machine is a sheet of paper: this is the only surface in the
+   scene that shows the thing has a thickness. */
+.device--mac .device__deck::after {
+  content: "";
+  position: absolute;
+  left: 6%;
+  right: 6%;
+  top: 100%;
+  height: 6.4%;
+  transform-origin: 50% 0;
+  transform: rotateX(-90deg);
+  border-radius: 0 0 5px 5px;
+  background: linear-gradient(180deg, #5f646d, #33373d 46%, #14161a);
+  box-shadow: inset 0 1.4px 0 rgba(255, 230, 198, 0.5);
+}
+
+/* iPhone: viewBox 400x841, screen at x=12 y=12 w=376 h=817.
+   A slab needs no hinge — one plane, turned to the same angle as the
+   Mac beside it. Its own perspective, applied per element rather than
+   inherited from a scene, so that translating the phone across the page
+   never changes how it is projected. The Wi-Fi demo slides one across
+   the whole stage and the handset has to stay the same shape. */
+.device--phone {
+  aspect-ratio: 400 / 841;
+  transform: perspective(1500px) rotateY(var(--dev-yaw));
+
+  --screen-x: 3%;
+  --screen-y: 1.43%;
+  --screen-w: 94%;
+  --screen-h: 97.15%;
+  --screen-r: 11% / 5.2%;
+}
+
+/* ---------- Placeholder slot (Phase 3 assets) ----------------------- */
+.slot {
+  display: grid;
+  place-content: center;
+  gap: var(--ws-space-2);
+  padding: var(--ws-space-8) var(--ws-space-4);
+  border: 1px dashed var(--ws-line-strong);
+  border-radius: var(--ws-radius-lg);
+  text-align: center;
+  color: var(--ws-text-muted);
+  font-size: var(--ws-step--1);
+}
+
+/* ---------- Top bar ---------- */
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  border-bottom: 1px solid var(--ws-line);
+  background: rgba(7, 7, 7, 0.72);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+@supports not (backdrop-filter: blur(2px)) {
+  .topbar { background: rgba(7, 7, 7, 0.96); }
+}
+
+/* THREE COLUMNS, THE OUTER TWO EQUAL. This was a flexbox with an auto
+   margin on each side of .nav and another on .topbar__actions — three
+   auto margins sharing the free space a third each, which distributes
+   the items but does not centre anything. The nav sat left of the bar's
+   true centre by half the difference between the brand and the CTA.
+
+   `1fr auto 1fr` makes the side columns equal by construction, so the
+   middle one is centred on the bar no matter how wide the wordmark or
+   the button get — including when the button's label is translated.
+
+   The columns are assigned EXPLICITLY because .nav is display:none
+   below 900px. Left to auto-placement, its disappearance would promote
+   the actions into column 2 and park the hamburger in the middle. */
+.topbar__inner {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: var(--ws-space-6);
+  min-height: 68px;
+}
+
+.brand { grid-column: 1; justify-self: start; }
+.nav { grid-column: 2; }
+.topbar__actions { grid-column: 3; justify-self: end; }
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  text-decoration: none;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--ws-text);
+  white-space: nowrap;
+}
+
+.brand img { width: 34px; height: auto; }
+.brand span { font-size: 0.98rem; }
+
+.nav {
+  display: none;
+  /* No auto margins — the grid column above is what centres this now. */
+  gap: var(--ws-space-8);
+}
+
+.nav a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+  font-size: var(--ws-step--1);
+  color: var(--ws-text-tertiary);
+  text-decoration: none;
+  transition: color var(--ws-dur-fast) var(--ws-ease-out);
+}
+
+.nav a:hover { color: var(--ws-text); }
+
+.topbar__actions { display: flex; align-items: center; gap: var(--ws-space-3); }
+.topbar__actions .btn { display: none; }
+
+/* Language switch. A two-letter pill rather than a full word, because it
+   sits in the one column of the bar that has to survive down to 320px
+   next to the hamburger. It stays visible at every width: the mobile
+   menu also carries the switch, but a visitor should not have to open a
+   menu to discover the site exists in their language.
+
+   It is a plain <a> to the counterpart page, so it works with lang.js
+   blocked; lang.js only upgrades it to also store the preference. */
+.lang-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 34px;
+  padding: 0 0.55rem;
+  border: 1px solid var(--ws-line-strong);
+  border-radius: var(--ws-radius-sm);
+  font-size: var(--ws-step--1);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--ws-text-tertiary);
+  text-decoration: none;
+  transition: color var(--ws-dur-fast) var(--ws-ease-out),
+              border-color var(--ws-dur-fast) var(--ws-ease-out);
+}
+
+.lang-link:hover {
+  color: var(--ws-text);
+  border-color: var(--ws-text-tertiary);
+}
+
+.hamburger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--ws-line-strong);
+  border-radius: var(--ws-radius-sm);
+  background: transparent;
+  color: var(--ws-text);
+  cursor: pointer;
+}
+
+.hamburger svg { width: 20px; height: 20px; }
+
+@media (min-width: 900px) {
+  .nav { display: flex; }
+  .topbar__actions .btn { display: inline-flex; }
+  .hamburger { display: none; }
+}
+
+/* ---------- Mobile menu ---------- */
+.mobile-menu {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: grid;
+  align-content: start;
+  gap: var(--ws-space-2);
+  padding: 96px var(--ws-space-6) var(--ws-space-8);
+  background: rgba(7, 7, 7, 0.97);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--ws-dur-base) var(--ws-ease-out);
+}
+
+.mobile-menu.open { opacity: 1; pointer-events: auto; }
+
+.mobile-menu a {
+  padding: var(--ws-space-4);
+  border: 1px solid var(--ws-line);
+  border-radius: var(--ws-radius-md);
+  font-size: var(--ws-step-1);
+  text-decoration: none;
+  color: var(--ws-text);
+}
+
+.mobile-menu .btn { margin-top: var(--ws-space-4); }
+
+.menu-close {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--ws-line-strong);
+  border-radius: var(--ws-radius-sm);
+  background: transparent;
+  color: var(--ws-text);
+  font-size: 1.3rem;
+  cursor: pointer;
+}
+
+/* ---------- FAQ (native <details>) ---------- */
+.faq { display: grid; gap: var(--ws-space-3); }
+
+.faq details {
+  border: 1px solid var(--ws-line);
+  border-radius: var(--ws-radius-md);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.faq summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ws-space-4);
+  padding: var(--ws-space-6);
+  font-size: var(--ws-step-1);
+  font-weight: 650;
+  letter-spacing: -0.015em;
+  cursor: pointer;
+  list-style: none;
+}
+
+.faq summary::-webkit-details-marker { display: none; }
+
+.faq summary::after {
+  content: "";
+  flex: none;
+  width: 11px;
+  height: 11px;
+  border-right: 2px solid var(--ws-text-tertiary);
+  border-bottom: 2px solid var(--ws-text-tertiary);
+  transform: rotate(45deg);
+  transition: transform var(--ws-dur-fast) var(--ws-ease-out);
+}
+
+.faq details[open] summary::after { transform: rotate(-135deg); }
+
+.faq .faq__body {
+  display: grid;
+  gap: var(--ws-space-3);
+  padding: 0 var(--ws-space-6) var(--ws-space-6);
+  color: var(--ws-text-secondary);
+  max-width: var(--ws-measure);
+}
+
+.faq .faq__body ul { margin: 0; padding-left: 1.15rem; display: grid; gap: 0.35rem; }
+
+/* ---------- Footer ---------- */
+.site-footer {
+  border-top: 1px solid var(--ws-line);
+  margin-top: var(--ws-space-24);
+  padding-block: var(--ws-space-16) var(--ws-space-8);
+}
+
+.footer-grid {
+  display: grid;
+  gap: var(--ws-space-8);
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 720px) {
+  .footer-grid { grid-template-columns: 1.4fr repeat(3, 1fr); }
+}
+
+.footer-col h2 {
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ws-text-muted);
+  margin-bottom: var(--ws-space-4);
+}
+
+.footer-links { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--ws-space-1); }
+
+/* min-height 24px meets WCAG 2.2 target size (minimum) without relying on
+   the spacing exception — these are navigation links, not inline prose. */
+.footer-links a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+  font-size: var(--ws-step--1);
+  color: var(--ws-text-tertiary);
+  text-decoration: none;
+}
+
+.footer-links a:hover { color: var(--ws-text); text-decoration: underline; }
+
+.legal-note {
+  margin-top: var(--ws-space-12);
+  padding-top: var(--ws-space-6);
+  border-top: 1px solid var(--ws-line);
+  display: grid;
+  gap: var(--ws-space-2);
+  font-size: var(--ws-step--1);
+  color: var(--ws-text-muted);
+}
+
+.footer-bottom {
+  margin-top: var(--ws-space-6);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ws-space-4);
+  justify-content: space-between;
+  font-size: var(--ws-step--1);
+  color: var(--ws-text-muted);
+}
+
+.footer-bottom a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+  color: inherit;
+  text-decoration: none;
+}
+
+.footer-bottom a:hover { color: var(--ws-text); }
+
+/* Language switch and "back to top" share the right-hand slot, so they
+   need a row of their own; the separator is not a link and would not
+   line up with two inline-flex anchors on its own. */
+.footer-bottom__end {
+  display: flex;
+  align-items: center;
+  gap: var(--ws-space-2);
+}

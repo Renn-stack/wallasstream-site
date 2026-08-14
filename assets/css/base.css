@@ -1,0 +1,119 @@
+/* ============================================================
+   base.css — reset, accessibility primitives, motion policy
+   Loaded AFTER tokens.css and BEFORE legacy-home.css.
+   Deliberately small: it must not fight the legacy styles that
+   still own the current visual design until Phase 2 replaces them.
+   ============================================================ */
+
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+/* ---- Motion policy -------------------------------------------------
+   Single source of truth for reduced motion. Because every animated
+   rule in Phases 2-3 is authored against the --ws-dur-* tokens,
+   zeroing them here disables motion site-wide with no per-rule opt-out
+   to forget. Scroll smoothing is gated the same way.
+   ------------------------------------------------------------------ */
+html { scroll-behavior: auto; }
+
+@media (prefers-reduced-motion: no-preference) {
+  html { scroll-behavior: smooth; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --ws-dur-fast: 0.01ms;
+    --ws-dur-base: 0.01ms;
+    --ws-dur-slow: 0.01ms;
+    --ws-dur-cinematic: 0.01ms;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ---- Focus visibility ----------------------------------------------
+   The legacy stylesheet never defined a focus style, so keyboard users
+   had no visible indicator. Uses :focus-visible so pointer users are
+   unaffected.
+   ------------------------------------------------------------------ */
+:focus-visible {
+  outline: 2px solid var(--ws-orange-400, #F2A464);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* ---- Skip link ---- */
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 1000;
+  padding: 12px 18px;
+  background: var(--ws-orange-500, #E0965B);
+  color: var(--ws-accent-on, #0B0B0B);
+  font-weight: 700;
+  font-size: 14px;
+  text-decoration: none;
+  border-radius: 0 0 var(--ws-radius-sm, 6px) 0;
+}
+
+.skip-link:focus {
+  left: 0;
+}
+
+/* ---- Screen-reader-only utility ------------------------------------
+   Mirrors the pattern already used well in wifi-diagram.html so every
+   decorative diagram can carry a real text description.
+   ------------------------------------------------------------------ */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ---- Media defaults ------------------------------------------------
+   height:auto is REQUIRED, not cosmetic. Phase 1 added explicit
+   width/height attributes to every <img> to reserve layout space and
+   kill CLS. Without height:auto, any image the CSS constrains by width
+   (e.g. .mode-panel-image img, max-width:180px) keeps the literal
+   height attribute and renders stretched. Rules that set an explicit
+   height (.brand img, .feature .ico img) are more specific and win.
+   ------------------------------------------------------------------ */
+img,
+picture,
+svg,
+video {
+  max-width: 100%;
+}
+
+img {
+  height: auto;
+}
+
+/* ---- Inert fallback -------------------------------------------------
+   nav.js marks the closed mobile menu [inert]. This is the CSS half:
+   browsers that do not support the attribute still get the subtree out
+   of the tab order via visibility:hidden (which, unlike opacity:0,
+   removes descendants from focus). The .open rule restores it.
+   -------------------------------------------------------------------- */
+.mobile-menu[inert] {
+  visibility: hidden;
+}
+
+.mobile-menu.open {
+  visibility: visible;
+}

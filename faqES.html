@@ -1,830 +1,325 @@
 <!-- =========================
-FILE: faq.html
-Put your logo file in the repo as: logo.png
+FILE: faqES.html
+Versión en español de faq.html. Misma estructura, mismas clases y los
+mismos id de sección; solo cambian el texto y los destinos de los
+enlaces, que apuntan a las páginas ES.
+
+Nav y footer vienen de partials/nav-sub-es.html y footer-sub-es.html.
+Corre `npm run build` después de editar esos archivos.
 ========================= -->
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Preguntas frecuentes - Wallas’ Stream</title>
-  <!-- Favicon -->
-  <link rel="icon" type="image/png" href="favicon.png">
-
-  <meta name="description" content="Frequently asked questions about Wallas’ Stream." />
-
-  <style>
-    :root{
-      --bg:#0b0b0b;
-      --card:#111214;
-      --muted:#9aa0a6;
-      --text:#f2f2f2;
-      --line:#222428;
-      --accent:#4da3ff;
-      --shadow: 0 10px 35px rgba(0,0,0,.55);
-      --radius: 18px;
-      --radius2: 24px;
-      --max: 1400px;
-    }
-
-    html{scroll-behavior:smooth}
-    *{box-sizing:border-box}
-
-    body{
-      margin:0;
-      background: var(--bg);
-      color:var(--text);
-      line-height:1.55;
-      font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,Arial,sans-serif;
-    }
-
-    body::before{
-      content:"";
-      position:fixed;
-      inset:0;
-      pointer-events:none;
-      background:
-        radial-gradient(1200px 700px at 50% 45%,
-        transparent 40%,
-        rgba(0,0,0,.65) 78%,
-        rgba(0,0,0,.85) 100%);
-      z-index:-1;
-    }
-
-    a{color:var(--accent); text-decoration:none}
-    a:hover{text-decoration:underline}
-
-    /* SAME WRAP AS INDEX */
-    .wrap{
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 32px 28px 70px;
-    }
-
-    @media (min-width: 1440px){
-      .wrap{ padding-left: 48px; padding-right: 48px; }
-    }
-
-    @media (max-width: 480px){
-      .wrap{ padding-left: 16px; padding-right: 16px; }
-    }
-
-    /* TOPBAR */
-    .topbar{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:16px;
-      padding:14px 16px;
-      border:1px solid var(--line);
-      border-radius: var(--radius2);
-      background: rgba(17,18,20,.75);
-      backdrop-filter: blur(10px);
-      box-shadow: var(--shadow);
-      position: sticky;
-      top: 14px;
-      z-index: 50;
-    }
-
-    .brand{
-      display:flex;
-      align-items:center;
-      gap:12px;
-      min-width:0;
-    }
-
-    .logo{
-      width:40px;
-      height:40px;
-      border-radius:12px;
-      background:#0f1012;
-      border:1px solid var(--line);
-      overflow:hidden;
-      flex:0 0 auto;
-    }
-
-    .logo img{
-      width:100%;
-      height:100%;
-      object-fit:contain;
-    }
-
-    .brand .name{
-      font-weight:700;
-      letter-spacing:.2px;
-    }
-
-    .brand .sub{
-      color:var(--muted);
-      font-size:13px;
-      margin-top:2px;
-    }
-
-    .nav{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      justify-content:flex-end;
-    }
-
-    .pill{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      padding:10px 12px;
-      border-radius:999px;
-      border:1px solid var(--line);
-      background: rgba(0,0,0,.18);
-      color:var(--text);
-      font-size:14px;
-    }
-
-    .pill:hover{
-      border-color:#2e3238;
-      text-decoration:none;
-    }
-
-    .pill.primary{
-  background: linear-gradient(180deg, rgba(77,163,255,.22), rgba(77,163,255,.10));
-  border-color: rgba(77,163,255,.35);
-}
-.pill.primary:hover{
-  border-color: rgba(77,163,255,.55);
-}
-.pill.ghost{
-  background: transparent;
-}
-
-
-    /* HERO */
-    .hero{
-      margin-top:22px;
-      padding:26px 18px;
-      border:1px solid var(--line);
-      border-radius: var(--radius2);
-      background: linear-gradient(180deg,
-        rgba(255,255,255,.04),
-        rgba(255,255,255,.02));
-      box-shadow: var(--shadow);
-    }
-
-    h1{
-      margin:0;
-      font-size:38px;
-      letter-spacing:-.3px;
-    }
-
-    .kicker{
-      margin:10px 0 0;
-      color:var(--muted);
-      max-width:75ch;
-      font-size:18px;
-    }
-
-    /* FAQ CARD */
-    .card{
-      margin-top:18px;
-      padding:18px;
-      border:1px solid var(--line);
-      border-radius: var(--radius2);
-      background: rgba(17,18,20,.65);
-      backdrop-filter: blur(10px);
-      box-shadow: var(--shadow);
-    }
-
-    .accordion{
-  border-top:1px solid var(--line);
-  margin-top:8px;
-}
-
-.acc-item{
-  border-bottom: 1px solid rgba(255,255,255,.08);
-  padding: 4px 0;
-}
-
-.acc-head{
-  width:100%;
-  background:transparent;
-  border:0;
-  color:var(--text);
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding:18px 10px;
-  font-size:17px;
-  font-weight:600;
-  cursor:pointer;
-  text-align:left;
-}
-
-.acc-head:hover{
-  background: rgba(255,255,255,.02);
-  border-radius: 12px;
-}
-
-.acc-head .icon{
-  color:var(--muted);
-  transition:transform .2s ease;
-}
-
-.acc-item.open .icon{
-  transform:rotate(90deg);
-}
-
-.acc-panel{
-  max-height:0;
-  overflow:hidden;
-  transition:max-height .25s ease;
-  padding:0 10px;
-  color:var(--muted);
-  font-size:15px;
-  line-height:1.6;
-}
-
-.acc-item.open .acc-panel{
-  max-height:600px;
-  padding-bottom:12px;
-}
-
-
-    /* FOOTER SAME AS INDEX */
-    .footer-block{
-      margin-top: 70px;
-      border-top: 1px solid rgba(255,255,255,.10);
-      padding-top: 28px;
-    }
-
-    .footer-grid{
-      display:grid;
-      grid-template-columns: 1.4fr 1fr 1fr .8fr;
-      gap: 28px;
-      align-items:start;
-    }
-
-    .footer-title{
-      font-weight:700;
-      font-size:22px;
-      margin: 0 0 14px;
-    }
-
-    .footer-links{
-      list-style:none;
-      padding:0;
-      margin:0;
-      display:flex;
-      flex-direction:column;
-      gap:10px;
-    }
-
-    .footer-links a{
-      color: var(--muted);
-      font-size:16px;
-    }
-
-    .footer-links a:hover{
-      color: var(--text);
-    }
-
-    .footer-badge{
-      margin-top: 8px;
-      display:inline-block;
-      border-radius:12px;
-      overflow:hidden;
-      border: 1px solid rgba(255,255,255,.12);
-      background: rgba(255,255,255,.03);
-      padding: 10px 12px;
-      color: var(--muted);
-      font-size:13px;
-    }
-
-    .footer-bottom{
-      margin-top: 26px;
-      padding-top: 18px;
-      border-top: 1px solid rgba(255,255,255,.08);
-      color: var(--muted);
-      font-size:13px;
-      display:flex;
-      justify-content:space-between;
-      flex-wrap:wrap;
-      gap:14px;
-    }
-
-    @media (max-width: 900px){
-      .footer-grid{ grid-template-columns: 1fr 1fr; }
-    }
-
-    @media (max-width: 560px){
-      .footer-grid{ grid-template-columns: 1fr; }
-      .footer-bottom{ justify-content:flex-start; }
-    }
-
-    .footer-bottom a{
-  color: var(--text) !important;
-}
-.footer-bottom a:hover{
-  color: var(--text) !important;
-  text-decoration: underline;
-}
-
-
-/* ---------------- Fullscreen Mobile Menu (Overlay) ---------------- */
-.mobile-menu{
-  position: fixed;
-  inset: 0;
-  z-index: 999;
-
-  opacity: 0;
-  pointer-events: none;
-  transform: translateY(-8px);
-  transition: opacity .18s ease, transform .18s ease;
-
-  background: rgba(0,0,0,.75);
-  backdrop-filter: blur(14px);
-
-  display: flex;
-  align-items: flex-start;
-  justify-content: center;
-  padding: 90px 20px 24px;
-}
-
-.mobile-menu.open{
-  opacity: 1;
-  pointer-events: auto;
-  transform: translateY(0);
-}
-
-.mobile-menu .menu-panel{
-  width: 100%;
-  max-width: 720px;
-  border: 0;
-  border-radius: 0;
-  background: transparent;
-  box-shadow: none;
-  padding: 0;
-}
-
-.mobile-menu .menu-close{
-  width: 44px;
-  height: 44px;
-  border-radius: 14px;
-  border: 1px solid rgba(255,255,255,.12);
-  background: rgba(0,0,0,.25);
-  color: var(--text);
-  font-size: 22px;
-  cursor: pointer;
-
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-
-  position: fixed;
-  top: calc(env(safe-area-inset-top, 0px) + 14px);
-  right: calc(env(safe-area-inset-right, 0px) + 14px);
-  z-index: 1000;
-}
-
-.mobile-menu a{
-  display:block;
-  padding: 18px 14px;
-  border-radius: 16px;
-  color: var(--text);
-  text-decoration:none;
-  font-size: 20px;
-  border: 1px solid rgba(255,255,255,.10);
-  background: rgba(255,255,255,.04);
-  margin: 10px 0;
-}
-
-.mobile-menu a:hover{
-  background: rgba(255,255,255,.08);
-}
-
-.hamburger{
-  display:none;
-  width:44px; height:44px;
-  border-radius:14px;
-  border:1px solid var(--line);
-  background: rgba(0,0,0,.18);
-  color: var(--text);
-  font-size: 20px;
-  cursor:pointer;
-}
-
-/* MOBILE RULES */
-@media (max-width: 820px){
-  .nav-links{ display:none; }
-  .hamburger{ display:inline-flex; align-items:center; justify-content:center; }
-}
-
-/* OPTIONAL: hide Download inside hamburger on mobile */
-@media (max-width: 820px){
-  .mobile-menu a[href*="download"]{
-    display:none;
-  }
-}
-
-.pill[disabled]{
-  opacity:.65;
-  cursor:not-allowed;
-}
-
-/* Hide download badge in footer on mobile */
-@media (max-width: 560px){
-  .footer-badge[href*="#download"]{
-    display: none;
-  }
-}
-
-/* FAQ links in accordion = white */
-.acc-panel a{
-  color: var(--text);
-  font-weight: 600;
-}
-
-.acc-panel a:hover{
-  text-decoration: underline;
-  opacity: .85;
-}
-
-
-
-
-
-
-  </style>
+  <title>Preguntas frecuentes | Wallas&rsquo; Stream</title>
+  <meta name="description" content="Respuestas sobre instalación, privacidad, compatibilidad y modos de transmisión de Wallas' Stream." />
+
+  <meta name="apple-itunes-app" content="app-id=6759255823">
+  <link rel="icon" href="favicons/favicon.ico" sizes="32x32" />
+  <link rel="icon" type="image/png" sizes="32x32" href="favicons/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="favicons/favicon-16x16.png" />
+  <link rel="apple-touch-icon" href="favicons/apple-touch-icon.png" />
+  <link rel="manifest" href="favicons/manifest.json" />
+
+  <link rel="alternate" hreflang="en" href="https://wallasstream.com/faq.html" />
+  <link rel="alternate" hreflang="es" href="https://wallasstream.com/faqES.html" />
+  <link rel="alternate" hreflang="x-default" href="https://wallasstream.com/faq.html" />
+
+  <meta property="og:title" content="Preguntas frecuentes | Wallas&rsquo; Stream" />
+  <meta property="og:description" content="Respuestas sobre instalación, privacidad, compatibilidad y modos de transmisión." />
+  <meta property="og:image" content="https://wallasstream.com/preview.png" />
+  <meta property="og:url" content="https://wallasstream.com/faqES.html" />
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content="es_MX" />
+  <meta name="twitter:card" content="summary_large_image" />
+
+  <link rel="stylesheet" href="assets/css/tokens.css" />
+  <link rel="stylesheet" href="assets/css/base.css" />
+  <link rel="stylesheet" href="assets/css/components.css" />
+  <link rel="stylesheet" href="assets/css/sections.css" />
+  <script src="lang.js" defer></script>
 </head>
 
-<body>
-  <div class="wrap" id="top">
+<body id="top">
+  <a class="skip-link" href="#main">Saltar al contenido</a>
 
+  <!--#include nav-sub-es-->
+<!-- Barra de subpágina en español. Espejo de partials/nav-sub.html: los
+     enlaces de sección son absolutos a indexES.html porque un #listen
+     suelto se resolvería contra la subpágina, que no tiene esa sección.
+     El botón es "Desbloquear Pro" y no "Prueba gratis", porque la página
+     de descarga ES la prueba gratis. -->
+<header class="topbar">
+  <div class="container topbar__inner">
+    <a class="brand" href="indexES.html">
+      <img src="assets/img/brand/logo-96.webp" alt="" width="96" height="70" />
+      <span>Wallas&rsquo; Stream</span>
+    </a>
 
-    <!-- TOPBAR -->
-    <div class="topbar">
-      <div class="brand">
-        <div class="logo" aria-label="Wallas’ Stream logo">
-          <img id="logoImg" src="logo.png" alt="Wallas’ Stream logo" />
-        </div>
-        <div style="min-width:0">
-          <div class="name">Wallas’ Stream</div>
-          <div class="sub">Preguntas frecuentes</div>
-        </div>
-      </div>
+    <nav class="nav" aria-label="Principal">
+      <a href="indexES.html#listen">Wi-Fi y cable</a>
+      <a href="indexES.html#pricing">Gratis vs Pro</a>
+      <a href="indexES.html#founder">Fundadora</a>
+      <a href="faqES.html">Preguntas</a>
+      <a href="contactES.html">Soporte</a>
+    </nav>
 
-      <div class="nav">
-
-        <!-- Desktop pills -->
-        <div class="nav-links">
-          <a class="pill" href="legalES.html">Privacidad y Términos</a>
-          <a class="pill" href="helpES.html">Ayuda</a>
-          <a class="pill" href="contactES.html">Contacto</a>
-          <a class="pill primary" href="indexES.html#download">Descargar</a>
-
-
-       
-
-        </div>
-
-        <!-- Mobile hamburger -->
-        <button class="hamburger" id="menuBtn" aria-label="Open menu" type="button">
-          ☰
-        </button>
-
-      </div>
+    <div class="topbar__actions">
+      <a class="lang-link" href="index.html" data-lang="en" hreflang="en" lang="en"
+         aria-label="View this page in English">EN</a>
+      <a class="btn btn--outline btn--sm" href="https://wallasstreamapp.lemonsqueezy.com/checkout/buy/6d7caf78-7cae-4540-91c7-9a2c2e016b05">Desbloquear Pro</a>
+      <button class="hamburger" id="menuBtn" type="button"
+              aria-label="Abrir menú" aria-expanded="false" aria-controls="mobileMenu">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+             stroke-linecap="round" aria-hidden="true">
+          <path d="M3 6h18M3 12h18M3 18h18" />
+        </svg>
+      </button>
     </div>
+  </div>
+</header>
 
-    <!-- ✅ Fullscreen Mobile Menu (must be OUTSIDE topbar) -->
-    <div class="mobile-menu" id="mobileMenu" aria-hidden="true">
-      <div class="menu-panel">
-        <button class="menu-close" id="menuClose" aria-label="Close menu" type="button">✕</button>
-        <a href="indexES.html">Inicio</a>
-        <a href="legalES.html">Privacidad y Términos</a>
-        <a href="helpES.html">Ayuda</a>
-        <a href="contactES.html">Contacto</a>
+<div class="mobile-menu" id="mobileMenu" role="dialog" aria-modal="true"
+     aria-label="Menú" aria-hidden="true">
+  <button class="menu-close" id="menuClose" type="button" aria-label="Cerrar menú">&#10005;</button>
+  <a href="indexES.html">Inicio</a>
+  <a href="indexES.html#listen">Wi-Fi y cable</a>
+  <a href="indexES.html#pricing">Gratis vs Pro</a>
+  <a href="indexES.html#founder">Fundadora</a>
+  <a href="faqES.html">Preguntas frecuentes</a>
+  <a href="contactES.html">Soporte</a>
+  <a href="index.html" data-lang="en" hreflang="en" lang="en">English</a>
+  <a class="btn btn--outline" href="https://wallasstreamapp.lemonsqueezy.com/checkout/buy/6d7caf78-7cae-4540-91c7-9a2c2e016b05">Desbloquear Pro</a>
+</div>
+<!--#endinclude nav-sub-es-->
+
+  <main id="main">
+
+    <!-- ============ Encabezado ============ -->
+    <section class="section section--tight" data-section="faq-hero">
+      <div class="container container--narrow">
+        <div class="section-head section-head--center">
+          <p class="eyebrow">Ayuda</p>
+          <h1>Preguntas frecuentes</h1>
+          <p class="lede">
+            Respuestas sobre privacidad, compatibilidad e instalación. Si la tuya
+            no está aquí, <a class="accent" href="contactES.html">escríbenos</a>. Una
+            persona real lee cada mensaje.
+          </p>
+        </div>
       </div>
-    </div>
-
-    <!-- HERO -->
-    <section class="hero">
-      <h1>Preguntas frecuentes.</h1>
-      <p class="kicker">
-        Respuestas sobre instalación, privacidad, compatibilidad y modos de transmisión.
-      </p>
     </section>
 
-    <!-- FAQ -->
-    <div class="card">
-      <div class="accordion">
+    <!-- ============ Seguridad y privacidad ============ -->
+    <section class="section section--tight" id="safety" data-section="faq-safety">
+      <div class="container container--narrow section__inner">
+        <div class="section-head">
+          <p class="eyebrow">Seguridad y privacidad</p>
+          <h2>Qué hace, y qué nunca toca</h2>
+        </div>
 
-        <div class="acc-item">
-          <button class="acc-head">
-            <span>¿Wallas’ Stream graba audio?</span>
-            <span class="icon">▸</span>
-          </button>
-          <div class="acc-panel">
-            No. Wallas’ Stream transmite audio en vivo solo durante el uso activo.
-            No graba, guarda ni sube audio.
+        <div class="faq">
+          <details>
+            <summary>¿Wallas&rsquo; Stream graba el audio?</summary>
+            <div class="faq__body">
+              <p>No. Wallas&rsquo; Stream transmite el audio en vivo únicamente durante el uso activo. No graba, no almacena ni sube audio.</p>
+            </div>
+          </details>
+
+          <details>
+            <summary>¿Wallas&rsquo; Stream es un dispositivo médico?</summary>
+            <div class="faq__body">
+              <p>No. Wallas&rsquo; Stream no es un dispositivo médico. Es una herramienta personal de transmisión de audio, y no diagnostica, trata, cura ni previene ninguna condición.</p>
+            </div>
+          </details>
+
+          <details>
+            <summary>¿Esto afecta la configuración de mi dispositivo auditivo?</summary>
+            <div class="faq__body">
+              <p>No. Wallas&rsquo; Stream no modifica de ninguna manera los ajustes de tu procesador ni su programación clínica. Solo transmite el audio de tu computadora a tu dispositivo iOS, que después entrega el sonido a través de tu configuración auditiva actual.</p>
+              <ul>
+                <li>Sin cambios en los MAPs ni en los ajustes de audiología</li>
+                <li>Sin actualizaciones de firmware</li>
+                <li>Sin ajustes médicos</li>
+                <li>Funciona solo como un complemento externo de transmisión de audio</li>
+              </ul>
+            </div>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ Compatibilidad ============ -->
+    <section class="section section--tight" id="compatibility" data-section="faq-compatibility">
+      <div class="container container--narrow section__inner">
+        <div class="section-head">
+          <p class="eyebrow">Compatibilidad</p>
+          <h2>Dispositivos y plataformas</h2>
+        </div>
+
+        <div class="faq">
+          <details>
+            <summary>¿Wallas&rsquo; Stream funciona con procesadores de sonido conectados al dispositivo?</summary>
+            <div class="faq__body">
+              <p>Sí. Wallas&rsquo; Stream se ha probado con procesadores Cochlear&trade; Nucleus&trade; 7 y Nucleus&trade; 8 conectados a través de un dispositivo iOS. La compatibilidad puede variar según el modelo de tu procesador y los ajustes de audio de tu dispositivo.</p>
+            </div>
+          </details>
+
+          <details>
+            <summary>¿Qué procesadores son compatibles?</summary>
+            <div class="faq__body">
+              <p>Por ahora, Wallas&rsquo; Stream se ha probado con procesadores Cochlear&trade; Nucleus&trade; 7 y Nucleus&trade; 8. Esperamos ampliar la compatibilidad conforme más personas lo prueben con otras marcas y modelos.</p>
+            </div>
+          </details>
+
+          <details>
+            <summary>¿También funciona con auxiliares auditivos?</summary>
+            <div class="faq__body">
+              <p>Sí. Wallas&rsquo; Stream también se ha probado con auxiliares auditivos Rexton conectados a través de un dispositivo iOS. La compatibilidad puede variar según tu dispositivo y tu configuración de audio.</p>
+            </div>
+          </details>
+
+          <details>
+            <summary>¿Hay una versión para Windows?</summary>
+            <div class="faq__body">
+              <p>Por ahora Wallas&rsquo; Stream está disponible solo para computadoras. Estamos trabajando activamente en ampliar la compatibilidad a otras plataformas.</p>
+            </div>
+          </details>
+
+          <details>
+            <summary>¿Funciona con teléfonos Android?</summary>
+            <div class="faq__body">
+              <p>Es posible que exploremos la compatibilidad con Android en el futuro.</p>
+            </div>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ Instalación y uso diario ============ -->
+    <section class="section section--tight" id="setup" data-section="faq-setup">
+      <div class="container container--narrow section__inner">
+        <div class="section-head">
+          <p class="eyebrow">Instalación y uso diario</p>
+          <h2>Ponerlo a funcionar, y vivir con él</h2>
+        </div>
+
+        <div class="faq">
+          <details>
+            <summary>¿Necesito instalar algo en mi computadora?</summary>
+            <div class="faq__body">
+              <p>Sí. Necesitas la app Wallas&rsquo; Stream para Mac y Wallas Audio, un controlador de audio virtual ligero que se usa para transmitir. Una vez instalado, seleccionas Wallas Audio como dispositivo de entrada <em>y</em> de salida de tu computadora, para que el sonido de tu Mac se dirija hacia Wallas&rsquo; Stream.</p>
+              <p>La <a class="accent" href="downloadES.html">página de descargas</a> te guía por las dos instalaciones en orden.</p>
+            </div>
+          </details>
+
+          <details>
+            <summary>¿Hay retraso en el audio?</summary>
+            <div class="faq__body">
+              <p>Wallas&rsquo; Stream está diseñado para escuchar con baja latencia. En la mayoría de los casos el retraso es mínimo (normalmente menos de 1 segundo).</p>
+            </div>
+          </details>
+
+          <details>
+            <summary>¿Wallas&rsquo; Stream funciona en segundo plano?</summary>
+            <div class="faq__body">
+              <p>Sí. La transmisión continúa mientras la app corre en segundo plano, así que puedes seguir escuchando durante juntas o clases.</p>
+            </div>
+          </details>
+
+          <details>
+            <summary>¿Dónde puedo conseguir soporte?</summary>
+            <div class="faq__body">
+              <p>Puedes contactar a soporte cuando quieras desde nuestra <a class="accent" href="contactES.html">página de contacto</a>.</p>
+            </div>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ Cierre ============ -->
+    <section class="section section--tight" data-section="faq-cta">
+      <div class="container container--narrow">
+        <div class="section-head section-head--center">
+          <h2>¿Te quedó alguna duda?</h2>
+          <p class="lede">Pregúntanos directamente, o pruébalo con tu propio equipo. Los primeros 7 días incluyen Pro.</p>
+          <div class="cta-row">
+            <a class="btn btn--primary btn--lg" href="downloadES.html">Prueba Wallas&rsquo; Stream gratis</a>
+            <a class="btn btn--ghost btn--lg" href="contactES.html">Contactar a soporte</a>
           </div>
         </div>
+      </div>
+    </section>
 
-        <div class="acc-item">
-          <button class="acc-head">
-            <span>¿Necesito internet?</span>
-            <span class="icon">▸</span>
-          </button>
-          <div class="acc-panel">
-            No. Tanto el modo Wi‑Fi como el modo por cable USB funcionan de forma local.
-            No se requiere internet.
-          </div>
-        </div>
+  </main>
 
-        <div class="acc-item">
-          <button class="acc-head">
-            <span>¿Wallas’ Stream es un dispositivo médico?</span>
-            <span class="icon">▸</span>
-          </button>
-          <div class="acc-panel">
-            No. Wallas’ Stream no es un dispositivo médico.
-            Es una herramienta personal de transmisión de audio.
-          </div>
-        </div>
+  <!--#include footer-sub-es-->
+<!-- Pie de subpágina en español. Mismo contenido que partials/footer-es.html;
+     los enlaces de Producto apuntan a las secciones de indexES.html, que una
+     subpágina no puede alcanzar con un fragmento suelto. -->
+<footer class="site-footer" id="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-col">
+        <a class="brand" href="indexES.html">
+          <img src="assets/img/brand/logo-96.webp" alt="" width="96" height="70" />
+          <span>Wallas&rsquo; Stream</span>
+        </a>
+        <p class="fineprint" style="margin-top:1rem;max-width:30ch">
+          Escucha tu Mac a través de tu dispositivo auditivo.
+        </p>
+      </div>
 
-        <!-- Will this affect my hearing device settings? -->
-<div class="acc-item">
-  <button class="acc-head">
-    <span>¿Esto afectará la configuración de mi dispositivo auditivo?</span>
-    <span class="icon">▸</span>
-  </button>
-  <div class="acc-panel">
-    No. Wallas’ Stream no cambia la configuración de tu procesador ni la programación clínica de ninguna forma.
-    <br><br>
-    Solo transmite audio de tu computadora a tu dispositivo, y el dispositivo entrega el sonido a través de tu configuración auditiva actual.
-    <br><br>
-    • Sin cambios en MAPs ni ajustes de audiología<br>
-    • Sin actualizaciones de firmware<br>
-    • Sin ajustes médicos<br>
-    • Funciona solo como un complemento externo de transmisión de audio
-  </div>
-</div>
+      <div class="footer-col">
+        <h2>Producto</h2>
+        <ul class="footer-links">
+          <li><a href="indexES.html#listen">Wi-Fi y cable</a></li>
+          <li><a href="indexES.html#pricing">Gratis vs Pro</a></li>
+          <li><a href="indexES.html#founder">Fundadora</a></li>
+        </ul>
+      </div>
 
-<!-- Does Wallas’ Stream support device-connected sound processors? -->
-<div class="acc-item">
-  <button class="acc-head">
-    <span>¿Wallas’ Stream es compatible con procesadores conectados a mi dispositivo?</span>
-    <span class="icon">▸</span>
-  </button>
-  <div class="acc-panel">
-    Sí. Wallas’ Stream se ha probado con procesadores Cochlear™ Nucleus 7 y Nucleus 8 conectados mediante un dispositivo móvil.
-    <br><br>
-    La compatibilidad puede variar según tu modelo de procesador y los ajustes de audio del dispositivo.
-  </div>
-</div>
+      <div class="footer-col">
+        <h2>Descargas</h2>
+        <ul class="footer-links">
+          <li><a href="downloadES.html">Wallas&rsquo; Stream para Mac</a></li>
+          <li><a href="https://apps.apple.com/mx/app/wallas-stream/id6759255823" target="_blank" rel="noopener">Wallas&rsquo; Stream para iPhone</a></li>
+          <li><a href="helpES.html">Ayuda</a></li>
+        </ul>
+      </div>
 
-<!-- Is Windows support available? -->
-<div class="acc-item">
-  <button class="acc-head">
-    <span>¿Hay soporte para Windows?</span>
-    <span class="icon">▸</span>
-  </button>
-  <div class="acc-panel">
-    Por ahora, Wallas’ Stream está disponible solo para computadoras.
-    <br><br>
-    Estamos trabajando para expandir el soporte a otras plataformas.
-  </div>
-</div>
-
-<div class="acc-item">
-  <button class="acc-head">
-    <span>¿Funciona con teléfonos Android?</span>
-    <span class="icon">▸</span>
-  </button>
-  <div class="acc-panel">
-    El soporte para Android podría explorarse en el futuro.
-  </div>
-</div>
-
-<div class="acc-item">
-  <button class="acc-head">
-    <span>¿Qué procesadores son compatibles?</span>
-    <span class="icon">▸</span>
-  </button>
-  <div class="acc-panel">
-    Por ahora, Wallas’ Stream se ha probado con procesadores Cochlear™ Nucleus 7 y Nucleus 8.
-    <br><br>
-    Esperamos mayor compatibilidad conforme más usuarios prueben distintas marcas y modelos.
-  </div>
-</div>
-
-
-<div class="acc-item">
-  <button class="acc-head">
-    <span>¿También funciona con auxiliares auditivos?</span>
-    <span class="icon">▸</span>
-  </button>
-  <div class="acc-panel">
-    Sí. Wallas’ Stream también se ha probado con auxiliares auditivos Rexton conectados mediante un dispositivo móvil.
-    <br><br>
-    La compatibilidad puede variar según tu dispositivo y configuración de audio.
-  </div>
-</div>
-
-<div class="acc-item">
-  <button class="acc-head">
-    <span>¿Hay retraso de audio?</span>
-    <span class="icon">▸</span>
-  </button>
-  <div class="acc-panel">
-    Wallas’ Stream está diseñado para una escucha de baja latencia.
-    <br><br>
-    En la mayoría de los casos, cualquier retraso es mínimo (normalmente menor a 1 segundo).
-  </div>
-</div>
-
-<div class="acc-item">
-  <button class="acc-head">
-    <span>¿Wallas’ Stream funciona en segundo plano?</span>
-    <span class="icon">▸</span>
-  </button>
-  <div class="acc-panel">
-    Sí. La transmisión continúa mientras la app se ejecuta en segundo plano,
-    para que puedas seguir escuchando durante reuniones o clases.
-  </div>
-</div>
-
-<div class="acc-item">
-  <button class="acc-head">
-    <span>¿Necesito instalar algo en mi computadora?</span>
-    <span class="icon">▸</span>
-  </button>
-  <div class="acc-panel">
-    Sí. Wallas’ Stream requiere instalar Wallas Audio,
-    un driver de audio virtual ligero que se usa para transmitir.
-    <br><br>
-    Una vez instalado, solo lo seleccionas como salida de audio en tu computadora.
-  </div>
-</div>
-
-
-        <div class="acc-item">
-          <button class="acc-head">
-            <span>¿Dónde puedo obtener soporte?</span>
-            <span class="icon">▸</span>
-          </button>
-          <div class="acc-panel">
-  Puedes contactar a soporte en cualquier momento desde nuestra
-  <a href="contactES.html">página de Contacto</a>.
-</div>
-
-        </div>
-
-        
-
+      <div class="footer-col">
+        <h2>Contacto</h2>
+        <ul class="footer-links">
+          <li><a href="contactES.html">Contacto</a></li>
+          <li><a href="faqES.html">Preguntas frecuentes</a></li>
+          <li><a href="legalES.html">Aviso de privacidad</a></li>
+          <li><a href="legalES.html#terms">Términos de uso</a></li>
+          <li><a href="https://www.instagram.com/wallasstream?igsh=MXQxenIyZ3d1eG9sNg%3D%3D&amp;utm_source=qr" target="_blank" rel="noopener">Instagram</a></li>
+          <li><a href="https://www.tiktok.com/@wallasstream" target="_blank" rel="noopener">TikTok</a></li>
+        </ul>
       </div>
     </div>
 
-    <!-- FOOTER -->
-<footer class="footer-block" id="footer">
-  <div class="footer-grid">
-    <!-- Left column -->
-    <div>
-      <div class="footer-title">Wallas’ Stream</div>
+    <div class="legal-note">
+      <p>Herramienta independiente • No es un dispositivo médico • Sin afiliación con Cochlear.</p>
+      <p>Cochlear™ y Nucleus™ son marcas de Cochlear Limited.</p>
+    </div>
 
-      <div class="footer-badge">
-        App móvil — próximamente
+    <div class="footer-bottom">
+      <div>© <span id="year">2026</span> Wallas&rsquo; Stream. Todos los derechos reservados.</div>
+      <div class="footer-bottom__end">
+        <a href="index.html" data-lang="en" hreflang="en" lang="en">English</a>
+        <span aria-hidden="true"> · </span>
+        <a href="#top">Volver arriba</a>
       </div>
-      <a class="footer-badge" href="indexES.html#download">
-  Descargar para computadora ahora
-</a>
-
-      
-      
-      
     </div>
-
-    <!-- Column 2 -->
-    <div>
-      <div class="footer-title">Producto</div>
-      <ul class="footer-links">
-        <li><a href="indexES.html#how-it-works">Cómo funciona</a></li>
-        <li><a href="modesES.html">Dos modos de escucha</a></li>
-    <li><a href="faqES.html">Preguntas frecuentes</a></li>  
-      </ul>
-    </div>
-
-    <!-- Column 3 -->
-    <div>
-      <div class="footer-title">Contacto</div>
-      <ul class="footer-links">
-        <li><a href="contactES.html">Contacto</a></li>
-        <li><a href="legalES.html">Política de Privacidad</a></li>
-        <li><a href="legalES.html#terms">Términos de uso</a></li>
-        
-        
-
-      </ul>
-    </div>
-
-    <!-- Column 4 -->
-    <div>
-      <div class="footer-title">Social</div>
-      <ul class="footer-links">
-        
-        <li><a href="https://www.instagram.com/wallasstream?igsh=MXQxenIyZ3d1eG9sNg%3D%3D&utm_source=qr" target="blank" rel="noopener">Instagram</a></li>
-        <li><a href="https://www.tiktok.com/@wallasstream" target="blank" rel="noopener">TikTok</a></li>
-      </ul>
-    </div>
-  </div>
-
-  <div class="footer-bottom">
-    <div>© <span id="year"></span> Wallas' Stream. Todos los derechos reservados.</div>
-    <div><a href="#top">Volver arriba</a></div>
   </div>
 </footer>
+<!--#endinclude footer-sub-es-->
 
-  </div>
-
-  <script>
-  // Year
-  document.getElementById("year").textContent = new Date().getFullYear();
-
-  // Accordion (one open)
-  document.querySelectorAll(".acc-head").forEach(btn => {
-    btn.addEventListener("click", () => {
-      const item = btn.parentElement;
-      document.querySelectorAll(".acc-item").forEach(x => {
-        if (x !== item) x.classList.remove("open");
-      });
-      item.classList.toggle("open");
-    });
-  });
-
-  // Logo resolver
-  const BASES = ['', 'assets/', 'img/', 'images/', 'Media/', 'Media/Logo/'];
-
-  function preloadImage(src){
-    return new Promise((resolve, reject) => {
-      const im = new Image();
-      im.onload = () => resolve(src);
-      im.onerror = () => reject(src);
-      im.src = src;
-    });
-  }
-
-  async function findAsset(names){
-    for (const base of BASES){
-      for (const name of names){
-        try{ await preloadImage(base + name); return base + name; }catch(e){}
-      }
-    }
-    return null;
-  }
-
-  async function resolveAssets(){
-    const logo = document.getElementById("logoImg");
-    if (logo){
-      const src = await findAsset(["Logo.png","logo.png","Logo 1.png"]);
-      if (src) logo.src = src;
-    }
-  }
-
-  resolveAssets();
-
-  // ✅ Mobile menu toggle
-const menuBtn = document.getElementById("menuBtn");
-const mobileMenu = document.getElementById("mobileMenu");
-const menuClose = document.getElementById("menuClose");
-
-function openMenu(){
-  mobileMenu.classList.add("open");
-  document.body.style.overflow = "hidden"; // lock scroll
-  mobileMenu.setAttribute("aria-hidden", "false");
-}
-
-function closeMenu(){
-  mobileMenu.classList.remove("open");
-  document.body.style.overflow = ""; // unlock
-  mobileMenu.setAttribute("aria-hidden", "true");
-}
-
-if (menuBtn && mobileMenu) {
-  menuBtn.addEventListener("click", openMenu);
-
-  if (menuClose) menuClose.addEventListener("click", closeMenu);
-
-  // close when clicking outside panel
-  mobileMenu.addEventListener("click", (e) => {
-    if (e.target === mobileMenu) closeMenu();
-  });
-
-  // close when clicking a link
-  mobileMenu.querySelectorAll("a").forEach(a => {
-    a.addEventListener("click", closeMenu);
-  });
-}
-
-
-</script>
-
-
-
+  <script src="assets/js/nav.js" defer></script>
+  <script src="assets/js/home.js" defer></script>
 </body>
 </html>

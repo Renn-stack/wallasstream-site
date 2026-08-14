@@ -1,0 +1,416 @@
+/* ============================================================
+   hero-checkpoint.css — DESKTOP CHECKPOINT HERO
+   Loaded by index.html. Not loaded by the scrub prototype.
+
+   The hero is one pinned 100dvh composition with four discrete
+   narrative states. Nothing here is scroll-linked: state is an
+   attribute (data-cp) set by hero-checkpoint.js, and every visual
+   change is a plain CSS transition off that attribute. The video is
+   played, not scrubbed.
+
+     data-cp="0"      opening question over black + "Scroll to send audio"
+     data-payoff="on" set at 6.00s of video: the whole payoff, headline
+                      through CTA, over the still-playing plate
+     data-cp="1"      the video has landed on its final frame
+
+   The video plays 0 -> 7.95s uninterrupted: the plate shows the signal
+   leaving the Mac, crossing the iPhone and arriving at the processor,
+   which is the whole narration. Note that the payoff is NOT keyed to
+   data-cp — it comes up two seconds before the plate stops, so the copy
+   is already settled by the time the frame comes to rest.
+
+   Gated on html.js-hero-cp, which the script adds only on a desktop
+   viewport with motion allowed. Without it this file changes nothing
+   and the complete static SVG hero from sections.css runs in normal
+   document flow.
+   ============================================================ */
+
+.js-hero-cp {
+  /* The topbar is a stable 69px at every desktop width (verified
+     900–1920), so this is a constant rather than a measured value —
+     measuring it at runtime would mean writing a layout-affecting
+     custom property after first paint, which is a layout shift. */
+  --ws-nav-h: 69px;
+}
+
+/* ---- Navbar: absent for the whole cinematic act ----
+   The intro must be uncluttered, so the topbar is hidden at every
+   checkpoint and only arrives once the visitor has scrolled out of the
+   hero into the document proper.
+
+   visibility (not display, not removal) is doing three jobs at once:
+   the element keeps its layout box so nothing reflows and CLS stays 0,
+   it stays in the DOM so there is no JS mutation, and a
+   visibility:hidden subtree is not focusable — so keyboard users cannot
+   tab into invisible nav controls without a single line of extra code.
+
+   The delayed visibility transition lets the fade finish before the box
+   goes non-interactive on the way out, and applies instantly on the way
+   in. */
+.js-hero-cp .topbar {
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-8px);
+  transition: opacity 0.32s ease, transform 0.32s ease,
+              visibility 0s linear 0.32s;
+}
+
+.js-hero-cp.js-hero-cp-out .topbar {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+  transition: opacity 0.32s ease, transform 0.32s ease, visibility 0s;
+}
+
+/* ---- The pinned stage ----
+   With the topbar invisible the stage takes the whole viewport, so the
+   hero is pulled up over the space the topbar still occupies in flow.
+   The margin is constant while the checkpoint layer is on — revealing
+   the navbar later changes nothing about layout, so no shift.
+   The class itself is applied by a tiny inline <head> script, i.e.
+   before first paint — that is what keeps CLS at 0. */
+.js-hero-cp .hero--cp {
+  height: 100dvh;
+  margin-top: calc(-1 * var(--ws-nav-h, 69px));
+  padding-block: 0;
+  overflow: hidden;
+}
+
+.js-hero-cp .hero--cp .hero__pin {
+  position: relative;
+  height: 100%;
+  overflow: hidden;
+  padding-block: 0;
+}
+
+/* ---- The cinematic plate ---- */
+.hero__cine {
+  position: absolute;
+  inset: 0;
+  background: #000;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  display: none;
+}
+
+.js-hero-cp .hero--cp .hero__cine { display: block; }
+
+.hero__cine-stage {
+  position: absolute;
+  inset: 0;
+  /* Poster as a background: a background inside a display:none subtree
+     is never fetched, so visitors who don't get the plate pay nothing.
+     It also covers the moment before the first video frame decodes. */
+  /* Pure black, matching the graded footage's own black, so the bands
+     object-fit:contain leaves at the sides are invisible. This used to
+     differ deliberately from the page token; now that the page is black
+     too they agree, and the plate sits seamlessly in the section. */
+  background: #000 center / contain no-repeat
+              url("../hero-cinematic/hero-cine-v2-poster.jpg");
+}
+
+.hero__cine video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  /* contain: the plate is shown whole, at the framing it was graded in.
+     Framing and grade are never altered here. */
+  object-fit: contain;
+  object-position: center;
+  display: block;
+}
+
+/* Flat left scrim, only once the payoff is up. No warm light anywhere —
+   the coil must stay the brightest thing in the frame. */
+.hero__cine::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(to right,
+    rgba(0, 0, 0, 0.58) 0%,
+    rgba(0, 0, 0, 0.34) 26%,
+    transparent 46%);
+  opacity: 0;
+  transition: opacity 0.9s ease;
+}
+
+/* Keyed to data-payoff, not data-cp: the scrim exists to seat the copy,
+   so it has to arrive with the headline at 6s rather than 2s later. */
+.js-hero-cp .hero--cp[data-payoff="on"] .hero__cine::after,
+.js-hero-cp .hero--cp[data-cp="1"] .hero__cine::after { opacity: 1; }
+
+/* The plate supplies Mac, iPhone, signal and hearing device, so the SVG
+   flow stands down. Hidden only, never moved — nothing reflows. */
+.js-hero-cp .hero--cp .hero__flow { display: none; }
+
+/* No ambient wash: a warm radial here would compete with the coil. */
+.js-hero-cp .hero--cp .hero__pin::before { opacity: 0; }
+
+/* Copy is positioned against the PIN (the full viewport), not the
+   centred .container, so `left: 7vw` is a true viewport margin. */
+.js-hero-cp .hero--cp .hero__layout {
+  display: block;
+  height: 100%;
+  position: static;
+  transform: none;
+}
+
+/* ---- CHECKPOINT 0 · the opening question ----
+   A title card: opacity 1 at rest, present on first paint. CSS
+   transitions do not run on initial render, so there is no fade-in,
+   no translate-in and no scale-in — it is simply already there. */
+.js-hero-cp .hero--cp .hero__question {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  translate: -50% -50%;
+  z-index: 3;
+  margin: 0;
+  width: min(19ch, 86vw);
+  max-width: none;
+  font-size: clamp(2.4rem, 4.6vw, 4.4rem);
+  line-height: 1.08;
+  letter-spacing: -0.035em;
+  text-align: center;
+  color: #fff;
+  text-shadow: 0 2px 40px rgba(0, 0, 0, 0.6);
+  opacity: 1;
+  transition: opacity 0.55s ease;
+}
+
+/* The two words the whole page is about, in the payoff's accent.
+
+   Solid --ws-accent rather than the clipped gradient that
+   .hero__headline-line--accent uses: this element carries a 40px
+   text-shadow for legibility over the plate, and background-clip:text
+   needs -webkit-text-fill-color:transparent, which would let that
+   shadow show through the glyphs as a dark smear. --ws-accent is the
+   gradient's own declared fallback and its midpoint, so the two read as
+   the same orange — and they never share a frame anyway, since the
+   question is gone two seconds before the payoff arrives.
+
+   Unscoped by .js-hero-cp on purpose: the static and reduced-motion
+   paths show the same question and should colour it the same way. */
+.hero__question-accent { color: var(--ws-accent); }
+
+/* Keyed to data-q, NOT data-cp: with only two states data-cp stays "0"
+   for the whole 8.3s journey, so keying the question off it would leave
+   the title card on screen for the entire video. data-q flips to "off"
+   the instant the first gesture starts playback. */
+.js-hero-cp .hero--cp[data-q="off"] .hero__question { opacity: 0; }
+
+/* ---- Interaction hints ----
+   One per waiting state, bottom-centre, understated. aria-hidden: they
+   describe a pointer gesture, and keyboard/AT users have their own path
+   (arrow keys, and focus jumps straight to the payoff). */
+.hero__hints {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: clamp(28px, 5dvh, 56px);
+  z-index: 4;
+  display: none;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.js-hero-cp .hero--cp .hero__hints { display: grid; }
+
+.hero__hint {
+  grid-area: 1 / 1;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.55rem;
+  font-size: var(--ws-step--1);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.62);
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+.hero--cp[data-q="on"] .hero__hint[data-for="0"] { opacity: 1; }
+
+/* While a cinematic transition is playing, hints stay down */
+.hero--cp[data-busy] .hero__hint { opacity: 0 !important; }
+
+/* A thin chevron. No mouse glyph, no bounce — a 3px drift, nothing more. */
+.hero__chev {
+  width: 12px;
+  height: 12px;
+  border-right: 1.5px solid currentColor;
+  border-bottom: 1.5px solid currentColor;
+  rotate: 45deg;
+  opacity: 0.75;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .hero__chev { animation: ws-chev 3.2s ease-in-out infinite; }
+}
+
+@keyframes ws-chev {
+  0%, 100% { transform: translateY(-2px); opacity: 0.5; }
+  50%      { transform: translateY(2px);  opacity: 0.9; }
+}
+
+
+/* A rewind lived here — the plate faded through black and cut back to
+   frame 0 on an upward gesture. The plate now plays once per page load
+   and stays on its final frame, so nothing sets data-rewind any more and
+   the fade it drove went with it. See hero-checkpoint.js. */
+
+/* ---- FINAL STATE · the payoff, left-anchored ----
+   Pinned to the viewport's left edge. Vertically centred at 52% to sit
+   opposite the processor, which the plate leaves in the right half of
+   the frame (roughly x 48-90%, its lit ear hook at x 48-60% / y 50-65%).
+   Measured at the widths this layer runs at, the longest line —
+   "Directly to you." — ends at 46% of the viewport at 1440 and 40% at
+   1920, so the copy never reaches the lit hook, and the orange accent
+   reads across the gap toward the orange glow instead of colliding
+   with it. */
+.js-hero-cp .hero--cp .hero__payoff {
+  position: absolute;
+  left: 7vw;
+  top: 52%;
+  translate: 0 -50%;
+  z-index: 3;
+  width: min(52vw, 44rem);
+  max-width: none;
+  margin: 0;
+  padding: 0;
+  gap: clamp(1.1rem, 3dvh, 2.2rem);
+  justify-items: start;
+  text-align: left;
+  transform: none;
+  /* not focusable and not announced until the state is reached */
+  visibility: hidden;
+}
+
+.js-hero-cp .hero--cp[data-payoff="on"] .hero__payoff,
+.js-hero-cp .hero--cp[data-cp="1"] .hero__payoff { visibility: visible; }
+
+/* The CTA is a real link, so it stays unfocusable and unannounced until
+   the payoff arrives — its own box, not just the payoff's, has to carry
+   the visibility or Tab would reach an invisible link. */
+.js-hero-cp .hero--cp .hero__cta { visibility: hidden; }
+.js-hero-cp .hero--cp[data-payoff="on"] .hero__cta,
+.js-hero-cp .hero--cp[data-cp="1"] .hero__cta { visibility: visible; }
+
+.js-hero-cp .hero--cp .hero__cta {
+  justify-items: start;
+  text-align: left;
+  margin: 0;
+  gap: clamp(1rem, 2.6dvh, 1.8rem);
+}
+
+.js-hero-cp .hero--cp .hero__payoff .lede,
+.js-hero-cp .hero--cp .hero__headline {
+  max-width: none;
+  text-align: left;
+}
+
+/* The headline is the anchor of the frame, so it runs larger than the
+   shared step-4 and drops its own line-height further. */
+.js-hero-cp .hero--cp .hero__headline {
+  font-size: clamp(2.4rem, 4.8vw, 4.8rem);
+  line-height: 0.94;
+  letter-spacing: -0.025em;
+}
+
+.js-hero-cp .hero--cp .hero__payoff .lede {
+  font-size: var(--ws-step-1);
+  line-height: 1.45;
+  color: var(--ws-text-secondary);
+}
+
+/* Restrained reveal: opacity plus 8px of rise, staggered by delay only.
+   The video provides the movement; the typography stays still. */
+.js-hero-cp .hero--cp .hero__headline-line,
+.js-hero-cp .hero--cp .hero__payoff .lede,
+.js-hero-cp .hero--cp .hero__cta .btn,
+.js-hero-cp .hero--cp .hero__meta {
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+/* The whole payoff arrives at 6.00s, over the still-playing plate: the
+   claim lands while the signal is reaching the processor rather than
+   after it, and the ask is there in the same breath.
+
+   One staggered sequence: the last line starts at 7.05s and its 0.6s
+   fade closes at 7.65s, just before the plate lands at 7.95s. So the
+   copy is fully settled at the moment the frame comes to rest, and the
+   two never finish moving at the same time. */
+.js-hero-cp .hero--cp[data-payoff="on"] .hero__headline-line,
+.js-hero-cp .hero--cp[data-payoff="on"] .hero__payoff .lede,
+.js-hero-cp .hero--cp[data-payoff="on"] .hero__cta .btn,
+.js-hero-cp .hero--cp[data-payoff="on"] .hero__meta {
+  opacity: 1;
+  transform: none;
+}
+
+.js-hero-cp .hero--cp[data-payoff="on"] .hero__headline-line:first-child { transition-delay: 0s; }
+.js-hero-cp .hero--cp[data-payoff="on"] .hero__headline-line--accent     { transition-delay: 0.28s; }
+.js-hero-cp .hero--cp[data-payoff="on"] .hero__payoff .lede              { transition-delay: 0.55s; }
+.js-hero-cp .hero--cp[data-payoff="on"] .hero__cta .btn                  { transition-delay: 0.80s; }
+.js-hero-cp .hero--cp[data-payoff="on"] .hero__meta                      { transition-delay: 1.05s; }
+
+/* The CTA's own layout box must not carry the stagger, or the button
+   and the trust line would move as a block. */
+.js-hero-cp .hero--cp .hero__cta { opacity: 1; transform: none; }
+
+/* Short viewports: tighten rather than overflow. */
+@media (max-height: 760px) {
+  .js-hero-cp .hero--cp .hero__payoff {
+    top: 50%;
+    width: min(54vw, 40rem);
+    gap: clamp(0.6rem, 1.6dvh, 1rem);
+  }
+  .js-hero-cp .hero--cp .hero__headline { font-size: clamp(2rem, 3.4vw, 3.2rem); }
+  .js-hero-cp .hero--cp .hero__question { font-size: clamp(2rem, 4vw, 3.4rem); }
+}
+
+/* Very wide frames: the plate letterboxes at the sides, so hold the copy
+   against the plate rather than the viewport edge. */
+@media (min-aspect-ratio: 16/9) {
+  .js-hero-cp .hero--cp .hero__payoff {
+    left: max(7vw, calc(50vw - 88.9dvh + 6dvh));
+  }
+}
+
+/* ---- Reduced motion ----
+   The script never adds .js-hero-cp under reduced motion, so this is
+   belt-and-braces: if the class somehow leaked, undo the pin entirely
+   and show the complete composition in normal flow. */
+@media (prefers-reduced-motion: reduce) {
+  .js-hero-cp .hero--cp {
+    height: auto;
+    overflow: visible;
+  }
+  .js-hero-cp .hero--cp .hero__cine,
+  .js-hero-cp .hero--cp .hero__hints { display: none; }
+  .js-hero-cp .hero--cp .hero__flow { display: flex; }
+  .js-hero-cp .hero--cp .hero__question,
+  .js-hero-cp .hero--cp .hero__payoff,
+  .js-hero-cp .hero--cp .hero__cta {
+    position: static;
+    translate: none;
+    visibility: visible;
+    opacity: 1;
+    width: auto;
+  }
+  .js-hero-cp .hero--cp .hero__headline-line,
+  .js-hero-cp .hero--cp .hero__payoff .lede,
+  .js-hero-cp .hero--cp .hero__cta .btn,
+  .js-hero-cp .hero--cp .hero__meta {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}

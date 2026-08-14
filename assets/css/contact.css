@@ -1,0 +1,182 @@
+/* ============================================================
+   contact.css — the Support page
+   Depends on tokens.css + base.css + components.css + sections.css.
+
+   Only layout that this page needs lives here. Surfaces, buttons and
+   type all come from the shared components, so the page inherits the
+   homepage's look for free and moves with it when the system changes.
+   ============================================================ */
+
+/* ---------- Header band ----------
+   Tighter top padding than .section, because the page opens on a
+   centred heading rather than a full hero stage. */
+.cthero {
+  padding-block: clamp(3rem, 7vw, 5rem) clamp(1.5rem, 3vw, 2.5rem);
+}
+
+.cthero__inner {
+  display: grid;
+  gap: clamp(2rem, 4vw, 3rem);
+  justify-items: center;
+}
+
+/* ---------- The address card ----------
+   The one thing the page exists for, so it gets the page's only
+   raised surface and its only accent glow. */
+.ct-card {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  width: 100%;
+  display: grid;
+  gap: var(--ws-space-5);
+  justify-items: center;
+  text-align: center;
+}
+
+/* Warmth behind the card, off to one side so the light has a
+   direction — the same lamp the device art is lit by. */
+.ct-card__glow {
+  position: absolute;
+  top: -40%;
+  right: -10%;
+  width: 60%;
+  aspect-ratio: 1;
+  z-index: -1;
+  pointer-events: none;
+  background: radial-gradient(circle,
+              rgba(224, 150, 91, 0.16) 0%,
+              rgba(224, 150, 91, 0.05) 48%,
+              transparent 72%);
+}
+
+.ct-card__label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ws-text-muted);
+}
+
+/* Capped at step-2 rather than sized off a heading step: it is the
+   loudest thing on the page, but it is an address, not a title.
+
+   The vw term is doing real work. An address is one unbreakable word,
+   so on a narrow phone step-2 alone split it as "…wallasstream.co / m",
+   which reads as a typo. Scaling with the viewport keeps it on one
+   line down to ~340px; overflow-wrap is only the last resort below
+   that, and stops a long address widening the card past the screen. */
+.ct-address {
+  font-size: clamp(1.05rem, 5vw, var(--ws-step-2));
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  line-height: 1.2;
+  color: var(--ws-text);
+  text-decoration: none;
+  overflow-wrap: anywhere;
+  transition: color var(--ws-dur-fast) var(--ws-ease-out);
+}
+
+.ct-address:hover { color: var(--ws-accent); }
+
+.ct-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--ws-space-3);
+}
+
+/* The copy button swaps its own label to confirm; nothing else on the
+   page moves, so the confirmation cannot be missed or misread. */
+.ct-copy.is-copied {
+  border-color: var(--ws-state-connected);
+  color: var(--ws-state-connected);
+}
+
+.ct-meta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: var(--ws-step--1);
+  color: var(--ws-text-tertiary);
+}
+
+.ct-meta svg { width: 1.1rem; height: 1.1rem; flex: none; color: var(--ws-accent); }
+
+/* ---------- What to include ----------
+   Six things, each one a line the sender can tick off. Two columns
+   where there is room; one where there is not. */
+.ct-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: var(--ws-space-4);
+}
+
+@media (min-width: 720px) {
+  .ct-list { grid-template-columns: 1fr 1fr; }
+}
+
+.ct-item {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.9rem;
+  align-items: start;
+  padding: var(--ws-space-5);
+  border: 1px solid var(--ws-line);
+  border-radius: var(--ws-radius-md);
+  background: rgba(255, 255, 255, 0.025);
+}
+
+.ct-item__icon {
+  display: grid;
+  place-items: center;
+  width: 2.3rem;
+  height: 2.3rem;
+  flex: none;
+  border: 1px solid var(--ws-orange-700);
+  border-radius: var(--ws-radius-pill);
+  background: rgba(224, 150, 91, 0.08);
+  color: var(--ws-accent);
+}
+
+.ct-item__icon svg { width: 1.15rem; height: 1.15rem; }
+
+.ct-item__body { display: grid; gap: 0.2rem; min-width: 0; }
+
+.ct-item__title { font-size: var(--ws-step-0); font-weight: 650; }
+
+.ct-item__text { font-size: var(--ws-step--1); color: var(--ws-text-tertiary); }
+
+/* ---------- Clinical note ----------
+   Same shape as download.css's .dl-note: an accent-bordered aside for
+   the one thing on the page we need the reader not to skip. */
+.ct-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.7rem;
+  padding: var(--ws-space-5) var(--ws-space-6);
+  border: 1px solid var(--ws-orange-700);
+  border-radius: var(--ws-radius-md);
+  background: rgba(224, 150, 91, 0.06);
+  color: var(--ws-text-secondary);
+  font-size: var(--ws-step--1);
+}
+
+.ct-note svg { width: 1.2rem; height: 1.2rem; flex: none; color: var(--ws-accent); }
+
+/* ---------- Self-serve links ---------- */
+.ct-help {
+  display: grid;
+  gap: var(--ws-space-6);
+  justify-items: center;
+  text-align: center;
+}
+
+.ct-help__links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--ws-space-3) var(--ws-space-4);
+}

@@ -1,0 +1,14 @@
+{
+  "name": "wallasstream-site",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Wallas' Stream marketing site. Static HTML; the only build step expands shared HTML partials.",
+  "type": "module",
+  "scripts": {
+    "build": "node build.mjs",
+    "check": "node build.mjs --check"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

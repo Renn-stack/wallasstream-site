@@ -1,1846 +1,1589 @@
 <!-- =========================
-FILE: index.html
-Put your logo file in the repo as: logo.png
+FILE: indexES.html
+Versión en español de index.html. Misma estructura, mismas clases y los
+MISMOS id de sección (#listen, #pricing, #founder, #faq), porque el CSS
+y el JS de las secciones se apoyan en ellos y en los data-section.
+Solo cambian el texto y los destinos de los enlaces.
+
+El sprite de dispositivos (partials/devices.html) se reutiliza tal cual:
+es geometría SVG sin texto.
 ========================= -->
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
- 
-
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Home - Wallas’ Stream</title>
-
-  <!-- Favicon -->
-  <link rel="icon" type="image/png" href="favicon.png">
-
-  <meta name="description" content="Transmite audio desde tu computadora a tu dispositivo móvil - al instante, en privado y localmente." />
-
-  <style>
-    :root{
-      --bg:#0b0b0b;
-      --card:#111214;
-      --muted:#9aa0a6;
-      --text:#f2f2f2;
-      --line:#222428;
-      --accent:#4da3ff;
-      --accent2:#20c997;
-      --danger:#ff4d4d;
-      --shadow: 0 10px 35px rgba(0,0,0,.55);
-      --radius: 18px;
-      --radius2: 24px;
-      --max: 1400px;
-    }
-    html{scroll-behavior:smooth}
-    *{box-sizing:border-box}
-    body{
-      margin:0;
-      background: var(--bg);
-      color:var(--text);
-      line-height:1.55;
-      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text",
-             "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-
-    }
-    body::before{
-      content:"";
-      position:fixed;
-      inset:0;
-      pointer-events:none;
-      background:
-        radial-gradient(1200px 700px at 50% 45%, transparent 40%, rgba(0,0,0,.65) 78%, rgba(0,0,0,.85) 100%);
-      z-index:-1;
-    }
-    a{color:var(--accent); text-decoration:none}
-    a:hover{text-decoration:underline}
-    .wrap{
-  max-width: 1200px;           /* antes: 1400px (demasiado ancho) */
-  margin: 0 auto;
-  padding: 32px 28px 60px;     /* más aire lateral */
-}
-
-/* En pantallas muy grandes, aún más aire */
-@media (min-width: 1440px){
-  .wrap{ padding-left: 48px; padding-right: 48px; }
-}
-
-/* En móvil, no exageres el padding */
-@media (max-width: 480px){
-  .wrap{ padding-left: 16px; padding-right: 16px; }
-}
-
-
-       /* Consistent spacing between sections */
-:root{
-  --section-gap: 60px;
-}
-
-/* No le pongas margin-top a TODOS los sections (eso pega raro arriba) */
-section{ margin-top: 0; }
-
-/* Solo agrega espacio entre secciones consecutivas */
-section + section{ margin-top: var(--section-gap); }
-
-/* Hero conserva su margen propio */
-.hero{ margin-top: 22px; }
-
-
-    
-    .topbar{
-      display:flex; align-items:center; justify-content:space-between;
-      gap:16px;
-      padding:14px 16px;
-      border:1px solid var(--line);
-      border-radius: var(--radius2);
-      background: rgba(17,18,20,.75);
-      backdrop-filter: blur(10px);
-      box-shadow: var(--shadow);
-      position: sticky; top: 14px; z-index: 50;
-    }
-    
-
-    .brand{display:flex; align-items:center; gap:12px; min-width: 0;}
-    .logo{
-      width:40px; height:40px; border-radius:12px;
-      background: #0f1012;
-      border: 1px solid var(--line);
-      display:flex; align-items:center; justify-content:center;
-      overflow:hidden;
-      flex: 0 0 auto;
-    }
-    .logo img{width:100%; height:100%; object-fit:contain}
-    .brand .name{font-weight:700; letter-spacing:.2px}
-    .brand .sub{color:var(--muted); font-size:13px; margin-top:2px}
-    .nav{display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end}
-
-    .pill{
-      display:inline-flex; align-items:center; justify-content:center; gap:8px;
-      padding:10px 12px;
-      border-radius: 999px;
-      border:1px solid var(--line);
-      background: rgba(0,0,0,.18);
-      color: var(--text);
-      text-decoration:none;
-      font-size:14px;
-      cursor:pointer;
-      user-select:none;
-    }
-    .pill:hover{border-color:#2e3238; text-decoration:none}
-    .pill.primary{
-      background: linear-gradient(180deg, rgba(77,163,255,.22), rgba(77,163,255,.10));
-      border-color: rgba(77,163,255,.35);
-    }
-    .pill.primary:hover{border-color: rgba(77,163,255,.55)}
-    .pill.ghost{
-      background: transparent;
-    }
-
-    .hero{
-      margin-top:22px;
-      padding:26px 18px;
-      
-      
-    }
-    .hero-grid{
-  display:grid;
-  grid-template-columns: 1fr;
-  gap:16px;
-  align-items:center;
-}
-
-/* Desktop: texto izquierda, gif derecha */
-@media (min-width: 1024px){
-  .hero-grid{
-    grid-template-columns: 1.05fr .95fr;
-    gap:22px;
-  }
-}
-
-    .hero-right{display:flex; align-items:center; justify-content:center; width:100%; max-width:520px; margin:0 auto; justify-self:center}
-    .hero-right img{width:100%; height:auto; display:block; object-fit:contain}
-    .gif-placeholder{color:var(--muted); font-size:14px; padding:24px; text-align:center}
-    h1{margin:0; font-size:38px; letter-spacing:-.3px}
-    .kicker{margin:10px 0 0; color:var(--muted); max-width: 70ch; font-size:18px}
-    .kicker .white{color: var(--text)}
-    .cta-row{display:flex; gap:10px; flex-wrap:wrap; margin-top:16px}
-    .cta-row .pill{font-size:16px; padding:12px 18px}
-    .cta-note{
-  margin-top:10px;
-  font-size:13px;
-  color:var(--muted);
-  text-align:left;
-}
-
-
-    .chips{display:flex; gap:10px; flex-wrap:wrap; margin-top:16px}
-    .chip{
-      font-size:13px;
-      color: var(--muted);
-      border:1px solid var(--line);
-      background: rgba(0,0,0,.18);
-      padding:8px 10px;
-      border-radius: 999px;
-    }
-
-    .card{
-      border:1px solid var(--line);
-      border-radius: var(--radius2);
-      background: rgba(17,18,20,.65);
-      backdrop-filter: blur(10px);
-      box-shadow: var(--shadow);
-      padding:18px;
-      margin-top:18px;
-    }
-
-    .grid{
-      display:grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap:14px;
-    }
-    @media (max-width: 820px){
-      .grid{grid-template-columns: 1fr;}
-      .hero-grid{grid-template-columns: 1fr}
-      h1{font-size:30px}
-      .kicker{font-size:16px}
-    }
-    @media (min-width: 1024px){
-      .hero{padding:34px 24px}
-      .hero-grid{gap:22px;}
-
-      .hero-right{max-width:800px}
-      h1{font-size:44px}
-      .kicker{font-size:20px}
-      .h2{font-size:28px}
-      .modes-gif-box{max-width:420px}
-      .steps .step:nth-child(1) img{max-width:420px}
-      .steps .step:nth-child(2) img{max-width:420px}
-      .steps .step:nth-child(3) img{max-width:420px}
-      .privacy-icon{width:72px}
-    }
-   @media (min-width: 1280px){
-  .hero-right{max-width:960px}
-}
-
-
-    .h2{font-size:24px; font-weight:700; margin:0 0 10px}
-    .muted{color: var(--muted)}
-    .small{font-size:15px; color: var(--muted)}
-    .list-large{font-size:18px; color: var(--text)}
-    ul.list-large li{margin:6px 0}
-    ul.list-large li::marker{font-size:1.3em}
-    ul.small li::marker{font-size:1.2em}
-    .hr{height:1px; background: var(--line); margin:14px 0}
-
-.steps{
-  display:grid;
-  grid-template-columns: 1fr;   /* 👈 una sola columna */
-  gap:14px;
-}
-
-
-
-.step{
-  border:1px solid var(--line);
-  border-radius:18px;
-  padding:14px;
-  background: rgba(0,0,0,.16);
-
-  display:flex;
-  gap:16px;
-  align-items:center;
-  justify-content:space-between;
-
-  min-height: 190px;     /* para que no se vean mini */
-  padding: 18px;         /* más aire */
-}
-
-.step .step-text{
-  flex: 1 1 55%;
-  min-width: 0;
-}
-
-.step .step-media{
-  flex: 0 0 40%;
-  display:flex;
-  justify-content:flex-end;
-}
-
-.step .step-media img{
-  width: 100%;
-  height: auto;
-  max-width: 360px;
-  border-radius: 14px;
-  display:block;
-}
-
-/* Texto más grande solo en "How it works" */
-.step p{
-  margin:0;
-  color: var(--muted);
-  font-size:16px;
-  line-height:1.5;
-}
-
-/* ✅ MOBILE FIX (ponlo AL FINAL) */
-@media (max-width: 820px){
-  .steps{
-    grid-template-columns: 1fr;
-  }
-
-  .step{
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .step .step-media{
-    width: 100%;
-    justify-content: center;
-  }
-
-  .step .step-media img{
-    max-width: 420px;
-  }
-}
-
-
-    .modes-gif-box{width:100%; margin:0 auto 10px; max-width:340px; aspect-ratio: 1 / 1}
-    .modes-gif-box img{width:100%; height:100%; display:block; object-fit:cover}
-    
-    
-    .step .num{
-      display:inline-flex; align-items:center; justify-content:center;
-      width:28px; height:28px; border-radius: 10px;
-      border:1px solid var(--line);
-      background: rgba(255,255,255,.03);
-      font-weight:700;
-      margin-bottom:10px;
-    }
-    .step h3{margin:0 0 6px; font-size:16px}
-   
-    .privacy-icon{width:64px; height:auto; display:block; margin:0 auto 8px}
-
-    .faq{margin-top:8px}
-    .faq-item{border-top:1px solid var(--line)}
-    .faq-q{
-      width:100%;
-      background:transparent;
-      border:0;
-      color:var(--text);
-      text-align:left;
-      padding:14px 8px;
-      display:flex;
-      justify-content:space-between;
-      gap:12px;
-      font-size:15px;
-      cursor:pointer;
-    }
-    .faq-q:hover{background:rgba(255,255,255,.03)}
-    .faq-a{max-height:0; overflow:hidden; transition:max-height .25s ease; padding:0 8px}
-    .faq-item.open .faq-a{max-height:700px; padding-bottom:12px}
-    .icon{color:var(--muted); font-weight:700}
-
-    /* Footer centered */
-    .footer{
-      margin-top:18px;
-      padding-top:18px;
-      border-top:1px solid var(--line);
-      color: var(--muted);
-      font-size:13px;
-      display:flex;
-      justify-content:center;
-      text-align:center;
-    }
-    .footer a{color: var(--muted); text-decoration:none}
-  /* ---------- Footer (PuffCount-style) ---------- */
-.footer-block{
-  margin-top: 70px;
-  border-top: 1px solid rgba(255,255,255,.10);
-  padding-top: 28px;
-}
-
-.footer-grid{
-  display:grid;
-  grid-template-columns: 1.4fr 1fr 1fr .8fr;
-  gap: 28px;
-  align-items:start;
-}
-
-.footer-title{
-  font-weight:700;
-  font-size:22px;
-  margin: 0 0 14px;
-}
-
-.footer-links{
-  list-style:none;
-  padding:0;
-  margin:0;
-  display:flex;
-  flex-direction:column;
-  gap:10px;
-}
-
-.footer-links a{
-  color: var(--muted);
-  text-decoration:none;
-  font-size:16px;
-}
-
-.footer-links a:hover{
-  color: var(--text);
-  text-decoration:underline;
-}
-
-.footer-badge{
-  margin-top: 8px;
-  display:inline-block;
-  border-radius:12px;
-  overflow:hidden;
-  border: 1px solid rgba(255,255,255,.12);
-  background: rgba(255,255,255,.03);
-  padding: 10px 12px;
-  color: var(--muted);
-  font-size:13px;
-}
-
-.footer-bottom{
-  margin-top: 26px;
-  padding-top: 18px;
-  border-top: 1px solid rgba(255,255,255,.08);
-  color: var(--muted);
-  font-size:13px;
-  display:flex;
-  justify-content:space-between;
-  gap: 14px;
-  flex-wrap:wrap;
-}
-
-.footer-bottom a{ color: var(--muted); text-decoration:none; }
-.footer-bottom a:hover{ color: var(--text); text-decoration:underline; }
-
-@media (max-width: 900px){
-  .footer-grid{ grid-template-columns: 1fr 1fr; }
-}
-@media (max-width: 560px){
-  .footer-grid{ grid-template-columns: 1fr; }
-  .footer-bottom{ justify-content:flex-start; }
-}
-
-/* Feature row (like Puff Count) */
-.features{
-  display:grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 22px;
-  margin-top: 18px;
-}
-
-.feature{
-  text-align:center;
-  padding: 10px 8px;
-}
-
-.feature .ico{
-  width: 56px;
-  height: 56px;
-  margin: 0 auto 14px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  opacity: .95;
-}
-
-.feature .ico svg{
-  width: 56px;
-  height: 56px;
-  stroke: white;   /* 👈 ahora es blanco */
-  fill: none;
-  stroke-width: 2;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  opacity: 0.92;   /* se ve elegante */
-}
-
-
-.feature h3{
-  margin: 0 0 10px;
-  font-size: 20px;
-  letter-spacing: -.2px;
-}
-
-.feature p{
-  margin: 0;
-  color: var(--muted);
-  font-size: 16px;
-  line-height: 1.7;
-  max-width: 34ch;
-  margin-left:auto;
-  margin-right:auto;
-}
-
-/* Responsive */
-@media (max-width: 980px){
-  .features{ grid-template-columns: repeat(2, minmax(0, 1fr)); }
-}
-@media (max-width: 560px){
-  .features{
-    grid-template-columns: 1fr;
-  }
-
-  .feature{
-    text-align: center;   /* ✅ centrado en móvil */
-  }
-
-  .feature .ico{
-    margin: 0 auto 10px;  /* ✅ icono centrado */
-  }
-
-  .feature p{
-    margin-left: auto;
-    margin-right: auto;  /* ✅ texto centrado */
-  }
-}
-
-
-.steps a{
-  color: rgba(255,255,255,.75);
-  text-decoration: underline;
-}
-
-.steps a:hover{
-  color: white;
-}
-
-.faq-link{
-  color: var(--text);          /* blanco */
-  font-weight: 600;
-  text-decoration: none;
-}
-
-.faq-link:hover{
-  text-decoration: underline; /* opcional */
-  opacity: 0.85;
-}
-
-
-.trust-line{
-  width: 100%;
-  text-align: center;
-  margin-top: 34px;
-  padding-top: 18px;
-  border-top: 1px solid rgba(255,255,255,0.08);
-  color: rgba(255,255,255,0.55);
-  font-size: 14px;
-  line-height: 1.5;
-}
-
-.trust-line strong{
-  color: rgba(255,255,255,0.82);
-  font-weight: 600;
-}
-
-.story{
-  margin-top: 18px;
-  padding: 18px;
-  border: 1px solid rgba(255,255,255,.10);
-  border-radius: 18px;
-  background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
-  box-shadow: 0 10px 35px rgba(0,0,0,.45);
-}
-.story .title{
-  margin: 0 0 8px;
-  font-size: 18px;
-  font-weight: 700;
-  letter-spacing: -.2px;
-}
-.story .desc{
-  margin: 0;
-  color: rgba(255,255,255,.72);
-  font-size: 15.5px;
-  line-height: 1.6;
-  max-width: 68ch;
-}
-.story-grid{
-  margin-top: 12px;
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 10px;
-}
-.story-item{
-  border: 1px solid rgba(255,255,255,.10);
-  background: rgba(0,0,0,.18);
-  border-radius: 14px;
-  padding: 12px;
-}
-.story-item .k{
-  font-weight: 700;
-  font-size: 13px;
-  color: rgba(255,255,255,.85);
-  margin-bottom: 6px;
-}
-.story-item .v{
-  font-size: 13.5px;
-  color: rgba(255,255,255,.65);
-  line-height: 1.5;
-}
-.story .note{
-  margin-top: 10px;
-  color: rgba(255,255,255,.55);
-  font-size: 13px;
-}
-
-@media (max-width: 820px){
-  .story-grid{ grid-template-columns: 1fr; }
-}
-
-
-h1{
-  line-height: 1.05;
-}
-
-.hero-left{ max-width: 620px; }
-
-.hero-right img{
-  filter: drop-shadow(0 18px 50px rgba(0,0,0,.65));
-  opacity: .95;
-}
-
-/* What you need block */
-.need-block{
-  margin: 70px auto 30px;   /* 👈 centra el bloque */
-  max-width: 820px;         /* ancho tipo “sección” */
-  padding: 0;
-  border: none;
-  background: transparent;
-  
-}
-
-
-
-
-
-
-.need-title{
-  font-weight: 700;
-  font-size: 15px;
-  margin-bottom: 8px;
-  color: rgba(255,255,255,.85);
-}
-
-.need-list{
-  margin: 12px 0 0;
-  padding: 0;
-  list-style: none;
-
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-
-.need-list li{
-  font-size: 15px;
-  color: rgba(255,255,255,.72);
-  line-height: 1.45;
-
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.behavior-grid{
-  display:grid;
-  grid-template-columns: 1fr 1.2fr 1fr;
-  gap: 24px;
-  align-items:center;
-  margin-top: 20px;
-}
-
-.behavior-box{
-  padding: 14px;
-  border: 1px solid rgba(255,255,255,.10);
-  border-radius: 18px;
-  background: rgba(0,0,0,.18);
-}
-
-.behavior-title{
-  margin: 0 0 8px;
-  font-size: 17px;
-  font-weight: 700;
-}
-
-.behavior-desc{
-  margin: 0;
-  color: rgba(255,255,255,.70);
-  font-size: 15px;
-  line-height: 1.5;
-}
-
-.behavior-note{
-  margin-top: 10px;
-  font-size: 14px;
-  color: rgba(255,255,255,.50);
-}
-
-.behavior-image img{
-  width:100%;
-  max-width: 360px;
-  margin: 0 auto;
-  display:block;
-  filter: drop-shadow(0 18px 50px rgba(0,0,0,.65));
-  border-radius: 18px;
-}
-
-/* Mobile */
-@media (max-width: 900px){
-  .behavior-grid{
-    grid-template-columns: 1fr;
-    text-align:left;
-  }
-
-  .behavior-image img{
-    max-width: 420px;
-  }
-}
-
-.card-noborder{
-  border: 0 !important;
-  box-shadow: none !important;          /* opcional: más limpio */
-  background: transparent !important;   /* opcional: si lo quieres “sin caja” */
-  padding: 0 !important;                /* opcional: si lo quieres pegadito */
-}
-
-.need-check{
-  color: rgba(255,255,255,.85);
-  font-weight: 700;
-  font-size: 15px;
-}
-
-.need-grid{
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 18px 70px;
-
-  max-width: 700px;   /* 👈 ancho real centrado */
-  margin: 22px auto 0; /* 👈 esto lo centra PERFECTO */
-  justify-content: center; /* centra el grid */
-}
-
-
-.need-grid li{
-  display:flex;
-  align-items:flex-start;
-  gap: 12px;
-
-  font-size: 17px;
-  line-height: 1.5;
-  color: rgba(255,255,255,.72);
-}
-
-
-.need-check{
-  color: rgba(255,255,255,.9);
-  font-weight: 800;
-  margin-top: 2px;
-}
-
-@media (max-width: 820px){
-  .need-grid{ grid-template-columns: 1fr; gap: 14px; }
-}
-
-/* Same style as "Multi-Listener Mode" title + kicker */
-.section-title{
-  margin:0;
-  font-size:32px;
-  font-weight:700;
-  letter-spacing:-.2px;
-}
-
-.section-kicker{
-  margin:10px 0 0;
-  color:var(--muted);
-  font-size:18px;        /* similar a tu kicker */
-  line-height:1.6;
-  max-width: 65ch;
-}
-
-/* Colors for behavior titles */
-.behavior-box:first-child .behavior-title{
-  color: var(--accent2); /* verde */
-}
-
-.behavior-box:last-child .behavior-title{
-  color: var(--accent);  /* azul */
-}
-
-.behavior-title.green{ color: var(--accent2); }
-.behavior-title.blue{ color: var(--accent); }
-
-/* Multi-Listener Mode: make image big on mobile */
-@media (max-width: 820px){
-  .cinema-grid{
-    grid-template-columns: 1fr !important; /* stack */
-    gap: 18px !important;
-  }
-
-  .cinema-grid > div:last-child{
-    width: 100%;
-    align-self: stretch !important;
-  }
-
-  .cinema-grid img{
-    width: 100% !important;
-    max-width: 520px;      /* puedes subir a 600 si quieres */
-    margin: 0 auto;
-    display: block;
-  }
-}
-
-
-/* MOBILE RULES */
-@media (max-width: 820px){
-  .nav-links{ display:none; }
-  .hamburger{ display:inline-flex; align-items:center; justify-content:center; }
-  .brand .sub{
-    display:block;          /* ✅ ahora sí aparece */
-    font-size:13px;
-    color:rgba(255,255,255,.55);
-    margin-top:2px;
-    line-height:1.1;
-  }
-}
-
-.hero-points{
-  list-style:none;
-  padding:0;
-  margin:18px 0 22px;
-  display:flex;
-  flex-direction:column;
-  gap:10px;
-}
-
-.hero-points li{
-  font-size:15px;
-  color:rgba(255,255,255,.82);
-  display:flex;
-  align-items:center;
-  gap:10px;
-}
-
-.hero-points li::before{
-  content:"✓";
-  color:rgba(255,255,255,.55);
-  font-weight:600;
-}
-
-.download-dropdown{
-  position:relative;
-  display:inline-block;
-}
-
-.download-dropdown button{
-  cursor:pointer;
-}
-
-.dropdown-menu{
-  position:absolute;
-  top:46px;
-  left:0;
-  background:rgba(20,20,20,.95);
-  border:1px solid rgba(255,255,255,.08);
-  border-radius:16px;
-  padding:10px;
-  min-width:260px;
-  box-shadow:0 18px 45px rgba(0,0,0,.55);
-  display:none;
-  z-index:999;
-}
-
-.download-dropdown:hover .dropdown-menu{
-  display:block;
-}
-
-.dropdown-menu a{
-  display:block;
-  padding:12px 14px;
-  border-radius:12px;
-  text-decoration:none;
-  color:white;
-  font-size:15px;
-  font-weight:500;
-}
-
-.dropdown-menu a span{
-  display:block;
-  font-size:13px;
-  color:rgba(255,255,255,.55);
-  margin-top:4px;
-  font-weight:400;
-}
-
-.dropdown-menu a:hover{
-  background:rgba(255,255,255,.04);
-}
-
-.hero-footnote{
-  margin-top:10px;
-  font-size:13px;
-  color:rgba(255,255,255,.55);
-  line-height:1.4;
-}
-
-.tester-link{
-  display:inline-block;
-  margin-top:12px;
-  font-size:14px;
-  color:rgba(255,255,255,.65);
-  text-decoration:none;
-}
-
-.tester-link:hover{
-  color:white;
-  text-decoration:underline;
-}
-
-/* ✅ Make the two mode cards equal size on mobile */
-@media (max-width: 900px){
-
-  .behavior-grid{
-    display:flex;
-    flex-direction:column;
-    gap:18px;
-  }
-
-  /* Reset inner spacing so both cards measure the same */
-  .behavior-box{
-    width:100%;
-    height: 140px;                 /* 👈 ajusta 200–240 a tu gusto */
-    padding: 18px;
-    display:flex;
-    flex-direction:column;
-    justify-content:space-between;
-  }
-
-  .behavior-box h3,
-  .behavior-box p{
-    margin:0;                      /* 👈 elimina diferencias invisibles */
-  }
-
-  .behavior-note{
-    margin-top:10px;               /* vuelve a meter este spacing controlado */
-  }
-
-  /* Order: Connected first, Meeting second, image last */
-  .behavior-box:nth-child(1){ order:1; }
-  .behavior-box:nth-child(3){ order:2; }
-  .behavior-image{ order:3; }
-}
-
-/* ✅ Hide download button on mobile */
-@media (max-width: 820px){
-
-  .download-dropdown{
-    display: none;
-  }
-
-}
-
-/* ✅ Hide desktop-only footer badge on mobile */
-@media (max-width: 820px){
-
-  .footer-badge[href*="download"],
-  .footer-badge[href*="#download"]{
-    display:none;
-  }
-
-}
-
-
-
-/* ---------------- Fullscreen Mobile Menu (Overlay) ---------------- */
-.mobile-menu{
-  position: fixed;
-  inset: 0;
-  z-index: 999;
-
-  opacity: 0;
-  pointer-events: none;
-  transform: translateY(-8px);
-  transition: opacity .18s ease, transform .18s ease;
-
-  background: rgba(0,0,0,.75);
-  backdrop-filter: blur(14px);
-
-  display: flex;
-  align-items: flex-start;
-  justify-content: center;
-  padding: 90px 20px 24px;
-}
-
-.mobile-menu.open{
-  opacity: 1;
-  pointer-events: auto;
-  transform: translateY(0);
-}
-
-.mobile-menu .menu-panel{
-  width: 100%;
-  max-width: 720px;
-  border: 0;
-  border-radius: 0;
-  background: transparent;
-  box-shadow: none;
-  padding: 0;
-}
-
-.mobile-menu .menu-close{
-  width: 44px;
-  height: 44px;
-  border-radius: 14px;
-  border: 1px solid rgba(255,255,255,.12);
-  background: rgba(0,0,0,.25);
-  color: var(--text);
-  font-size: 22px;
-  cursor: pointer;
-
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-
-  position: fixed;
-  top: calc(env(safe-area-inset-top, 0px) + 14px);
-  right: calc(env(safe-area-inset-right, 0px) + 14px);
-  z-index: 1000;
-}
-
-.mobile-menu a{
-  display:block;
-  padding: 18px 14px;
-  border-radius: 16px;
-  color: var(--text);
-  text-decoration:none;
-  font-size: 20px;
-  border: 1px solid rgba(255,255,255,.10);
-  background: rgba(255,255,255,.04);
-  margin: 10px 0;
-}
-
-.mobile-menu a:hover{
-  background: rgba(255,255,255,.08);
-}
-
-.hamburger{
-  display:none;
-  width:44px; height:44px;
-  border-radius:14px;
-  border:1px solid var(--line);
-  background: rgba(0,0,0,.18);
-  color: var(--text);
-  font-size: 20px;
-  cursor:pointer;
-}
-
-/* MOBILE RULES */
-@media (max-width: 820px){
-  .nav-links{ display:none; }
-  .hamburger{ display:inline-flex; align-items:center; justify-content:center; }
-}
-
-/* OPTIONAL: hide Download inside hamburger on mobile */
-@media (max-width: 820px){
-  .mobile-menu a[href*="download"]{
-    display:none;
-  }
-}
-
-.pill[disabled]{
-  opacity:.65;
-  cursor:not-allowed;
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-</style>
+  <title>Wallas&rsquo; Stream | Escucha tu Mac a través de tu dispositivo auditivo</title>
+  <meta name="description" content="Wallas' Stream envía el audio de tu Mac a tu iPhone, para que lo escuches a través de tu implante coclear o auxiliar auditivo compatible. Gratis por Wi-Fi. Incluye 7 días de Pro." />
+
+  <meta name="apple-itunes-app" content="app-id=6759255823">
+  <link rel="icon" href="favicons/favicon.ico" sizes="32x32" />
+  <link rel="icon" type="image/png" sizes="32x32" href="favicons/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="favicons/favicon-16x16.png" />
+  <link rel="apple-touch-icon" href="favicons/apple-touch-icon.png" />
+  <link rel="manifest" href="favicons/manifest.json" />
+
+  <link rel="alternate" hreflang="en" href="https://wallasstream.com/" />
+  <link rel="alternate" hreflang="es" href="https://wallasstream.com/indexES.html" />
+  <link rel="alternate" hreflang="x-default" href="https://wallasstream.com/" />
+
+  <meta property="og:title" content="Wallas’ Stream" />
+  <meta property="og:description" content="Escucha tu Mac a través de tu dispositivo auditivo." />
+  <meta property="og:image" content="https://wallasstream.com/preview.png" />
+  <meta property="og:url" content="https://wallasstream.com/indexES.html" />
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content="es_MX" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Wallas’ Stream" />
+  <meta name="twitter:description" content="Escucha tu Mac a través de tu dispositivo auditivo." />
+  <meta name="twitter:image" content="https://wallasstream.com/preview.png" />
+
+  <link rel="stylesheet" href="assets/css/tokens.css" />
+  <link rel="stylesheet" href="assets/css/base.css" />
+  <link rel="stylesheet" href="assets/css/components.css" />
+  <link rel="stylesheet" href="assets/css/sections.css" />
+  <link rel="stylesheet" href="assets/css/connect-modes.css" />
+  <link rel="stylesheet" href="assets/css/use-cases.css" />
+  <link rel="stylesheet" href="assets/css/uses.css" />
+  <link rel="stylesheet" href="assets/css/hero-checkpoint.css" />
+  <script>
+    /* Se aplica antes del primer pintado: la capa de checkpoint cambia la
+       caja del hero (100dvh más un margen superior negativo sobre la barra
+       oculta), y hacerlo desde un script diferido caería después del
+       pintado y contaría como salto de layout. Refleja la misma prueba de
+       elegibilidad que hace hero-checkpoint.js. */
+    (function () {
+      try {
+        var c = navigator.connection;
+        if (matchMedia("(min-width: 900px)").matches &&
+            !matchMedia("(prefers-reduced-motion: reduce)").matches &&
+            !(c && c.saveData === true) &&
+            document.createElement("video").canPlayType("video/mp4") !== "") {
+          document.documentElement.classList.add("js-hero-cp");
+        }
+      } catch (e) { /* se cae al hero estático */ }
+    })();
+  </script>
+  <link rel="preload" as="image" href="assets/img/ui/mac-home.webp" fetchpriority="high" />
+  <script src="lang.js" defer></script>
 </head>
 
-
 <body id="top">
-  <div class="wrap">
+  <a class="skip-link" href="#main">Saltar al contenido</a>
 
-    <div class="topbar">
-      <div class="brand">
-        <div class="logo" aria-label="Wallas’ Stream logo">
-          <img id="logoImg" src="logo.png" alt="Wallas’ Stream logo" />
+  <!-- ============================================================
+       Sprite de dispositivos. Solo el chasis: cada pantalla es una
+       captura real del producto, montada encima como <img>. Se
+       referencia con <use> para que la geometría viaje una sola vez.
+       ============================================================ -->
+  <svg width="0" height="0" aria-hidden="true" focusable="false" style="position:absolute">
+    <defs>
+      <!--#include devices-->
+<!-- ============================================================
+     Device frames: shared hardware geometry
+     ============================================================
+     Three <symbol>s and the gradients they need. Every page that shows
+     a Mac or an iPhone <use>es these, so the geometry ships once and
+     can never drift between pages.
+
+     THESE ARE FLAT ELEVATIONS. The 3/4 view is not drawn here; the
+     perspective is applied by components.css, which stands the lid up
+     and lays the deck down as two planes in one CSS 3D scene. That is
+     why the deck is drawn STRAIGHT DOWN, as if you were above the
+     machine looking at the keyboard: the foreshortening happens at
+     render time.
+
+     Drawing the perspective into the art instead would mean the screen
+     became a quadrilateral, and a real screenshot cannot be poured into
+     a quadrilateral without solving a homography per device size. Let
+     the browser project both the chrome and the screenshot with the
+     same matrix and they line up by construction.
+
+     THE SCREEN RECT IS LOAD-BEARING. components.css positions the
+     screenshot from it and connect-modes.js aims the Wi-Fi demo at the
+     QR through the same numbers. Everything around it is free.
+
+     The screenshot <img> covers the screen exactly, so anything drawn
+     inside it is invisible in practice, which is why all the detail
+     here is bezel, rail, hinge and deck. The glass sheen that sits OVER
+     the screenshot is a CSS overlay, in components.css.
+
+     WHY GRADIENTS AND NOT A PNG: these are hardware props behind real UI
+     screenshots. Drawn, they stay sharp at any size, recolour with the
+     page, weigh nothing and never need a 2x variant.
+     ============================================================ -->
+
+<!-- ============================================================
+     LIGHTING
+     ============================================================
+     One warm lamp, high and to the RIGHT, in an otherwise dark room,
+     the same light the rest of the page is lit by. That single decision
+     drives every gradient below, and it is what the eye reads as "a
+     photograph of an object" rather than "a drawing of one".
+
+     Two rules it has to obey to stay convincing:
+
+       · The body is nearly black. A rim light only reads as light if
+         the surface it wraps is darker than it is. Bodies were a mid
+         grey before, which left the edges looking like borders.
+
+       · The rim FALLS OFF. It is hot at the top right corner and gone
+         by the bottom left. A rim of even brightness all the way round
+         is a stroke, and the eye knows it instantly.
+
+     Highlights run warm-white to amber, not white: a specular takes the
+     colour of the lamp, not of the metal.
+     ============================================================ -->
+
+<!-- Lid face: dark anodised aluminium, barely catching the room. -->
+<linearGradient id="ws-alu" x1="0" y1="0" x2="0" y2="1">
+  <stop offset="0" stop-color="#41454c" />
+  <stop offset="0.35" stop-color="#26292e" />
+  <stop offset="1" stop-color="#15171a" />
+</linearGradient>
+
+<!-- Both vertical edges roll away from the light. Laid over the face, it
+     is what turns a flat slab into something with a thickness. -->
+<linearGradient id="ws-alu-side" x1="0" y1="0" x2="1" y2="0">
+  <stop offset="0" stop-color="#000" stop-opacity="0.55" />
+  <stop offset="0.06" stop-color="#000" stop-opacity="0" />
+  <stop offset="0.94" stop-color="#000" stop-opacity="0" />
+  <stop offset="1" stop-color="#000" stop-opacity="0.45" />
+</linearGradient>
+
+<!-- The machined top edge under the lamp: hot towards the right, dying
+     out before the far corner. Deliberately NOT symmetrical: a
+     highlight centred on the object is the giveaway of a light that
+     does not exist anywhere in particular. -->
+<linearGradient id="ws-spec" x1="0" y1="0" x2="1" y2="0">
+  <stop offset="0" stop-color="#A36029" stop-opacity="0.06" />
+  <stop offset="0.42" stop-color="#F4C29A" stop-opacity="0.4" />
+  <stop offset="0.84" stop-color="#FFE6C6" stop-opacity="0.92" />
+  <stop offset="1" stop-color="#F2A464" stop-opacity="0.3" />
+</linearGradient>
+
+<!-- The rim itself: traced diagonally so the top-right corner burns and
+     the bottom-left falls into shadow, which is the whole trick. -->
+<linearGradient id="ws-rim" x1="1" y1="0" x2="0.12" y2="1">
+  <stop offset="0" stop-color="#FFE6C6" stop-opacity="0.95" />
+  <stop offset="0.16" stop-color="#F2A464" stop-opacity="0.78" />
+  <stop offset="0.46" stop-color="#D07D39" stop-opacity="0.34" />
+  <stop offset="0.72" stop-color="#A36029" stop-opacity="0.12" />
+  <stop offset="1" stop-color="#000" stop-opacity="0.45" />
+</linearGradient>
+
+<!-- Deck front: the lit top lip, then the face falling into shadow.
+     Kept well under the lid: a deck brighter than the screen half
+     pulls the eye to the furniture instead of the product. -->
+<linearGradient id="ws-alu-base" x1="0" y1="0" x2="0" y2="1">
+  <stop offset="0" stop-color="#5f646d" />
+  <stop offset="0.12" stop-color="#3a3e45" />
+  <stop offset="0.58" stop-color="#24272c" />
+  <stop offset="1" stop-color="#121416" />
+</linearGradient>
+
+<!-- The top edge of the deck. Same lamp, so the warmth pools to the
+     right here too rather than sitting evenly across the front. -->
+<linearGradient id="ws-lip" x1="0" y1="0" x2="1" y2="0">
+  <stop offset="0" stop-color="#A36029" stop-opacity="0.18" />
+  <stop offset="0.22" stop-color="#F4C29A" stop-opacity="0.34" />
+  <stop offset="0.72" stop-color="#FFE6C6" stop-opacity="0.62" />
+  <stop offset="1" stop-color="#F2A464" stop-opacity="0.24" />
+</linearGradient>
+
+<!-- Titanium rail, seen end-on: two thin edges where the curve turns
+     back, a broad dark face between. The right edge faces the lamp and
+     burns warm; the left one only picks up what the room gives back. -->
+<linearGradient id="ws-ti" x1="0" y1="0" x2="1" y2="0">
+  <stop offset="0" stop-color="#6b7079" />
+  <stop offset="0.08" stop-color="#33373d" />
+  <stop offset="0.45" stop-color="#43474e" />
+  <stop offset="0.72" stop-color="#3a3e44" />
+  <stop offset="0.9" stop-color="#8a6743" />
+  <stop offset="1" stop-color="#FFDCB0" />
+</linearGradient>
+
+<!-- The top and bottom rails face the lamp more squarely than the long
+     sides, so they take a wash the sides do not. -->
+<linearGradient id="ws-ti-v" x1="0" y1="0" x2="0" y2="1">
+  <stop offset="0" stop-color="#FFE6C6" stop-opacity="0.22" />
+  <stop offset="0.13" stop-color="#fff" stop-opacity="0" />
+  <stop offset="0.87" stop-color="#fff" stop-opacity="0" />
+  <stop offset="1" stop-color="#F2A464" stop-opacity="0.12" />
+</linearGradient>
+
+<!-- Side buttons: rounded stock, catching the same warm top light. -->
+<linearGradient id="ws-btn" x1="0" y1="0" x2="0" y2="1">
+  <stop offset="0" stop-color="#c9a483" />
+  <stop offset="0.5" stop-color="#4e535a" />
+  <stop offset="1" stop-color="#2e3238" />
+</linearGradient>
+
+<!-- Deck surface, seen straight down. The open lid shades the back of
+     it and the lamp reaches the front right, so the sheen runs corner
+     to corner rather than straight down the page. -->
+<linearGradient id="ws-deck" x1="0.08" y1="0" x2="0.92" y2="1">
+  <stop offset="0" stop-color="#171a1e" />
+  <stop offset="0.4" stop-color="#282c31" />
+  <stop offset="0.78" stop-color="#3b4048" />
+  <stop offset="1" stop-color="#4b505a" />
+</linearGradient>
+
+<linearGradient id="ws-key" x1="0" y1="0" x2="0" y2="1">
+  <stop offset="0" stop-color="#282c31" />
+  <stop offset="1" stop-color="#131518" />
+</linearGradient>
+
+<!-- One row of keys, reused down the keyboard. Fourteen rects defined
+     once and <use>d five times is a fraction of the bytes of a full
+     drawn keyboard, and at the angle this deck is seen from, nobody can
+     tell that every row has the same key widths. -->
+<g id="ws-keyrow">
+  <rect x="160" y="0" width="44" height="38" rx="6" fill="url(#ws-key)" />
+  <rect x="209" y="0" width="44" height="38" rx="6" fill="url(#ws-key)" />
+  <rect x="258" y="0" width="44" height="38" rx="6" fill="url(#ws-key)" />
+  <rect x="307" y="0" width="44" height="38" rx="6" fill="url(#ws-key)" />
+  <rect x="356" y="0" width="44" height="38" rx="6" fill="url(#ws-key)" />
+  <rect x="405" y="0" width="44" height="38" rx="6" fill="url(#ws-key)" />
+  <rect x="454" y="0" width="44" height="38" rx="6" fill="url(#ws-key)" />
+  <rect x="503" y="0" width="44" height="38" rx="6" fill="url(#ws-key)" />
+  <rect x="552" y="0" width="44" height="38" rx="6" fill="url(#ws-key)" />
+  <rect x="601" y="0" width="44" height="38" rx="6" fill="url(#ws-key)" />
+  <rect x="650" y="0" width="44" height="38" rx="6" fill="url(#ws-key)" />
+  <rect x="699" y="0" width="44" height="38" rx="6" fill="url(#ws-key)" />
+  <rect x="748" y="0" width="44" height="38" rx="6" fill="url(#ws-key)" />
+  <rect x="797" y="0" width="44" height="38" rx="6" fill="url(#ws-key)" />
+</g>
+
+<!-- MacBook lid: viewBox 1000x560, screen at 76,16 -> 848x530 (16:10).
+     Stood upright by components.css. -->
+<symbol id="frame-mac-lid" viewBox="0 0 1000 560">
+  <!-- Face, edge roll-off, then the rim in two passes: a wide faint
+       one for the bloom a bright edge throws into the air around it, a
+       fine bright one for the edge itself. Two strokes cost nothing; an
+       SVG blur on a symbol used a dozen times does. -->
+  <rect x="60" y="0" width="880" height="560" rx="24" fill="url(#ws-alu)" />
+  <rect x="60" y="0" width="880" height="560" rx="24" fill="url(#ws-alu-side)" />
+  <rect x="61.5" y="1.5" width="877" height="557" rx="22.5" fill="none"
+        stroke="url(#ws-rim)" stroke-width="5" stroke-opacity="0.28" />
+  <rect x="60.8" y="0.8" width="878.4" height="558.4" rx="23.2" fill="none"
+        stroke="url(#ws-rim)" stroke-width="1.6" />
+  <path d="M88 1.8 H912" stroke="url(#ws-spec)" stroke-width="2.6" stroke-linecap="round" />
+
+  <!-- Bezel, then the fine catch where black plastic meets glass. Warm,
+       because the only light in the room is. -->
+  <rect x="70" y="9" width="860" height="542" rx="16" fill="#0a0a0b" />
+  <rect x="73.6" y="13.6" width="852.8" height="534.8" rx="11.5" fill="none"
+        stroke="#F4C29A" stroke-opacity="0.09" stroke-width="1.2" />
+
+  <!-- Screen well. The screenshot covers this exactly; it is seen only
+       while that image is still on its way. The corner radius is echoed
+       by --screen-r in components.css, which rounds the screenshot to
+       match: a square-cornered image inside a rounded bezel is the
+       single loudest tell that a device is drawn rather than
+       photographed. -->
+  <rect x="76" y="16" width="848" height="530" rx="14" fill="#050506" />
+
+  <!-- The hinge barrel, in the lid's own shadow at the fold. -->
+  <path d="M66 546 H934 L930 560 H70 Z" fill="#0d0f12" />
+</symbol>
+
+<!-- MacBook deck: viewBox 1000x520, drawn STRAIGHT DOWN. y=0 is the
+     hinge, y=520 is the front edge nearest the viewer; components.css
+     lays it away from the lid, so this is seen at a hard rake and every
+     detail here ends up compressed to a fraction of its drawn height.
+     That is the budget this art is drawn to. -->
+<symbol id="frame-mac-deck" viewBox="0 0 1000 520">
+  <rect x="60" y="0" width="880" height="520" rx="18" fill="url(#ws-deck)" />
+
+  <!-- Speaker grilles either side of the keyboard. -->
+  <rect x="92" y="40" width="52" height="248" rx="10" fill="#000" opacity="0.34" />
+  <rect x="856" y="40" width="52" height="248" rx="10" fill="#000" opacity="0.34" />
+
+  <!-- Keyboard well, then the rows. -->
+  <rect x="150" y="28" width="700" height="256" rx="12" fill="#0b0c0e" />
+  <g opacity="0.95">
+    <rect x="165" y="38" width="40" height="18" rx="4" fill="url(#ws-key)" />
+    <rect x="214" y="38" width="40" height="18" rx="4" fill="url(#ws-key)" />
+    <rect x="263" y="38" width="40" height="18" rx="4" fill="url(#ws-key)" />
+    <rect x="312" y="38" width="40" height="18" rx="4" fill="url(#ws-key)" />
+    <rect x="361" y="38" width="40" height="18" rx="4" fill="url(#ws-key)" />
+    <rect x="410" y="38" width="40" height="18" rx="4" fill="url(#ws-key)" />
+    <rect x="459" y="38" width="40" height="18" rx="4" fill="url(#ws-key)" />
+    <rect x="508" y="38" width="40" height="18" rx="4" fill="url(#ws-key)" />
+    <rect x="557" y="38" width="40" height="18" rx="4" fill="url(#ws-key)" />
+    <rect x="606" y="38" width="40" height="18" rx="4" fill="url(#ws-key)" />
+    <rect x="655" y="38" width="40" height="18" rx="4" fill="url(#ws-key)" />
+    <rect x="704" y="38" width="40" height="18" rx="4" fill="url(#ws-key)" />
+    <rect x="753" y="38" width="40" height="18" rx="4" fill="url(#ws-key)" />
+    <rect x="802" y="38" width="40" height="18" rx="4" fill="url(#ws-key)" />
+
+    <use href="#ws-keyrow" y="64" />
+    <use href="#ws-keyrow" y="108" />
+    <use href="#ws-keyrow" y="152" />
+    <use href="#ws-keyrow" y="196" />
+
+    <!-- Bottom row: modifiers, spacebar, modifiers, arrow cluster. -->
+    <rect x="160" y="240" width="44" height="38" rx="6" fill="url(#ws-key)" />
+    <rect x="209" y="240" width="44" height="38" rx="6" fill="url(#ws-key)" />
+    <rect x="258" y="240" width="54" height="38" rx="6" fill="url(#ws-key)" />
+    <rect x="317" y="240" width="240" height="38" rx="6" fill="url(#ws-key)" />
+    <rect x="562" y="240" width="54" height="38" rx="6" fill="url(#ws-key)" />
+    <rect x="621" y="240" width="44" height="38" rx="6" fill="url(#ws-key)" />
+    <rect x="699" y="259" width="44" height="19" rx="5" fill="url(#ws-key)" />
+    <rect x="748" y="240" width="44" height="19" rx="5" fill="url(#ws-key)" />
+    <rect x="748" y="259" width="44" height="19" rx="5" fill="url(#ws-key)" />
+    <rect x="797" y="259" width="44" height="19" rx="5" fill="url(#ws-key)" />
+  </g>
+
+  <!-- Trackpad: a shade lighter than the deck, with the hairline groove
+       that separates it from the palm rest. -->
+  <rect x="370" y="316" width="260" height="172" rx="14" fill="#2e3238" />
+  <rect x="370.6" y="316.6" width="258.8" height="170.8" rx="13.4" fill="none"
+        stroke="#000" stroke-opacity="0.55" stroke-width="1.2" />
+  <rect x="372" y="318" width="256" height="168" rx="12.6" fill="none"
+        stroke="#fff" stroke-opacity="0.05" stroke-width="1" />
+
+  <!-- The front edge catches the lamp before it rolls under. -->
+  <path d="M96 518 H904" stroke="url(#ws-lip)" stroke-width="3" stroke-linecap="round" />
+  <rect x="61" y="1" width="878" height="518" rx="17" fill="none"
+        stroke="url(#ws-rim)" stroke-width="1.4" />
+</symbol>
+
+<!-- iPhone: viewBox 400x841, screen at 12,12 -> 376x817 -->
+<symbol id="frame-phone" viewBox="0 0 400 841">
+  <!-- Buttons are drawn UNDER the rail, so only the sliver that clears
+       the body shows. Painted on top they read as stickers. -->
+  <rect x="0" y="150" width="7" height="34" rx="3.5" fill="url(#ws-btn)" />
+  <rect x="0" y="206" width="7" height="58" rx="3.5" fill="url(#ws-btn)" />
+  <rect x="0" y="280" width="7" height="58" rx="3.5" fill="url(#ws-btn)" />
+  <rect x="393" y="250" width="7" height="86" rx="3.5" fill="url(#ws-btn)" />
+
+  <rect x="2" y="2" width="396" height="837" rx="62" fill="url(#ws-ti)" />
+  <rect x="2" y="2" width="396" height="837" rx="62" fill="url(#ws-ti-v)" />
+
+  <!-- Antenna seams. Tiny, and the thing the eye uses to decide a phone
+       is a real object rather than an icon of one. -->
+  <rect x="2" y="120" width="5" height="3.4" fill="#15181c" opacity="0.85" />
+  <rect x="2" y="712" width="5" height="3.4" fill="#15181c" opacity="0.85" />
+  <rect x="393" y="196" width="5" height="3.4" fill="#15181c" opacity="0.85" />
+
+  <!-- Same two-pass rim as the Mac: bloom, then edge. -->
+  <rect x="3.4" y="3.4" width="393.2" height="834.2" rx="60.6" fill="none"
+        stroke="url(#ws-rim)" stroke-width="4" stroke-opacity="0.3" />
+  <rect x="2.8" y="2.8" width="394.4" height="835.4" rx="61.2" fill="none"
+        stroke="url(#ws-rim)" stroke-width="1.5" />
+
+  <rect x="9" y="9" width="382" height="823" rx="54" fill="#0a0a0b" />
+  <rect x="10.6" y="10.6" width="378.8" height="819.8" rx="52.6" fill="none"
+        stroke="#F4C29A" stroke-opacity="0.1" stroke-width="1.2" />
+
+  <rect x="12" y="12" width="376" height="817" rx="50" fill="#050506" />
+  <rect x="158" y="26" width="84" height="24" rx="12" fill="#0a0a0b" />
+</symbol>
+<!--#endinclude devices-->
+
+      <!-- Relleno de la onda de señal (hero) -->
+      <linearGradient id="sigfade" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0" stop-color="#E0965B" stop-opacity="0.25" />
+        <stop offset="0.3" stop-color="#F2A464" stop-opacity="0.95" />
+        <stop offset="0.7" stop-color="#F2A464" stop-opacity="0.95" />
+        <stop offset="1" stop-color="#E0965B" stop-opacity="0.25" />
+      </linearGradient>
+    </defs>
+  </svg>
+
+  <!--#include nav-es-->
+<!-- Barra de la portada en español. Espejo de partials/nav.html: mismo
+     marcado y mismas clases, solo cambian el texto y los destinos, que
+     apuntan a las páginas ES. Los anclas (#listen, #pricing, #founder)
+     son las mismas en los dos idiomas a propósito, porque el CSS y el
+     JS de las secciones se apoyan en esos id. -->
+<header class="topbar">
+  <div class="container topbar__inner">
+    <a class="brand" href="indexES.html">
+      <img src="assets/img/brand/logo-96.webp" alt="" width="96" height="70" />
+      <span>Wallas&rsquo; Stream</span>
+    </a>
+
+    <nav class="nav" aria-label="Principal">
+      <a href="#listen">Wi-Fi y cable</a>
+      <a href="#pricing">Gratis vs Pro</a>
+      <a href="#founder">Fundadora</a>
+    </nav>
+
+    <div class="topbar__actions">
+      <!-- Enlace real a la página en inglés: sin lang.js sigue funcionando
+           como un enlace normal; con lang.js, además guarda la preferencia. -->
+      <a class="lang-link" href="index.html" data-lang="en" hreflang="en" lang="en"
+         aria-label="View this page in English">EN</a>
+      <a class="btn btn--primary btn--sm" href="downloadES.html">Prueba Wallas&rsquo; Stream gratis</a>
+      <button class="hamburger" id="menuBtn" type="button"
+              aria-label="Abrir menú" aria-expanded="false" aria-controls="mobileMenu">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+             stroke-linecap="round" aria-hidden="true">
+          <path d="M3 6h18M3 12h18M3 18h18" />
+        </svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<div class="mobile-menu" id="mobileMenu" role="dialog" aria-modal="true"
+     aria-label="Menú" aria-hidden="true">
+  <button class="menu-close" id="menuClose" type="button" aria-label="Cerrar menú">&#10005;</button>
+  <a href="#listen">Wi-Fi y cable</a>
+  <a href="#pricing">Gratis vs Pro</a>
+  <a href="#founder">Fundadora</a>
+  <a href="faqES.html">Preguntas frecuentes</a>
+  <a href="contactES.html">Soporte</a>
+  <a href="index.html" data-lang="en" hreflang="en" lang="en">English</a>
+  <a class="btn btn--primary" href="downloadES.html">Prueba Wallas&rsquo; Stream gratis</a>
+</div>
+<!--#endinclude nav-es-->
+
+  <main id="main">
+
+    <!-- ============ 01 · HERO, un solo acto continuo ============
+         Mac → iPhone → dispositivo auditivo. El marcado estático es el
+         fotograma FINAL; hero-motion.css y scroll-progress.js avanzan
+         hacia él. -->
+    <section class="hero hero--cp" data-section="hero" data-cp="0" data-q="on">
+      <div class="hero__pin">
+      <div class="hero__cine" aria-hidden="true">
+        <!-- El póster es un fondo CSS del escenario; el <video> no lleva
+             src hasta que hero-checkpoint.js decide que se va a usar la
+             placa y elige una variante para el viewport. Quien no recibe
+             la placa no descarga ninguna de las dos. -->
+        <div class="hero__cine-stage">
+          <video muted playsinline preload="none"
+                 data-src="assets/hero-cinematic/hero-cine-v2-1920.mp4"
+                 data-src-sm="assets/hero-cinematic/hero-cine-v2-1280.mp4"></video>
         </div>
-        <div style="min-width:0">
-          <div class="name">Wallas’ Stream</div>
-          <div class="sub">Inicio</div>
+      </div>
+        <div class="container hero__layout">
+
+          <h1 class="hero__question">¿Y si pudieras escuchar tu Mac a través de tu <span class="hero__question-accent">dispositivo auditivo</span>?</h1>
+
+          <div class="hero__flow" role="img"
+               aria-label="El audio viaja de una Mac a un iPhone con Wallas' Stream, y de ahí al procesador de sonido de un implante coclear.">
+            <div class="hero__node hero__node--mac">
+              <div class="device device--mac">
+                <div class="device__scene">
+                  <div class="device__lid">
+                    <svg class="device__chrome" viewBox="0 0 1000 560" aria-hidden="true"><use href="#frame-mac-lid" /></svg>
+                    <img class="device__screen" src="assets/img/ui/mac-home.webp"
+                         alt="" width="1200" height="750" fetchpriority="high" decoding="async" />
+                  </div>
+                  <div class="device__deck" aria-hidden="true">
+                    <svg class="device__chrome" viewBox="0 0 1000 520"><use href="#frame-mac-deck" /></svg>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <svg class="sig sig--1" viewBox="0 0 200 64" aria-hidden="true">
+              <line x1="4" y1="32" x2="194" y2="32" pathLength="1" />
+              <rect x="4.0" y="27.0" width="3.6" height="10" rx="1.7" style="--i:0.000" />
+              <rect x="14.6" y="23.0" width="3.6" height="18" rx="1.7" style="--i:0.055" />
+              <rect x="25.2" y="18.0" width="3.6" height="28" rx="1.7" style="--i:0.110" />
+              <rect x="35.8" y="12.0" width="3.6" height="40" rx="1.7" style="--i:0.165" />
+              <rect x="46.4" y="21.0" width="3.6" height="22" rx="1.7" style="--i:0.220" />
+              <rect x="57.0" y="8.0" width="3.6" height="48" rx="1.7" style="--i:0.275" />
+              <rect x="67.6" y="25.0" width="3.6" height="14" rx="1.7" style="--i:0.330" />
+              <rect x="78.2" y="16.0" width="3.6" height="32" rx="1.7" style="--i:0.385" />
+              <rect x="88.8" y="5.0" width="3.6" height="54" rx="1.7" style="--i:0.440" />
+              <rect x="99.4" y="20.0" width="3.6" height="24" rx="1.7" style="--i:0.495" />
+              <rect x="110.0" y="11.0" width="3.6" height="42" rx="1.7" style="--i:0.550" />
+              <rect x="120.6" y="24.0" width="3.6" height="16" rx="1.7" style="--i:0.605" />
+              <rect x="131.2" y="17.0" width="3.6" height="30" rx="1.7" style="--i:0.660" />
+              <rect x="141.8" y="9.0" width="3.6" height="46" rx="1.7" style="--i:0.715" />
+              <rect x="152.4" y="22.0" width="3.6" height="20" rx="1.7" style="--i:0.770" />
+              <rect x="163.0" y="15.0" width="3.6" height="34" rx="1.7" style="--i:0.825" />
+              <rect x="173.6" y="20.0" width="3.6" height="24" rx="1.7" style="--i:0.880" />
+              <rect x="184.2" y="26.0" width="3.6" height="12" rx="1.7" style="--i:0.935" />
+            </svg>
+
+            <div class="hero__node hero__node--phone">
+              <span class="hero__glow" aria-hidden="true"></span>
+              <div class="device device--phone">
+                <svg class="device__chrome" viewBox="0 0 400 841" aria-hidden="true"><use href="#frame-phone" /></svg>
+                <img class="device__screen" src="assets/img/ui/ios-home.webp"
+                     alt="" width="480" height="1044" decoding="async" />
+              </div>
+            </div>
+
+            <svg class="sig sig--2" viewBox="0 0 200 64" aria-hidden="true">
+              <line x1="4" y1="32" x2="194" y2="32" pathLength="1" />
+              <rect x="4.0" y="26.0" width="3.6" height="12" rx="1.7" style="--i:0.000" />
+              <rect x="14.6" y="20.0" width="3.6" height="24" rx="1.7" style="--i:0.055" />
+              <rect x="25.2" y="14.0" width="3.6" height="36" rx="1.7" style="--i:0.110" />
+              <rect x="35.8" y="23.0" width="3.6" height="18" rx="1.7" style="--i:0.165" />
+              <rect x="46.4" y="9.0" width="3.6" height="46" rx="1.7" style="--i:0.220" />
+              <rect x="57.0" y="18.0" width="3.6" height="28" rx="1.7" style="--i:0.275" />
+              <rect x="67.6" y="6.0" width="3.6" height="52" rx="1.7" style="--i:0.330" />
+              <rect x="78.2" y="22.0" width="3.6" height="20" rx="1.7" style="--i:0.385" />
+              <rect x="88.8" y="13.0" width="3.6" height="38" rx="1.7" style="--i:0.440" />
+              <rect x="99.4" y="17.0" width="3.6" height="30" rx="1.7" style="--i:0.495" />
+              <rect x="110.0" y="25.0" width="3.6" height="14" rx="1.7" style="--i:0.550" />
+              <rect x="120.6" y="10.0" width="3.6" height="44" rx="1.7" style="--i:0.605" />
+              <rect x="131.2" y="21.0" width="3.6" height="22" rx="1.7" style="--i:0.660" />
+              <rect x="141.8" y="15.0" width="3.6" height="34" rx="1.7" style="--i:0.715" />
+              <rect x="152.4" y="8.0" width="3.6" height="48" rx="1.7" style="--i:0.770" />
+              <rect x="163.0" y="20.0" width="3.6" height="24" rx="1.7" style="--i:0.825" />
+              <rect x="173.6" y="24.0" width="3.6" height="16" rx="1.7" style="--i:0.880" />
+              <rect x="184.2" y="27.0" width="3.6" height="10" rx="1.7" style="--i:0.935" />
+            </svg>
+
+            <div class="hero__node hero__node--implant">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="58 4 706 880" class="ws-implant">
+                <title id="hd-title">Procesador de sonido de implante coclear</title>
+                <desc id="hd-desc">Un procesador de sonido retroauricular con un gancho transparente, unido por un cable holgado a una bobina externa circular.</desc>
+
+                <defs>
+                  <linearGradient id="hd-body" x1="0.08" y1="0.05" x2="0.82" y2="0.95">
+                    <stop offset="0"    stop-color="#3C424A" />
+                    <stop offset="0.26" stop-color="#242830" />
+                    <stop offset="0.62" stop-color="#14171B" />
+                    <stop offset="1"    stop-color="#08090B" />
+                  </linearGradient>
+
+                  <linearGradient id="hd-coil" x1="0.18" y1="0.05" x2="0.82" y2="1">
+                    <stop offset="0"   stop-color="#363B44" />
+                    <stop offset="0.5" stop-color="#191C21" />
+                    <stop offset="1"   stop-color="#0A0B0D" />
+                  </linearGradient>
+
+                  <linearGradient id="hd-trim" x1="0" y1="0" x2="1" y2="0.4">
+                    <stop offset="0"    stop-color="#6E747E" />
+                    <stop offset="0.38" stop-color="#EDF0F4" />
+                    <stop offset="0.7"  stop-color="#A8AEB8" />
+                    <stop offset="1"    stop-color="#666C76" />
+                  </linearGradient>
+
+                  <!-- Silicón transparente. En una página casi negra un objeto
+                       transparente se lee por sus BORDES, no por su relleno, así
+                       que la presencia viene de los trazos de contorno de abajo,
+                       con el relleno lo bastante claro para seguir pareciendo
+                       vidrio. Un tinte frío tenue lo separa del cuerpo neutro
+                       del procesador contra el que se apoya. -->
+                  <linearGradient id="hd-hook" x1="0" y1="0" x2="1" y2="0.85">
+                    <stop offset="0"    stop-color="#FFFFFF" stop-opacity="0.56" />
+                    <stop offset="0.40" stop-color="#D6E2F0" stop-opacity="0.33" />
+                    <stop offset="1"    stop-color="#FFFFFF" stop-opacity="0.46" />
+                  </linearGradient>
+
+                  <radialGradient id="hd-signal">
+                    <stop offset="0"   stop-color="#F2A464" stop-opacity="0.26" />
+                    <stop offset="0.5" stop-color="#E0965B" stop-opacity="0.08" />
+                    <stop offset="1"   stop-color="#E0965B" stop-opacity="0" />
+                  </radialGradient>
+                </defs>
+
+                <g class="ws-implant__signal">
+                  <ellipse cx="300" cy="205" rx="205" ry="192" fill="url(#hd-signal)" />
+                </g>
+
+                <!-- ============ BOBINA ============ -->
+                <path d="M231 284 C225 332 233 372 246 396 L289 396
+                         C301 365 327 343 353 319 C335 295 302 283 267 282 Z"
+                      fill="url(#hd-coil)" />
+                <circle cx="300" cy="205" r="129" fill="url(#hd-coil)" />
+                <path d="M214 116 A129 129 0 0 0 175 232" fill="none"
+                      stroke="#6A707A" stroke-opacity="0.38" stroke-width="4" stroke-linecap="round" />
+
+                <circle cx="300" cy="205" r="67" fill="#1A1D22" />
+                <circle cx="300" cy="205" r="67" fill="none" stroke="#4E545E" stroke-opacity="0.38" stroke-width="2.5" />
+                <circle cx="300" cy="205" r="45" fill="#0D0F12" />
+                <circle cx="300" cy="205" r="45" fill="none" stroke="#3A4048" stroke-opacity="0.45" stroke-width="1.5" />
+                <g stroke="#5C626C" stroke-opacity="0.45" stroke-width="2.5" stroke-linecap="round">
+                  <path d="M283 178 l6 9" />
+                  <path d="M330 210 l-11 1" />
+                  <path d="M289 236 l5 -9" />
+                </g>
+
+                <!-- ============ CABLE ============ -->
+                <g fill="none" stroke-linecap="round">
+                  <path d="M258 396 C246 432 220 458 188 486 C140 528 80 572 77 624
+                           C74 674 120 702 168 701 C216 700 260 660 290 610
+                           C310 574 322 548 336 528"
+                        stroke="#0D0F12" stroke-width="19" />
+                  <path d="M262 400 C250 434 224 460 193 488 C147 528 90 570 87 622
+                           C84 668 124 693 168 692"
+                        stroke="#454B54" stroke-opacity="0.45" stroke-width="3.5" />
+                </g>
+
+                <!-- Retención de hule del cable, pegada al hombro del arco -->
+                <path d="M310 506 C328 487 358 486 376 502 C392 516 392 546 374 560
+                         C354 575 324 570 311 552 C300 538 301 517 310 506 Z"
+                      fill="#111418" />
+                <path d="M317 510 C333 495 356 494 370 507" fill="none"
+                      stroke="#4A505A" stroke-opacity="0.4" stroke-width="2.5" stroke-linecap="round" />
+
+                <!-- ============ PROCESADOR, una silueta continua ============
+                     La batería cuelga de la izquierda; el arco engancha hacia la
+                     derecha y deja la parte de abajo cóncava que le da al aparato
+                     su forma reconocible. -->
+                <path d="M334 848
+                         C334 866 348 876 366 876
+                         H460
+                         C478 876 492 866 492 848
+                         L492 662
+                         C494 632 507 614 532 604
+                         C566 591 614 585 654 576
+                         C688 568 712 550 710 522
+                         C708 495 682 475 638 463
+                         C568 444 470 449 416 473
+                         C354 501 326 564 334 646
+                         Z"
+                      fill="url(#hd-body)" />
+
+                <!-- Brillo del borde superior a lo largo del arco -->
+                <path d="M348 600 C364 540 420 496 492 482 C566 468 640 480 680 504"
+                      fill="none" stroke="#787F89" stroke-opacity="0.38" stroke-width="3.5" stroke-linecap="round" />
+
+                <!-- Franja cromada -->
+                <path d="M366 596 C388 548 438 512 500 499 C568 485 644 497 686 518"
+                      fill="none" stroke="url(#hd-trim)" stroke-width="7" stroke-linecap="round" />
+
+                <!-- Botón de control en la parte alta del arco -->
+                <rect x="486" y="454" width="28" height="15" rx="6" fill="#7E848E" />
+                <rect x="486" y="454" width="28" height="15" rx="6" fill="none"
+                      stroke="#C9CFD7" stroke-opacity="0.42" stroke-width="1.5" />
+
+                <!-- Módulo de batería: costura y detalle de superficie -->
+                <path d="M338 610 C382 604 448 604 490 608" fill="none"
+                      stroke="#4C525B" stroke-opacity="0.34" stroke-width="2.5" stroke-linecap="round" />
+                <circle cx="466" cy="646" r="4.5" fill="#3E444D" fill-opacity="0.75" />
+                <path d="M348 654 v94" stroke="#000000" stroke-opacity="0.4" stroke-width="9" stroke-linecap="round" />
+                <path d="M472 692 C478 752 476 804 464 842" fill="none"
+                      stroke="#787F89" stroke-opacity="0.2" stroke-width="6" stroke-linecap="round" />
+
+                <!-- ============ GANCHO TRANSPARENTE ============ -->
+                <path d="M660 498
+                         C700 498 728 521 741 560
+                         C754 602 749 654 731 692
+                         C723 709 710 715 702 709
+                         C695 703 696 691 701 678
+                         C714 644 717 604 707 574
+                         C698 547 681 527 658 516 Z"
+                      fill="url(#hd-hook)" />
+                <!-- halo exterior suave: despega el gancho del fondo sin darle masa -->
+                <path d="M663 500 C702 501 730 524 742 562 C754 604 749 655 731 692"
+                      fill="none" stroke="#DCE7F5" stroke-opacity="0.13" stroke-width="9" stroke-linecap="round" />
+                <!-- luz de contorno principal: el borde que lo hace leer como plástico transparente -->
+                <path d="M663 500 C702 501 730 524 742 562 C754 604 749 655 731 692"
+                      fill="none" stroke="#FFFFFF" stroke-opacity="0.66" stroke-width="3.2" stroke-linecap="round" />
+                <!-- borde interior, más tenue, le da grosor al material -->
+                <path d="M659 515 C680 526 697 547 707 575 C717 606 714 646 701 680"
+                      fill="none" stroke="#FFFFFF" stroke-opacity="0.24" stroke-width="2" stroke-linecap="round" />
+                <!-- reflejo en la punta redondeada, para que el gancho no se desvanezca abajo -->
+                <path d="M731 692 C723 709 710 715 702 709" fill="none"
+                      stroke="#FFFFFF" stroke-opacity="0.38" stroke-width="2.6" stroke-linecap="round" />
+                <!-- reflejo especular cerca de la parte alta del gancho -->
+                <path d="M690 522 C706 532 718 548 725 568" fill="none"
+                      stroke="#FFFFFF" stroke-opacity="0.36" stroke-width="4" stroke-linecap="round" />
+              </svg>
+            </div>
+          </div>
+
+          <div class="hero__payoff">
+            <p class="hero__headline">
+              <span class="hero__headline-line">Tu Mac.</span>
+              <span class="hero__headline-line hero__headline-line--accent">Directo a ti.</span>
+            </p>
+            <p class="lede">
+              Transmite tu Mac a tu implante coclear<br />
+              o auxiliar auditivo a través de tu iPhone.
+            </p>
+            <div class="hero__cta">
+              <a class="btn btn--primary btn--lg" href="downloadES.html">
+                Prueba Wallas&rsquo; Stream gratis
+                <svg class="btn__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M4 12h14M12.5 6l6 6-6 6" />
+                </svg>
+              </a>
+
+              <ul class="hero__meta">
+                <li>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
+                       stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <circle cx="12" cy="12" r="9" />
+                    <path d="m8 12.4 2.7 2.7L16 9.8" />
+                  </svg>
+                  7 días de Pro
+                </li>
+                <li>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
+                       stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <rect x="2.5" y="5.5" width="19" height="13" rx="2.5" />
+                    <path d="M2.5 10h19" />
+                  </svg>
+                  Sin tarjeta de crédito
+                </li>
+              </ul>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Sin texto durante la reproducción: la placa muestra la señal
+             saliendo de la Mac, cruzando el iPhone y llegando al
+             procesador, así que narrarlo en texto solo competía con lo
+             que describía. -->
+
+        <div class="hero__hints" aria-hidden="true">
+          <p class="hero__hint" data-for="0">Desliza para enviar el audio<span class="hero__chev"></span></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 02 · EL PROBLEMA ============
+         El mismo argumento que la vieja cuadrícula de cuatro tarjetas.
+         Son los momentos cotidianos para los que existe el producto,
+         pero mostrados en lugar de descritos. Una placa por momento,
+         elegida con la fila de pestañas de abajo. Lo mueve uses.js; sin
+         él, la placa 1 se sostiene sola. -->
+    <section class="section uses" data-section="problem" data-uses
+             role="region" aria-roledescription="carrusel"
+             aria-label="Momentos cotidianos para los que se hizo Wallas&rsquo; Stream">
+      <div class="container uses__inner">
+
+        <div class="uses__stage">
+          <div class="uses__copy">
+            <div class="section-head">
+              <p class="eyebrow">Por qué existe</p>
+              <h2>Escuchar desde tu teléfono puede ser simple. Desde tu Mac, no siempre.</h2>
+              <p class="lede">Estos son los momentos cotidianos para los que se hizo Wallas&rsquo; Stream.</p>
+            </div>
+          </div>
+
+          <!-- Las placas. Cada alt describe el momento, no la composición,
+               porque la composición es la misma en las cuatro y repetirla
+               cuatro veces no le ayuda a nadie. -->
+          <div class="uses__visual">
+            <div class="uses__panel is-active" id="uses-panel-0"
+                 role="tabpanel" aria-labelledby="uses-tab-0">
+              <img class="uses__img" src="assets/use-case-visuals/wallas-meeting-mode.webp"
+                   srcset="assets/use-case-visuals/wallas-meeting-mode-1100.webp 1100w,
+                           assets/use-case-visuals/wallas-meeting-mode.webp 1672w"
+                   sizes="(min-width: 1000px) 55vw, 92vw"
+                   alt="Una videollamada con cuatro personas en una MacBook, con su audio viajando a un iPhone con Wallas&rsquo; Stream."
+                   width="1672" height="941" decoding="async" />
+            </div>
+
+            <div class="uses__panel" id="uses-panel-1"
+                 role="tabpanel" aria-labelledby="uses-tab-1" aria-hidden="true" inert>
+              <img class="uses__img" src="assets/use-case-visuals/wallas-online-course.webp"
+                   srcset="assets/use-case-visuals/wallas-online-course-1100.webp 1100w,
+                           assets/use-case-visuals/wallas-online-course.webp 1672w"
+                   sizes="(min-width: 1000px) 55vw, 92vw"
+                   alt="Una clase en línea reproduciéndose en una MacBook, con su audio viajando a un iPhone con Wallas&rsquo; Stream."
+                   width="1672" height="941" loading="lazy" decoding="async" />
+            </div>
+
+            <div class="uses__panel" id="uses-panel-2"
+                 role="tabpanel" aria-labelledby="uses-tab-2" aria-hidden="true" inert>
+              <img class="uses__img" src="assets/use-case-visuals/wallas-music-video.webp"
+                   srcset="assets/use-case-visuals/wallas-music-video-1100.webp 1100w,
+                           assets/use-case-visuals/wallas-music-video.webp 1672w"
+                   sizes="(min-width: 1000px) 55vw, 92vw"
+                   alt="Un concierto en vivo reproduciéndose en una MacBook, con su audio viajando a un iPhone con Wallas&rsquo; Stream."
+                   width="1672" height="941" loading="lazy" decoding="async" />
+            </div>
+
+            <div class="uses__panel" id="uses-panel-3"
+                 role="tabpanel" aria-labelledby="uses-tab-3" aria-hidden="true" inert>
+              <img class="uses__img" src="assets/use-case-visuals/wallas-move-freely.webp"
+                   srcset="assets/use-case-visuals/wallas-move-freely-1100.webp 1100w,
+                           assets/use-case-visuals/wallas-move-freely.webp 1672w"
+                   sizes="(min-width: 1000px) 55vw, 92vw"
+                   alt="Una clase de yoga reproduciéndose en una MacBook en una cocina, con su audio viajando a un iPhone al otro lado del cuarto."
+                   width="1672" height="941" loading="lazy" decoding="async" />
+            </div>
+          </div>
+        </div>
+
+        <div class="uses__switcher">
+
+          <div class="uses__tabs" role="tablist" aria-label="Elige un momento">
+
+            <button class="uses__tab is-active" type="button" role="tab" id="uses-tab-0"
+                    aria-controls="uses-panel-0" aria-selected="true"
+                    data-uses-label="Juntas en línea">
+              <span class="uses__icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="2" y="6" width="13" height="12" rx="2" /><path d="m22 8-7 4 7 4V8Z" />
+                </svg>
+              </span>
+              <span class="uses__tab-title">Juntas en línea</span>
+              <span class="uses__tab-body">Deja el video en tu Mac. Llévate el audio contigo.</span>
+            </button>
+
+            <button class="uses__tab" type="button" role="tab" id="uses-tab-1"
+                    aria-controls="uses-panel-1" aria-selected="false" tabindex="-1"
+                    data-uses-label="Cursos en línea">
+              <span class="uses__icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M3 5.5A2.5 2.5 0 0 1 5.5 3H20v15.5H5.5A2.5 2.5 0 0 0 3 21Z" /><path d="M3 18.5h17" />
+                </svg>
+              </span>
+              <span class="uses__tab-title">Cursos en línea</span>
+              <span class="uses__tab-body">Estudia horas con un audio claro y sin distracciones.</span>
+            </button>
+
+            <button class="uses__tab" type="button" role="tab" id="uses-tab-2"
+                    aria-controls="uses-panel-2" aria-selected="false" tabindex="-1"
+                    data-uses-label="Música y videos">
+              <span class="uses__icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M9 18V5.5l11-2V16" /><circle cx="6.5" cy="18" r="2.5" /><circle cx="17.5" cy="16" r="2.5" />
+                </svg>
+              </span>
+              <span class="uses__tab-title">Música y videos</span>
+              <span class="uses__tab-body">Disfruta lo que ves en tu Mac a través de tu iPhone.</span>
+            </button>
+
+            <button class="uses__tab" type="button" role="tab" id="uses-tab-3"
+                    aria-controls="uses-panel-3" aria-selected="false" tabindex="-1"
+                    data-uses-label="Muévete libre">
+              <span class="uses__icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M4 8h13l-3-3M20 16H7l3 3" />
+                </svg>
+              </span>
+              <span class="uses__tab-title">Muévete libre</span>
+              <span class="uses__tab-body">Cambia de dispositivo. Tu audio se queda contigo.</span>
+            </button>
+
+          </div>
+
+          <div class="uses__rail" aria-hidden="true">
+            <span class="uses__rail-fill" style="--uses-i: 0"></span>
+            <span class="uses__rail-dot is-active" style="--i: 0"></span>
+            <span class="uses__rail-dot" style="--i: 1"></span>
+            <span class="uses__rail-dot" style="--i: 2"></span>
+            <span class="uses__rail-dot" style="--i: 3"></span>
+          </div>
+        </div>
+
+      </div>
+
+      <p class="sr-only" data-uses-status aria-live="polite"></p>
+    </section>
+
+    <!-- ============ 03 · ELIGE CÓMO ESCUCHAR ============
+         Escenario de dos paneles que se reproduce solo. Lo mueve
+         connect-modes.js, que corre la historia de conexión en un ciclo
+         de cinco segundos; si eso nunca carga, queda el panel estático
+         de Wi-Fi. -->
+    <section class="section cm" id="listen" data-section="listen" data-cm
+             role="region" aria-roledescription="carrusel" aria-label="Formas de conectar">
+
+      <div class="cm__intro">
+        <div class="section-head">
+          <p class="eyebrow">Formas de conectar</p>
+          <h2>Wi-Fi o cable. Tú decides.</h2>
         </div>
       </div>
 
-      <div class="nav">
-
-        <!-- Desktop pills -->
-        <div class="nav-links">
-          <a class="pill" href="legalES.html">Privacidad y Términos</a>
-          <a class="pill" href="helpES.html">Ayuda</a>
-          <a class="pill" href="contactES.html">Contacto</a>
-          <a class="pill primary" href="#download">Descargar</a>
-          <a class="pill ghost" href="index.html">EN</a>
-       
-
-        </div>
-
-        <!-- Mobile hamburger -->
-        <button class="hamburger" id="menuBtn" aria-label="Open menu" type="button">
-          ☰
+      <!-- Los dos modos se eligen aquí y no haciendo clic en una rendija
+           del propio panel: las dos opciones se leen al mismo tiempo, y el
+           escenario de abajo queda libre para usar todo su ancho. -->
+      <div class="cm__switch" role="tablist" aria-label="Elige cómo conectarte">
+        <button class="cm__switch-btn is-active" type="button" role="tab"
+                id="cm-tab-wifi" aria-controls="cm-panel-wifi" aria-selected="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M2.5 8.5a15 15 0 0 1 19 0" />
+            <path d="M5.8 12.3a10 10 0 0 1 12.4 0" />
+            <path d="M9.1 16a5 5 0 0 1 5.8 0" />
+            <circle cx="12" cy="19.4" r="1.1" fill="currentColor" stroke="none" />
+          </svg>
+          Wi-Fi
         </button>
 
+        <button class="cm__switch-btn" type="button" role="tab"
+                id="cm-tab-cable" aria-controls="cm-panel-cable" aria-selected="false" tabindex="-1">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M9 2.5v5M15 2.5v5" />
+            <path d="M6.5 7.5h11v3.5a5.5 5.5 0 0 1-11 0Z" />
+            <path d="M12 16.5v5" />
+          </svg>
+          Cable
+        </button>
       </div>
-    </div>
 
-    <!-- ✅ Fullscreen Mobile Menu (must be OUTSIDE topbar) -->
-    <div class="mobile-menu" id="mobileMenu" aria-hidden="true">
-      <div class="menu-panel">
-        <button class="menu-close" id="menuClose" aria-label="Close menu" type="button">✕</button>
+      <div class="cm__track">
 
-        <a href="legalES.html">Privacidad y Términos</a>
-        <a href="helpES.html">Ayuda</a>
-        <a href="contactES.html">Contacto</a>
-        <a href="index.html">EN</a>
+        <!-- ================= Wi-Fi =================
+             Escrito ya expandido. Si connect-modes.js nunca carga, este
+             panel se queda abierto con su texto legible y las pantallas
+             reales del producto a la vista; solo deja de reproducirse. -->
+        <article class="cm__panel is-active" data-cm-panel="wifi" data-cm-label="Wi-Fi, gratis"
+                 id="cm-panel-wifi" role="tabpanel" aria-labelledby="cm-tab-wifi">
+
+          <div class="cm__full">
+            <div class="cm__copy">
+              <h3 class="cm__title">Quédate sin cables.</h3>
+              <p class="cm__body">Usa Wi-Fi cuando tu Mac y tu iPhone estén en la misma red.</p>
+            </div>
+
+            <!-- Se reproduce solo en un ciclo de cinco segundos; aquí
+                 adentro nada es operable, así que toda la escena es una
+                 sola imagen para las tecnologías de asistencia, y la línea
+                 sr-only que va después dice qué muestra esa imagen. -->
+            <div class="cm__stage" data-demo="wifi" aria-hidden="true">
+              <!-- Calidez del entorno. Va DETRÁS del hardware, para que se
+                   lea como luz en el cuarto y no como un componente de UI. -->
+              <span class="cm__glow cm__glow--phone" aria-hidden="true"></span>
+
+              <div class="cm__mac">
+                <span class="cm__glow cm__glow--qr" aria-hidden="true"></span>
+                <div class="device device--mac">
+                  <div class="device__scene">
+                    <div class="device__lid">
+                      <svg class="device__chrome" viewBox="0 0 1000 560" aria-hidden="true"><use href="#frame-mac-lid" /></svg>
+                      <img class="device__screen cm__screen cm__screen--setup" src="assets/img/ui/mac-wifi.webp"
+                           alt="Wallas' Stream para Mac mostrando un código QR y la instrucción de abrir Wallas' Stream en tu iPhone y elegir escucha por Wi-Fi."
+                           width="1200" height="750" decoding="async" />
+                      <img class="device__screen cm__screen cm__screen--connected" src="assets/img/ui/mac-connected.webp"
+                           alt="" aria-hidden="true" width="1200" height="750" decoding="async" />
+                    </div>
+                    <div class="device__deck" aria-hidden="true">
+                      <svg class="device__chrome" viewBox="0 0 1000 520"><use href="#frame-mac-deck" /></svg>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Viaja hasta el código QR y regresa, una vez por ciclo. Lo
+                   mueve connect-modes.js escribiendo --dx/--dy en este
+                   elemento. -->
+              <div class="cm__drag cm__drag--phone">
+                <span class="device device--phone cm__phone-dev">
+                  <svg class="device__chrome" viewBox="0 0 400 841" aria-hidden="true"><use href="#frame-phone" /></svg>
+
+                  <!-- Visor de cámara en vivo: un duplicado 1:1 de la Mac que
+                       se contra-traslada por el propio desplazamiento del
+                       teléfono, para quedarse quieto en el espacio mientras el
+                       teléfono se mueve encima. Es la misma URL de imagen que
+                       la Mac real, así que no hay una petición extra. El
+                       tamaño y el desplazamiento de la escena los mide
+                       alignScene() al cargar, al cambiar de tamaño y al
+                       cambiar de modo. -->
+                  <span class="cm__view" aria-hidden="true">
+                    <span class="cm__view-scene">
+                      <span class="device device--mac">
+                        <span class="device__scene">
+                          <span class="device__lid">
+                            <svg class="device__chrome" viewBox="0 0 1000 560"><use href="#frame-mac-lid" /></svg>
+                            <img class="device__screen" src="assets/img/ui/mac-wifi.webp"
+                                 alt="" width="1200" height="750" decoding="async" />
+                          </span>
+                          <span class="device__deck" aria-hidden="true">
+                            <svg class="device__chrome" viewBox="0 0 1000 520"><use href="#frame-mac-deck" /></svg>
+                          </span>
+                        </span>
+                      </span>
+                    </span>
+                  </span>
+
+                  <!-- La pantalla real del escáner de iOS, sin modificar. UI
+                       blanca sobre negro puro, así que la mezcla `screen`
+                       elimina el negro y deja el marco, la etiqueta y la barra
+                       de estado flotando sobre el visor en vivo. -->
+                  <img class="device__screen cm__scanner cm__screen cm__screen--setup" src="assets/img/ui/ios-qr-scanner.PNG"
+                       alt="" aria-hidden="true" width="1206" height="2622" decoding="async" />
+
+                  <img class="device__screen cm__screen cm__screen--connected" src="assets/img/ui/ios-connected.webp"
+                       alt="" aria-hidden="true" width="480" height="1044" decoding="async" />
+                  <span class="cm__sweep" aria-hidden="true"></span>
+                </span>
+              </div>
+            </div>
+
+            <!-- Se dice una sola vez, de forma estática. NO es una región
+                 viva: el ciclo nunca para, y un anuncio cada cinco segundos
+                 sí lo sería. -->
+            <p class="sr-only">Animación: un iPhone se acerca al código QR de
+              la Mac y lo escanea, y las dos pantallas cambian a Conectado.</p>
+          </div>
+        </article>
+
+        <!-- ================= Cable ================= -->
+        <article class="cm__panel" data-cm-panel="cable" data-cm-label="Cable, Pro"
+                 id="cm-panel-cable" role="tabpanel" aria-labelledby="cm-tab-cable"
+                 aria-hidden="true" inert>
+
+          <div class="cm__full">
+            <div class="cm__copy">
+              <h3 class="cm__title">Conéctate directo.</h3>
+              <p class="cm__body">Conecta tu iPhone a tu Mac con tu cable de carga. No hace falta Wi-Fi.</p>
+            </div>
+
+            <div class="cm__stage" data-demo="cable" aria-hidden="true">
+              <span class="cm__glow cm__glow--plug" aria-hidden="true"></span>
+              <span class="cm__glow cm__glow--port" aria-hidden="true"></span>
+
+              <div class="cm__mac">
+                <div class="device device--mac">
+                  <div class="device__scene">
+                    <div class="device__lid">
+                      <svg class="device__chrome" viewBox="0 0 1000 560" aria-hidden="true"><use href="#frame-mac-lid" /></svg>
+                      <img class="device__screen cm__screen cm__screen--setup" src="assets/img/ui/mac-cable.webp"
+                           alt="Wallas' Stream para Mac esperando una conexión, con la instrucción de abrir Wallas' Stream en tu iPhone y elegir cable USB."
+                           width="1200" height="750" loading="lazy" decoding="async" />
+                      <img class="device__screen cm__screen cm__screen--connected" src="assets/img/ui/mac-connected.webp"
+                           alt="" aria-hidden="true" width="1200" height="750" loading="lazy" decoding="async" />
+                    </div>
+                    <div class="device__deck" aria-hidden="true">
+                      <svg class="device__chrome" viewBox="0 0 1000 520"><use href="#frame-mac-deck" /></svg>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Aquí el iPhone está QUIETO. Solo se mueve el conector. -->
+              <div class="cm__phone">
+                <div class="device device--phone">
+                  <svg class="device__chrome" viewBox="0 0 400 841" aria-hidden="true"><use href="#frame-phone" /></svg>
+                  <img class="device__screen cm__screen cm__screen--setup" src="assets/img/ui/ios-cable.webp"
+                       alt="" aria-hidden="true" width="480" height="1044" loading="lazy" decoding="async" />
+                  <img class="device__screen cm__screen cm__screen--connected" src="assets/img/ui/ios-connected.webp"
+                       alt="" aria-hidden="true" width="480" height="1044" loading="lazy" decoding="async" />
+                </div>
+              </div>
+
+              <!-- drawCable() reconstruye el viewBox y las dos geometrías de
+                   trazo a partir de los rects vivos, al cargar, al arrastrar,
+                   al cambiar de tamaño y al cambiar de modo. -->
+              <svg class="cm__cable" aria-hidden="true" preserveAspectRatio="none" viewBox="0 0 100 100">
+                <path class="cm__cable-core" d="" />
+                <path class="cm__cable-hi" d="" />
+              </svg>
+
+              <!-- Entra al puerto y sale, una vez por ciclo. -->
+              <div class="cm__drag cm__drag--plug">
+                <span class="cm__plug-collar" aria-hidden="true"></span>
+                <span class="cm__plug-body" aria-hidden="true"></span>
+              </div>
+            </div>
+
+            <p class="sr-only">Animación: el cable que sale de la Mac se
+              conecta al iPhone, y las dos pantallas cambian a Conectado.</p>
+          </div>
+        </article>
+
       </div>
-    </div>
 
-    <!-- HERO -->
-     
-<section id="download" class="hero">
-  <div class="hero-grid">
-
-    <div class="hero-left">
-      <h1>Escucha tu computadora a través de tu dispositivo auditivo</h1>
-      <p class="kicker"><span class="white">Privado. Sin interrupciones. Sin cambiar Bluetooth.</span></p>
-      
-
-<ul class="hero-points">
-  <li>Sin problemas de emparejamiento</li>
-  <li>Sin cambiar de dispositivo</li>
-  <li>Audio solo local (sin nube)</li>
-</ul>
-
-      
-
-
-      
-
-      <div class="cta-row">
-
-  <!-- Primary -->
-  <a href="https://apps.apple.com/mx/app/wallas-stream/id6759255823" target="_blank" rel="noopener">
-    <img src="Download_on_the_App_Store_Badge_ESMX_RGB_blk_100217.svg" alt="Descargar en el App Store" height="44">
-  </a>
-
-
- <!-- Download Dropdown -->
-<div class="download-dropdown">
-  <button class="pill">
-    Descargar para Mac ▾
-  </button>
-
-  <div class="dropdown-menu">
-
-    <!-- Wallas' Stream App -->
-    <a href="downloads/WallasStream.zip" download>
-      Wallas’ Stream para Mac
-      <span>App para Mac (emisor de audio)</span>
-    </a>
-
-    <!-- Wallas Audio Driver -->
-    <a href="downloads/WallasAudioInstaller.pkg" download>
-      Wallas Audio
-      <span>Dispositivo de sonido virtual (configuración única)</span>
-    </a>
-
-  </div>
-</div>
-
-
-<p class="cta-note">
-  Funciona con tu dispositivo móvil y tu computadora, con una configuración de audio única.
-</p>
-
-  
-
-
-
-</div>
-
-
-
-
-    </div>
-
-    <div class="hero-right">
-      <img id="heroConnectpng" src="hero.png" alt="Connection preview" />
-    </div>
-
-  </div> <!-- ✅ cierra hero-grid -->
-</section> <!-- ✅ cierra hero -->
-
-<!--  Espacio -->
-<div style="height:60px;"></div>
-
-<p class="small" style="
-  margin-top:18px;
-  text-align:center;
-  color:rgba(255,255,255,.45);
-  max-width:72ch;
-  margin-left:auto;
-  margin-right:auto;
-  line-height:1.5;
-">
-  Herramienta independiente • No es un dispositivo médico • No está afiliada a Cochlear.
-</p>
-
-<p class="small" style="
-  margin-top:18px;
-  text-align:center;
-  color:rgba(255,255,255,.45);
-  max-width:72ch;
-  margin-left:auto;
-  margin-right:auto;
-  line-height:1.5;
-">
-  Cochlear™ y Nucleus™ son marcas registradas de Cochlear Limited.
-</p>
-    
-
-
-   <!-- HOW IT WORKS -->
-    <section  style="margin-top:90px;">
-     
-<!-- Puff Count-style feature row -->
-<div class="features">
-  <div class="feature">
-    <div class="ico" aria-hidden="true">
-      <!-- meeting / video call icon -->
-<svg viewBox="0 0 24 24" fill="none">
-  <!-- screen -->
-  <path d="M4 6h16v12H4z"
-        stroke="currentColor"
-        stroke-width="2"
-        stroke-linejoin="round"/>
-
-  <!-- person head -->
-  <path d="M12 11a2 2 0 1 0 0-4 2 2 0 0 0 0 4z"
-        stroke="currentColor"
-        stroke-width="2"/>
-
-  <!-- person body -->
-  <path d="M8.5 16c.8-2 2.2-3 3.5-3s2.7 1 3.5 3"
-        stroke="currentColor"
-        stroke-width="2"
-        stroke-linecap="round"/>
-</svg>
-
-    </div>
-    <h3>Reuniones claras</h3>
-    <p>Escucha llamadas y reuniones con claridad.</p>
-  </div>
-
-  <div class="feature">
-    <div class="ico" aria-hidden="true">
-      <!-- clapperboard -->
-      <svg viewBox="0 0 24 24" fill="none">
-        <path d="M4 9h16v11H4z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
-        <path d="M4 9l2-5h16l-2 5H4z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
-        <path d="M8 4l-2 5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-        <path d="M13 4l-2 5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-        <path d="M18 4l-2 5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-      </svg>
-    </div>
-    <h3>Mira videos en sincronía</h3>
-    <p>Audio para películas y uso diario.</p>
-  </div>
-
-  <div class="feature">
-    <div class="ico" aria-hidden="true">
-      <!-- plug -->
-      <svg viewBox="0 0 24 24" fill="none">
-
-  <!-- Top horizontal line -->
-  <path d="M9 3H15"
-        stroke="currentColor"
-        stroke-width="2"
-        stroke-linecap="round"/>
-
-  <!-- Left pin -->
-  <path d="M9 3v6"
-        stroke="currentColor"
-        stroke-width="2"
-        stroke-linecap="round"/>
-
-  <!-- Right pin -->
-  <path d="M15 3v6"
-        stroke="currentColor"
-        stroke-width="2"
-        stroke-linecap="round"/>
-
-  <!-- Plug body -->
-  <path d="M7 9h10v3a5 5 0 0 1-10 0V9z"
-        stroke="currentColor"
-        stroke-width="2"
-        stroke-linejoin="round"/>
-
-  <!-- Cable down -->
-  <path d="M12 17v4"
-        stroke="currentColor"
-        stroke-width="2"
-        stroke-linecap="round"/>
-
-</svg>
-
-    </div>
-    <h3>Wi-Fi o cable</h3>
-    <p>Funciona por Wi-Fi o con un cable USB.</p>
-  </div>
-
-  <div class="feature">
-    <div class="ico" aria-hidden="true">
-      <!-- lock -->
-      <svg viewBox="0 0 24 24" fill="none">
-        <path d="M7 11V8a5 5 0 0 1 10 0v3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-        <path d="M6 11h12v10H6z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
-        <path d="M12 15v3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-      </svg>
-    </div>
-    <h3>Privado por diseño</h3>
-    <p>Sin grabación. Sin nube. Nunca.</p>
-  </div>
-</div>
+      <p class="sr-only" data-cm-status aria-live="polite"></p>
     </section>
 
-<!-- Trust line -->
-<div class="trust-line">
-
-</div>
-
-<!-- Feature MODES -->
-<section class="card card-noborder" style="margin-top:50px;">
-<h2 class="section-title">Dos modos de escucha</h2>
- <p class="section-kicker">Elige cómo reacciona Wallas’ Stream cuando el audio se detiene.</p>
-
-
-  <div class="behavior-grid">
-
-    <!-- LEFT -->
-    <div class="behavior-box">
-      <h3 class="behavior-title green">Conectado (desconexión automática)</h3>
-      <p class="behavior-desc">
-        Se desconecta automáticamente después de silencio para que vuelvas a escuchar tu entorno.
-
-      </p>
-      <p class="behavior-note">
-        Ideal para música, videos y uso diario.
-      </p>
-    </div>
-
-    <!-- CENTER IMAGE -->
-<div class="behavior-image">
-  <img src="Modes.png" alt="Connected vs Meeting mode preview">
-
-  <p class="small" style="margin:12px 0 0; text-align:center;">
-  Para más información, consulta
-  <a href="modesES.html" style="color: rgba(255,255,255,.85); text-decoration: underline;">
-    Dos modos de escucha
-  </a>
-</p>
-
-</div>
-
-
-    <!-- RIGHT -->
-    <div class="behavior-box">
-      <h3 class="behavior-title blue">Modo Reunión (mantener conexión)</h3>
-      <p class="behavior-desc">
-        Permanece conectado durante el silencio para que el audio no se corte.
-
-      </p>
-      <p class="behavior-note">
-        Ideal para reuniones, clases y pausas largas.
-      </p>
-    </div>
-
-  </div>
-
-  
-</section>
-
-<div class="trust-line">
-
-</div>
-
-<!-- CINEMA MODE -->
-<section class="card card-noborder cinema" style="margin-top:50px;">
-
-  <div class="grid cinema-grid" style="align-items:start; gap:40px; grid-template-columns: 1fr 1.4fr;">
-
-
-
-    <!-- LEFT TEXT -->
-    <div>
-      <h2 style="margin:0; font-size:32px; font-weight:700;">
-        Modo de Escucha Compartida
-      </h2>
-
-      <p class="kicker" style="margin:10px 0 0;">
-        Ve juntos. Escucha juntos. 
-      </p>
-
-      <ul class="list-large" style="margin:22px 0 0; padding-left:20px;">
-        <li>Perfecto para películas, clases o escuchar en grupo</li>
-        <li>Varios dispositivos pueden conectarse al mismo tiempo</li>
-        <li>Todos escuchan el mismo audio, en tiempo real</li>
-        <li>Sin problemas de emparejamiento ni cambios de Bluetooth</li>
-      </ul>
-
-      
-    </div>
-
- <!-- RIGHT IMAGE -->
-<div style="align-self:flex-start; width:100%;">
-
-  <img
-    src="Compatible.png"
-    alt="Cinema mode preview"
-    style="
-      width:100%;
-      height:auto;
-      display:block;
-      object-fit:contain;
-    "
-  >
-
-  <p class="small" style="margin:12px 0 0; text-align:center;">
-    Ejemplo: cuatro dispositivos conectados simultáneamente.
-  </p>
-
-</div>
-
-
-
-  </div>
-</section>
-
-<!-- Trust line -->
-<div class="trust-line">
-
-</div>
-
-
-
-
-
-<!-- WHAT YOU NEED -->
-<div class="need-block">
- <h2 class="section-title">Lo que necesitas</h2>
-
-
-  <ul class="need-grid">
-  <li><span class="need-check">✓</span> Una computadora compatible</li>
-  <li><span class="need-check">✓</span> Un dispositivo móvil con Wallas’ Stream instalado</li>
-  <li><span class="need-check">✓</span> Un dispositivo auditivo conectado a tu dispositivo</li>
-  <li><span class="need-check">✓</span> Wi-Fi o un cable USB</li>
-</ul>
-
-</div>
-
-<div style="height:30px;"></div>
-
-<!-- Trust line -->
-<div class="trust-line">
-
-</div>
-
-<!-- HOW IT WORKS -->
-<div id="how-it-works" class="h2"> Cómo funciona</div>
-      <div class="steps">
-        <div class="step">
-  <div class="step-text">
-    <div class="num">1</div>
-    <h3>Paso 1: Selecciona Wallas Audio</h3>
-    <p>Selecciona Wallas Audio como dispositivo de sonido en tu computadora (entrada y salida).
-</p>
-    <p>Puedes cambiarlo cuando quieras.</p>
-  </div>
-
-  <div class="step-media">
-    <img id="audioSettingImg" src="AudioSetting.png" />
-  </div>
-</div>
-
-        <div class="step">
-  <div class="step-text">
-    <div class="num">2</div>
-    <h3>Paso 2: Elige un modo</h3>
-
-    <ul class="small" style="margin:0; padding-left:18px">
-      <li>Wi-Fi → Escanea el código QR</li>
-      
-      <li>USB → Conecta un cable USB</li>
-    </ul>
-
-    <p class="small" style="margin-top:10px;">
-      Para más información, consulta <a href="modesES.html">Dos modos de escucha</a>.
-    </p>
-  </div>
-
-  <div class="step-media">
-    <img id="bothdevicesImg" src="Bothdevices.png" alt="Computer and mobile apps" />
-  </div>
-</div>
-
-        <div class="step">
-  <div class="step-text">
-    <div class="num">3</div>
-    <h3>Paso 3: Empieza a escuchar</h3>
-    <p>Audio en vivo de tu computadora, transmitido de forma privada a tu dispositivo auditivo.</p>
-  </div>
-
-  <div class="step-media">
-    <img id="connectedImg" src="Connected.png" alt="Connected state" />
-  </div>
-</div>
-
-      </div>
-    
-
-    
-
-   
-    
-
-    <!-- FAQ -->
-    <section class="card">
-      <div class="h2">Preguntas frecuentes</div>
-      <div class="faq" id="faq">
-        
-        <div class="faq-item">
-  <button class="faq-q" type="button">
-    <span>¿Esto afectará la configuración de mi dispositivo auditivo?</span>
-    <span class="icon">▸</span>
-  </button>
-
-  <div class="faq-a">
-    <p class="small" style="margin:0 0 12px 0;">
-      No. Wallas’ Stream no cambia la configuración de tu procesador ni la programación clínica de ninguna forma.
-
-    </p>
-
-    <p class="small" style="margin:0 0 12px 0;">
-      Solo transmite audio de tu computadora a tu dispositivo móvil, y el dispositivo lo entrega mediante tu configuración auditiva actual, como cualquier otra app de audio.
-    </p>
-
-    <ul class="small" style="margin:0; padding-left:18px;">
-      <li>Sin cambios en MAPs ni ajustes de audiología</li>
-      <li>Sin actualizaciones de firmware</li>
-      <li>Sin ajustes médicos</li>
-      <li>Funciona solo como un complemento externo de transmisión de audio</li>
-    </ul>
-  </div>
-</div>
-
-<div class="faq-item">
-  <button class="faq-q" type="button">
-    <span>¿Wallas’ Stream es compatible con procesadores de sonido conectados a mi dispositivo?</span>
-    <span class="icon">▸</span>
-  </button>
-
-  <div class="faq-a">
-    <p class="small" style="margin:0 0 12px 0;">
-      Sí. Wallas’ Stream se ha probado con procesadores Cochlear™ Nucleus 7 y Nucleus 8 conectados mediante un dispositivo móvil.
-    </p>
-
-    <p class="small" style="margin:0 0 12px 0;">
-      Funciona como un complemento privado de transmisión de audio usando tu configuración auditiva actual del dispositivo.
-    </p>
-
-    <p class="small" style="margin:0;">
-      La compatibilidad puede variar según tu modelo de procesador y los ajustes de audio del dispositivo.
-    </p>
-  </div>
-</div>
-
-<div class="faq-item">
-  <button class="faq-q" type="button">
-    <span>¿Hay soporte para Windows?</span>
-    <span class="icon">▸</span>
-  </button>
-
-  <div class="faq-a">
-    <p class="small" style="margin:0;">
-  Wallas’ Stream está disponible actualmente para computadoras.
-  Estamos trabajando activamente para expandir el soporte a otras plataformas.
-</p>
-
-
-  </div>
-</div>
-
-
-        <div class="faq-item">
-          <button class="faq-q" type="button">
-            <span>¿Wallas’ Stream graba audio?</span><span class="icon">▸</span>
-          </button>
-          <div class="faq-a">
-            <p class="small" style="margin:0">
-              No. El audio se transmite en vivo para escuchar y no se almacena ni se graba en el sistema.
-            </p>
-          </div>
-        </div>
-
-        <div class="faq-item">
-          <button class="faq-q" type="button">
-            <span>¿Necesito internet?</span><span class="icon">▸</span>
-          </button>
-          <div class="faq-a">
-            <p class="small" style="margin:0">
-              El modo Wi-Fi requiere que ambos dispositivos estén en la misma red. El modo USB está diseñado para uso sin internet.
-            </p>
-          </div>
-        </div>
-
-        <div class="faq-item">
-          <button class="faq-q" type="button">
-            <span>¿Esto es un dispositivo médico?</span><span class="icon">▸</span>
-          </button>
-          <div class="faq-a">
-            <p class="small" style="margin:0">
-              No. Wallas’ Stream no es un dispositivo médico y no diagnostica, trata, cura ni previene ninguna condición.
-            </p>
-          </div>
+    <!-- ============ 04 · FORMAS DE ESCUCHAR ============
+         No lleva id: #listen ya le pertenece al carrusel de Wi-Fi/cable
+         de arriba, y un segundo sería un id duplicado y un destino de
+         navegación ambiguo. -->
+    <section class="section uc" data-section="use-cases" data-uc
+             role="region" aria-roledescription="carrusel" aria-label="Formas de escuchar">
+
+      <div class="uc__intro">
+        <div class="section-head">
+          <p class="eyebrow">Formas de escuchar</p>
+          <h2>Elige lo que funcione en el momento.</h2>
         </div>
       </div>
 
-      <div style="margin-top:14px; text-align:center;">
-  <p class="small" style="margin:0;">
-    ¿Más preguntas?
-    <a href="faqES.html" class="faq-link">
-  Ver preguntas frecuentes completas
-</a>
-  </p>
-</div>
+      <div class="uc__viewport">
+        <div class="uc__track" style="--uc-i: 0">
 
+          <!-- ---- Diapositiva 1 ---- -->
+          <article class="uc__slide is-active" data-uc-label="Trabajando en casa">
+            <img class="uc__img" src="assets/img/use-cases/use-case-home-wifi.png"
+                 alt="Una MacBook y un iPhone sobre un escritorio de madera oscura en casa, los dos con Wallas' Stream conectado."
+                 width="1672" height="941" loading="lazy" decoding="async" />
+            <div class="uc__scrim" aria-hidden="true"></div>
+            <div class="uc__copy">
+              <p class="eyebrow uc__eyebrow">Trabajando en casa</p>
+              <h3 class="uc__title">Quédate sin cables.</h3>
+              <p class="uc__body">Usa Wi-Fi cuando tu Mac y tu iPhone estén en la misma red.</p>
+            </div>
+          </article>
 
+          <!-- ---- Diapositiva 2 ---- -->
+          <article class="uc__slide" data-uc-label="En un avión" aria-hidden="true" inert>
+            <img class="uc__img" src="assets/img/use-cases/use-case-airplane-cable.png"
+                 alt="Una MacBook y un iPhone en la mesita de un avión, unidos por un cable de carga, junto a una ventana sobre las nubes."
+                 width="1672" height="941" loading="lazy" decoding="async" />
+            <div class="uc__scrim" aria-hidden="true"></div>
+            <div class="uc__copy">
+              <p class="eyebrow uc__eyebrow">En un avión</p>
+              <h3 class="uc__title">Sigue escuchando en el camino.</h3>
+              <p class="uc__body">Conecta tu iPhone directo a tu Mac con tu cable de carga.</p>
+            </div>
+          </article>
 
+          <!-- ---- Diapositiva 3 ---- -->
+          <article class="uc__slide" data-uc-label="En una cafetería" aria-hidden="true" inert>
+            <img class="uc__img" src="assets/img/use-cases/use-case-coffee-shop-wifi.png"
+                 alt="Una MacBook y un iPhone sobre una mesa redonda de café, con el lugar desenfocado detrás."
+                 width="1672" height="941" loading="lazy" decoding="async" />
+            <div class="uc__scrim" aria-hidden="true"></div>
+            <div class="uc__copy">
+              <p class="eyebrow uc__eyebrow">En una cafetería</p>
+              <h3 class="uc__title">Elige lo que funcione en el momento.</h3>
+            </div>
+          </article>
 
+        </div>
+
+        <button class="uc__nav uc__nav--prev" type="button" aria-label="Caso de uso anterior">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M15 5 8 12l7 7" />
+          </svg>
+        </button>
+
+        <button class="uc__nav uc__nav--next" type="button" aria-label="Siguiente caso de uso">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="m9 5 7 7-7 7" />
+          </svg>
+        </button>
+
+        <div class="uc__dots" role="tablist" aria-label="Elige un caso de uso">
+          <button class="uc__dot" type="button" role="tab" aria-selected="true"
+                  aria-label="Trabajando en casa"></button>
+          <button class="uc__dot" type="button" role="tab" aria-selected="false"
+                  aria-label="En un avión" tabindex="-1"></button>
+          <button class="uc__dot" type="button" role="tab" aria-selected="false"
+                  aria-label="En una cafetería" tabindex="-1"></button>
+        </div>
+      </div>
+
+      <p class="sr-only" data-uc-status aria-live="polite"></p>
     </section>
 
-<div style="height:30px;"></div>
+    <!-- ============ 05 · PRUÉBALO CON TU EQUIPO ============ -->
+    <section class="section" data-section="try-it">
+      <div class="container container--narrow">
+        <div class="tryit">
+          <div class="section-head section-head--center">
+            <p class="eyebrow">Compatibilidad</p>
+            <h2 class="tryit__title">¿No sabes si tu equipo<br />es compatible?</h2>
+            <p class="lede tryit__lede">
+              Prueba Wallas&rsquo; Stream con tus propios dispositivos.<br />
+              <b>7 días de Pro, gratis.</b> Sin tarjeta de crédito.
+            </p>
+          </div>
 
-    
-    <!-- FOOTER -->
-<footer class="footer-block" id="footer">
-  <div class="footer-grid">
-    <!-- Left column -->
-    <div>
-      <div class="footer-title">Wallas’ Stream</div>
+          <a class="btn btn--primary btn--lg" href="downloadES.html">Prueba Wallas&rsquo; Stream gratis</a>
 
-      <a href="https://apps.apple.com/mx/app/wallas-stream/id6759255823" target="_blank" rel="noopener">
-        <img src="Download_on_the_App_Store_Badge_ESMX_RGB_blk_100217.svg" alt="Descargar en el App Store" height="36">
-      </a>
-      <a class="footer-badge" href="indexES.html#download">
-  Descargar para computadora ahora
-</a>
+          <ul class="tryit__specs">
+            <li>Mac + iPhone</li>
+            <li>Wi-Fi o cable</li>
+            <li>Tu equipo auditivo</li>
+          </ul>
+        </div>
+      </div>
+    </section>
 
-      
-      
-      
+    <!-- ============ 06 · GRATIS -> PRO ============ -->
+    <section class="section" id="pricing" data-section="free-vs-pro">
+      <div class="container section__inner">
+        <div class="section-head section-head--center">
+          <p class="eyebrow">Gratis vs Pro</p>
+          <h2>Lo gratis sigue gratis.</h2>
+          <p class="lede">Wi-Fi siempre es gratis. Prueba el cable gratis 7 días.</p>
+        </div>
+
+        <div class="plans">
+          <!-- ---- GRATIS ---- -->
+          <article class="plan plan--free">
+            <header class="plan__head">
+              <p class="plan__badge">Gratis</p>
+              <p class="plan__price">$0</p>
+            </header>
+
+            <ul class="plan__features">
+              <li>
+                <span class="plan__icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M2.5 9.2a14 14 0 0 1 19 0" />
+                    <path d="M5.8 12.8a9.2 9.2 0 0 1 12.4 0" />
+                    <path d="M9 16.4a4.4 4.4 0 0 1 6 0" />
+                    <circle cx="12" cy="19.6" r="1.1" fill="currentColor" stroke="none" />
+                  </svg>
+                </span>
+                <span class="plan__feature">
+                  <b>Escucha por Wi-Fi</b>
+                  <span class="plan__state">Siempre gratis</span>
+                </span>
+              </li>
+
+              <li>
+                <span class="plan__icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M8.6 3.4v4.2M14.4 3.4v4.2" />
+                    <path d="M6.6 7.6h9.8v3.1a4.9 4.9 0 0 1-9.8 0Z" />
+                    <path d="M11.5 15.6v2.2a2.4 2.4 0 0 0 2.4 2.4h1.3" />
+                  </svg>
+                </span>
+                <span class="plan__feature">
+                  <b>Escucha por cable</b>
+                  <span class="plan__state">Gratis tus primeros 7 días</span>
+                </span>
+              </li>
+            </ul>
+
+            <p class="plan__note">
+              <span class="plan__note-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3.2" y="5" width="17.6" height="15.8" rx="2.6" />
+                  <path d="M8 3.2v3.6M16 3.2v3.6M3.2 10.2h17.6" />
+                </svg>
+              </span>
+              <span>Después de los 7 días, la escucha por Wi-Fi <b>sigue siendo gratis.</b></span>
+            </p>
+
+            <a class="btn btn--outline btn--block" href="downloadES.html">Empieza gratis</a>
+          </article>
+
+          <!-- ---- PRO ---- -->
+          <article class="plan plan--pro panel">
+            <header class="plan__head">
+              <p class="plan__badge">Pro</p>
+              <p class="plan__price">$19.99</p>
+            </header>
+
+            <ul class="plan__features">
+              <li>
+                <span class="plan__icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M2.5 9.2a14 14 0 0 1 19 0" />
+                    <path d="M5.8 12.8a9.2 9.2 0 0 1 12.4 0" />
+                    <path d="M9 16.4a4.4 4.4 0 0 1 6 0" />
+                    <circle cx="12" cy="19.6" r="1.1" fill="currentColor" stroke="none" />
+                  </svg>
+                </span>
+                <span class="plan__feature">
+                  <b>Escucha por Wi-Fi</b>
+                  <span class="plan__state">Siempre gratis</span>
+                </span>
+              </li>
+
+              <li>
+                <span class="plan__icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M8.6 3.4v4.2M14.4 3.4v4.2" />
+                    <path d="M6.6 7.6h9.8v3.1a4.9 4.9 0 0 1-9.8 0Z" />
+                    <path d="M11.5 15.6v2.2a2.4 2.4 0 0 0 2.4 2.4h1.3" />
+                  </svg>
+                </span>
+                <span class="plan__feature">
+                  <b>Escucha por cable</b>
+                  <span class="plan__state">Para siempre</span>
+                </span>
+              </li>
+            </ul>
+
+            <p class="plan__note">
+              <span class="plan__note-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 3.2 20 6v5.4c0 4.5-3.2 7.5-8 9.4-4.8-1.9-8-4.9-8-9.4V6Z" />
+                  <path d="m8.9 12 2.2 2.2 4.2-4.5" />
+                </svg>
+              </span>
+              <span>Sin suscripción. <b>Pagas una vez, lo usas para siempre.</b></span>
+            </p>
+
+            <!-- lemonsqueezy-button es a lo que se engancha lemon.js (que se
+                 carga al final del body) para abrir el checkout como una capa
+                 en vez de sacarte de la página. Sin la clase, el script queda
+                 inerte y esto es solo un enlace. Las clases .btn se quedan:
+                 llevan el diseño, y Lemon Squeezy solo necesita añadir la
+                 suya. -->
+            <a class="btn btn--primary btn--block lemonsqueezy-button" href="https://wallasstreamapp.lemonsqueezy.com/checkout/buy/6d7caf78-7cae-4540-91c7-9a2c2e016b05?embed=1">Compra Wallas&rsquo; Stream Pro</a>
+          </article>
+        </div>
+
+        <div class="plans__how">
+          <p>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="12" cy="12" r="9" />
+              <path d="M12 11.2v5.2M12 7.7h.01" />
+            </svg>
+            Las compras se procesan a través de Lemon Squeezy.
+          </p>
+          <p>Recibes una clave de licencia y la ingresas en Wallas&rsquo; Stream para Mac.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 08 · FUNDADORA + LO QUE SIGUE ============ -->
+    <section class="section section--flush-end" id="founder" data-section="founder">
+      <!-- Aquí no va .container a propósito: el retrato llega hasta el borde
+           izquierdo del viewport, y la columna derecha recrea el margen
+           derecho del contenedor para que el texto siga alineado con el de
+           todas las demás secciones. -->
+      <div class="founder">
+          <!-- La figura está fijada al 3:2 de la propia fotografía para que el
+               viewBox de la línea guía mapee 1:1 sobre los píxeles de la
+               imagen, y así el punto caiga sobre el procesador a cualquier
+               ancho, sin ajustes por breakpoint. -->
+          <figure class="founder__figure">
+            <img src="assets/img/creator/creator-face.png"
+                 alt="La creadora de Wallas' Stream de perfil, con un procesador de sonido de implante coclear detrás de la oreja."
+                 width="1536" height="1024" loading="lazy" decoding="async" />
+
+            <svg class="founder__leader" viewBox="0 0 1536 1024" aria-hidden="true">
+              <circle cx="445" cy="648" r="10" />
+              <path d="M445 648 H478 Q500 648 500 626 V300 Q500 278 522 278 H536"
+                    vector-effect="non-scaling-stroke" />
+            </svg>
+
+            <figcaption class="founder__callout">
+              <p class="founder__callout-label">Implante coclear</p>
+              <p class="founder__callout-text">Parte de mi día a día.<br />Parte de mi porqué.</p>
+            </figcaption>
+          </figure>
+
+          <div class="founder__body">
+            <p class="eyebrow">Fundadora</p>
+            <h2 class="founder__title">Hecho desde una<br />necesidad <span class="founder__em">real</span>.</h2>
+
+            <p class="founder__lede">
+              Soy usuaria de implante coclear.<br />
+              Creé Wallas&rsquo; Stream<br />
+              porque necesitaba una forma más simple de escuchar mi Mac.
+            </p>
+
+            <ul class="founder__nots">
+              <li>
+                <span class="founder__not-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="2.6" y="5" width="18.8" height="12.4" rx="2.2" />
+                    <path d="M8 20.4h8" />
+                    <path d="M3.4 3.4 20.6 20.6" />
+                  </svg>
+                </span>
+                <span>Sin aparatos<br />extra.</span>
+              </li>
+
+              <li>
+                <span class="founder__not-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M8.8 3.4v4.2M14.6 3.4v4.2" />
+                    <path d="M6.8 7.6h10v3.1a5 5 0 0 1-5 5 5 5 0 0 1-5-5Z" />
+                    <path d="M11.8 15.7v4.9" />
+                    <path d="M3.4 3.4 20.6 20.6" />
+                  </svg>
+                </span>
+                <span>Sin<br />adaptadores.</span>
+              </li>
+
+              <li>
+                <span class="founder__not-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M20.4 11.4a8.4 8.4 0 0 0-14.4-5.2L3.6 8.4" />
+                    <path d="M3.6 12.6a8.4 8.4 0 0 0 14.4 5.2l2.4-2.2" />
+                    <path d="M3.6 4.2v4.2h4.2M20.4 19.8v-4.2h-4.2" />
+                  </svg>
+                </span>
+                <span>Sin estar<br />cambiando.</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+    </section>
+
+    <!-- ============ 08b · LO QUE SIGUE ============
+         Su propia banda, de borde a borde, para que la hoja de ruta se lea
+         como una nota al pie de la historia de la fundadora y no como una
+         cuarta columna compitiendo con ella. -->
+    <section class="whatsnext" data-section="whats-next">
+      <div class="container whatsnext__inner">
+        <div class="whatsnext__head">
+          <p class="eyebrow">Lo que sigue</p>
+          <h3>Empezamos con Mac + iPhone.</h3>
+          <p class="whatsnext__sub">Y apenas vamos empezando.</p>
+        </div>
+
+        <ol class="roadmap">
+          <li class="roadmap__stop roadmap__stop--live">
+            <span class="roadmap__node" aria-hidden="true"></span>
+            <div class="roadmap__card">
+              <span class="roadmap__icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16.4 12.8c0-2.2 1.8-3.3 1.9-3.3-1-1.5-2.7-1.7-3.3-1.7-1.4-.1-2.7.8-3.4.8-.7 0-1.8-.8-3-.8-1.5 0-2.9.9-3.7 2.3-1.6 2.7-.4 6.7 1.1 8.9.7 1.1 1.6 2.3 2.8 2.2 1.1 0 1.5-.7 2.9-.7 1.3 0 1.7.7 2.9.7 1.2 0 2-1.1 2.7-2.2.9-1.2 1.2-2.5 1.2-2.5s-2.3-.9-2.3-3.6M14.2 5.9c.6-.8 1-1.8.9-2.9-.9 0-2 .6-2.6 1.4-.6.7-1.1 1.7-.9 2.8 1 .1 2-.5 2.6-1.3" /></svg>
+              </span>
+              <span class="roadmap__text">
+                <span class="roadmap__name">macOS y iOS</span>
+                <span class="roadmap__status">Ya disponible</span>
+              </span>
+            </div>
+          </li>
+
+          <li class="roadmap__stop roadmap__stop--next">
+            <span class="roadmap__node" aria-hidden="true"></span>
+            <div class="roadmap__card">
+              <span class="roadmap__icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 5.5 10.5 4.4v7.1H3zM11.6 4.2 21 3v8.5h-9.4zM3 12.5h7.5v7.1L3 18.5zM11.6 12.5H21V21l-9.4-1.3z" /></svg>
+              </span>
+              <span class="roadmap__text">
+                <span class="roadmap__name">Windows</span>
+                <span class="roadmap__status">En camino</span>
+              </span>
+            </div>
+          </li>
+
+          <li class="roadmap__stop">
+            <span class="roadmap__node" aria-hidden="true"></span>
+            <div class="roadmap__card">
+              <span class="roadmap__icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 10h12v8a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2Z" /><path d="M6.5 8a5.5 5.5 0 0 1 11 0Z" /><path d="M8.5 4.5 7.6 3M15.5 4.5l.9-1.5" /><path d="M3.6 11.5v4M20.4 11.5v4" /></svg>
+              </span>
+              <span class="roadmap__text">
+                <span class="roadmap__name">Android</span>
+                <span class="roadmap__status">Planeado</span>
+              </span>
+            </div>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ============ 09 · LO QUE MÁS SE PREGUNTA ============ -->
+    <section class="section" id="faq" data-section="faq">
+      <div class="container container--narrow section__inner">
+        <div class="section-head section-head--center">
+          <p class="eyebrow">Antes de empezar</p>
+          <h2>Lo que más se pregunta</h2>
+        </div>
+
+        <div class="faq">
+          <details>
+            <summary>¿Esto afecta la configuración de mi dispositivo auditivo?</summary>
+            <div class="faq__body">
+              <p>No. Wallas&rsquo; Stream no modifica de ninguna manera los ajustes de tu procesador ni su programación clínica.</p>
+              <p>Transmite el audio de tu computadora a tu dispositivo, y el dispositivo entrega el sonido a través de tu configuración auditiva actual, igual que cualquier otra app de audio.</p>
+              <ul>
+                <li>Sin cambios en los MAPs ni en los ajustes de audiología</li>
+                <li>Sin actualizaciones de firmware</li>
+                <li>Sin ajustes médicos</li>
+              </ul>
+            </div>
+          </details>
+
+          <details>
+            <summary>¿Con qué dispositivos auditivos funciona Wallas&rsquo; Stream?</summary>
+            <div class="faq__body">
+              <p>Wallas&rsquo; Stream se ha probado con procesadores Cochlear&trade; Nucleus&trade; 7 y Nucleus&trade; 8 conectados a través de un dispositivo iOS compatible.</p>
+              <p>Funciona como un complemento privado de transmisión de audio, usando tu configuración auditiva actual. La compatibilidad puede variar según el modelo de tu procesador y los ajustes de audio de tu dispositivo.</p>
+              <p>Tus primeros 7 días incluyen Pro, para que lo pruebes con tu propio equipo.</p>
+            </div>
+          </details>
+
+          <details>
+            <summary>¿Wallas&rsquo; Stream graba el audio?</summary>
+            <div class="faq__body">
+              <p>No. El audio se transmite en vivo para escucharlo, y el sistema no lo almacena ni lo graba.</p>
+            </div>
+          </details>
+
+          <details>
+            <summary>¿Es un dispositivo médico?</summary>
+            <div class="faq__body">
+              <p>No. Wallas&rsquo; Stream no es un dispositivo médico y no diagnostica, trata, cura ni previene ninguna condición.</p>
+            </div>
+          </details>
+
+          <details>
+            <summary>¿Hay una versión para Windows?</summary>
+            <div class="faq__body">
+              <p>Por ahora Wallas&rsquo; Stream está disponible para dispositivos macOS e iOS. Estamos trabajando activamente en ampliar la compatibilidad a otras plataformas, incluidos Android y Windows.</p>
+            </div>
+          </details>
+        </div>
+
+        <p class="fineprint" style="text-align:center">
+          ¿Más preguntas? <a href="faqES.html" class="accent">Ve a las preguntas frecuentes</a>.
+        </p>
+      </div>
+    </section>
+
+  </main>
+
+  <!--#include footer-es-->
+<!-- Pie de la portada en español. Espejo de partials/footer.html. -->
+<footer class="site-footer" id="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-col">
+        <a class="brand" href="indexES.html">
+          <img src="assets/img/brand/logo-96.webp" alt="" width="96" height="70" />
+          <span>Wallas&rsquo; Stream</span>
+        </a>
+        <p class="fineprint" style="margin-top:1rem;max-width:30ch">
+          Escucha tu Mac a través de tu dispositivo auditivo.
+        </p>
+      </div>
+
+      <div class="footer-col">
+        <h2>Producto</h2>
+        <ul class="footer-links">
+          <li><a href="#listen">Wi-Fi y cable</a></li>
+          <li><a href="#pricing">Gratis vs Pro</a></li>
+          <li><a href="#founder">Fundadora</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h2>Descargas</h2>
+        <ul class="footer-links">
+          <li><a href="downloadES.html">Wallas&rsquo; Stream para Mac</a></li>
+          <li><a href="https://apps.apple.com/mx/app/wallas-stream/id6759255823" target="_blank" rel="noopener">Wallas&rsquo; Stream para iPhone</a></li>
+          <li><a href="helpES.html">Ayuda</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h2>Contacto</h2>
+        <ul class="footer-links">
+          <li><a href="contactES.html">Contacto</a></li>
+          <li><a href="faqES.html">Preguntas frecuentes</a></li>
+          <li><a href="legalES.html">Aviso de privacidad</a></li>
+          <li><a href="legalES.html#terms">Términos de uso</a></li>
+          <li><a href="https://www.instagram.com/wallasstream?igsh=MXQxenIyZ3d1eG9sNg%3D%3D&amp;utm_source=qr" target="_blank" rel="noopener">Instagram</a></li>
+          <li><a href="https://www.tiktok.com/@wallasstream" target="_blank" rel="noopener">TikTok</a></li>
+        </ul>
+      </div>
     </div>
 
-    <!-- Column 2 -->
-    <div>
-      <div class="footer-title">Producto</div>
-      <ul class="footer-links">
-        <li><a href="#how-it-works">Cómo funciona</a></li>
-        <li><a href="modesES.html">Dos modos de escucha</a></li>
-        <li><a href="faqES.html">Preguntas frecuentes</a></li>
-      </ul>
+    <div class="legal-note">
+      <p>Herramienta independiente • No es un dispositivo médico • Sin afiliación con Cochlear.</p>
+      <p>Cochlear™ y Nucleus™ son marcas de Cochlear Limited.</p>
     </div>
 
-    <!-- Column 3 -->
-    <div>
-      <div class="footer-title">Conectar</div>
-      <ul class="footer-links">
-        <li><a href="contactES.html">Contacto</a></li>
-        <li><a href="legalES.html">Política de Privacidad</a></li>
-        <li><a href="legalES.html#terms">Términos de uso</a></li>
-        
-        
-
-      </ul>
+    <div class="footer-bottom">
+      <div>© <span id="year">2026</span> Wallas&rsquo; Stream. Todos los derechos reservados.</div>
+      <div class="footer-bottom__end">
+        <a href="index.html" data-lang="en" hreflang="en" lang="en">English</a>
+        <span aria-hidden="true"> · </span>
+        <a href="#top">Volver arriba</a>
+      </div>
     </div>
-
-    <!-- Column 4 -->
-    <div>
-      <div class="footer-title">Redes</div>
-      <ul class="footer-links">
-        
-        <li><a href="https://www.instagram.com/wallasstream?igsh=MXQxenIyZ3d1eG9sNg%3D%3D&utm_source=qr" target="blank" rel="noopener">Instagram</a></li>
-        <li><a href="https://www.tiktok.com/@wallasstream" target="blank" rel="noopener">TikTok</a></li>
-      </ul>
-    </div>
-  </div>
-
-  <div class="footer-bottom">
-    <div>© <span id="year"></span> Wallas' Stream. Todos los derechos reservados.</div>
-    <div><a href="#top">Volver arriba</a></div>
   </div>
 </footer>
+<!--#endinclude footer-es-->
 
-  </div>
-
-  <script>
-  document.getElementById("year").textContent = new Date().getFullYear();
-
-  const BASES = ['', 'assets/', 'img/', 'images/', 'Gifs/', 'gifs/', 'GIFs/', 'Media/', 'Media/Gifs/', 'Media/Logo/'];
-
-  function preloadImage(src){
-    return new Promise((resolve, reject) => {
-      const im = new Image();
-      im.onload = () => resolve(src);
-      im.onerror = () => reject(src);
-      im.src = src;
-    });
-  }
-
-  async function findAsset(names){
-    for (const base of BASES){
-      for (const name of names){
-        try{
-          await preloadImage(base + name);
-          return base + name;
-        }catch(e){}
-      }
-    }
-    return null;
-  }
-
-  async function resolveAssets(){
-    const logo = document.getElementById('logoImg');
-    if (logo){
-      const src = await findAsset(['Logo.png','logo.png','Logo 1.png']);
-      if (src) logo.src = src;
-    }
-
-    const heroConn = document.getElementById('heroConnectpng');
-if (heroConn){
-  const src = await findAsset([
-    'hero.png',
-    'Hero.png',
-    'hero.PNG'
-  ]);
-  if (src) heroConn.src = src;
-}
-
-
-    const audioSet = document.getElementById('audioSettingImg');
-    if (audioSet){
-      const src = await findAsset(['AudioSetting.png','audioSetting.png','Audio Settings.png']);
-      if (src) audioSet.src = src;
-    }
-
-    const both = document.getElementById('bothdevicesImg');
-    if (both){
-      const src = await findAsset(['Bothdevices.png','BothDevices.png','bothdevices.png']);
-      if (src) both.src = src;
-    }
-
-    const conn = document.getElementById('connectedImg');
-    if (conn){
-      const src = await findAsset(['Connected.png','connected.png']);
-      if (src) conn.src = src;
-    }
-
-    const wrong = document.getElementById('wrongIcon');
-    if (wrong){
-      const src = await findAsset(['wrong.png','Wrong.png']);
-      if (src) wrong.src = src;
-    }
-
-    const check = document.getElementById('checkIcon');
-    if (check){
-      const src = await findAsset(['check.png','Check.png']);
-      if (src) check.src = src;
-    }
-  }
-
-  resolveAssets();
-
-  // ✅ Mobile menu toggle
-const menuBtn = document.getElementById("menuBtn");
-const mobileMenu = document.getElementById("mobileMenu");
-const menuClose = document.getElementById("menuClose");
-
-function openMenu(){
-  mobileMenu.classList.add("open");
-  document.body.style.overflow = "hidden"; // lock scroll
-  mobileMenu.setAttribute("aria-hidden", "false");
-}
-
-function closeMenu(){
-  mobileMenu.classList.remove("open");
-  document.body.style.overflow = ""; // unlock
-  mobileMenu.setAttribute("aria-hidden", "true");
-}
-
-if (menuBtn && mobileMenu) {
-  menuBtn.addEventListener("click", openMenu);
-
-  if (menuClose) menuClose.addEventListener("click", closeMenu);
-
-  // close when clicking outside panel
-  mobileMenu.addEventListener("click", (e) => {
-    if (e.target === mobileMenu) closeMenu();
-  });
-
-  // close when clicking a link
-  mobileMenu.querySelectorAll("a").forEach(a => {
-    a.addEventListener("click", closeMenu);
-  });
-}
-
-document.querySelectorAll(".faq-q").forEach((btn) => {
-  btn.addEventListener("click", () => {
-    const item = btn.closest(".faq-item");
-    if (!item) return;
-
-    document.querySelectorAll(".faq-item.open").forEach((openItem) => {
-      if (openItem !== item) {
-        openItem.classList.remove("open");
-        const icon = openItem.querySelector(".icon");
-        if (icon) icon.textContent = "▸";
-      }
-    });
-
-    item.classList.toggle("open");
-    const icon = btn.querySelector(".icon");
-    if (icon) icon.textContent = item.classList.contains("open") ? "▾" : "▸";
-  });
-});
-
-</script>
-
-
+  <script src="assets/js/hero-checkpoint.js" defer></script>
+  <script src="assets/js/nav.js" defer></script>
+  <script src="assets/js/home.js" defer></script>
+  <script src="assets/js/connect-modes.js" defer></script>
+  <script src="assets/js/use-cases.js" defer></script>
+  <script src="assets/js/uses.js" defer></script>
+  <script src="https://assets.lemonsqueezy.com/lemon.js" defer></script>
 </body>
 </html>

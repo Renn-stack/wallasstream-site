@@ -1,0 +1,317 @@
+/* ============================================================
+   uses.css — "Why this exists" use-case switcher
+   Loaded by index.html.
+
+   Replaces the four static .problem__item cards with one large plate
+   that changes, plus a row of tabs that select it. The section keeps
+   its old job — naming the everyday moments the product is for — but
+   shows the moment instead of describing it.
+
+   Namespaced .uses__ so it cannot collide with .uc__ (the "Ways to
+   listen" carousel) or with .problem__ in sections.css, which index.html
+   and the cinematic prototype still use.
+
+   Without JS the markup renders panel 1 visible with its copy readable
+   and every tab present; the controls simply do nothing.
+   ============================================================ */
+
+.uses__inner {
+  display: grid;
+  gap: clamp(2rem, 4vw, 3.25rem);
+}
+
+/* ---------- Top row: copy beside the plate ----------
+   The plate is the argument, so it takes the larger share. Below
+   1000px the two stack and the copy leads. */
+.uses__stage {
+  display: grid;
+  gap: clamp(1.75rem, 4vw, 3rem);
+  align-items: center;
+}
+
+@media (min-width: 1000px) {
+  .uses__stage { grid-template-columns: minmax(0, 0.78fr) minmax(0, 1.12fr); }
+}
+
+.uses__copy { display: grid; gap: var(--ws-space-5); align-content: center; }
+
+/* ---------- The plate ----------
+   Every panel is stacked in the same grid cell, so the section's height
+   is fixed by the tallest one and switching cannot reflow the page.
+   The renders are 1672x941, and the aspect-ratio here matches them, so
+   the box is correct before a single byte of image arrives. */
+.uses__visual {
+  display: grid;
+  aspect-ratio: 1672 / 941;
+  position: relative;
+}
+
+/* ---------- The change: out, then in ----------
+   NOT A CROSSFADE. Both plates used to run the same 520ms opacity
+   transition at the same time, which meant that halfway through the
+   change both were at 50% and the eye saw one image ghosted over the
+   other. These four renders share a composition — a MacBook left, an
+   iPhone right, the same desk, the same black — so a dissolve between
+   them reads as the picture smearing rather than as the scene changing.
+
+   Sequencing it fixes that. The outgoing plate leaves first, the frame
+   passes through the page's own black, and the new one arrives into an
+   empty stage. The gap is what makes it legible as a NEW picture.
+
+   HOW THE TWO HALVES ARE TOLD APART, with no JS and no keyframes: the
+   transition that runs is the one declared in the style being changed
+   TO. A panel losing .is-active falls back to the rule below and leaves
+   on --uses-out with no delay; a panel gaining it picks up the rule
+   after, and waits out that same duration before arriving. One class
+   toggle, two different timings.
+
+   The leaving curve is deliberately not --ws-ease-out: an image that
+   eases out of its own exit hangs around at low opacity and muddies the
+   very gap this exists to create. It leaves on ease-in, quickly. */
+.uses__visual {
+  --uses-out: 200ms;
+  --uses-in: 420ms;
+}
+
+.uses__panel {
+  grid-area: 1 / 1;
+  opacity: 0;
+  transition: opacity var(--uses-out) cubic-bezier(0.4, 0, 1, 1);
+  /* Inactive panels are decorative duplicates of a plate the visitor
+     cannot see — keep them out of hit-testing entirely. */
+  pointer-events: none;
+}
+
+.uses__panel.is-active {
+  opacity: 1;
+  transition: opacity var(--uses-in) var(--ws-ease-out) var(--uses-out);
+}
+
+/* The change is information, not decoration — the tab already said which
+   plate this is, so with motion turned down the plate simply is the new
+   one. Zeroing the durations keeps the same one-class mechanism rather
+   than introducing a second code path. */
+@media (prefers-reduced-motion: reduce) {
+  .uses__visual {
+    --uses-out: 0s;
+    --uses-in: 0s;
+  }
+}
+
+.uses__img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* The renders are matted in a black of their own, sampled at RGB 0-3.
+   Now that the page is pure black too they very nearly agree, but the
+   feather stays: 3/255 is still a straight edge, and the softened edge
+   is a better read than a rectangle either way.
+
+   The fade widths are set by where the render's content actually starts:
+   the MacBook's left edge is at 11% and the phone's right edge at 89%,
+   the Mac's top at 16% and the desk reflection's foot at 83%. 8% and 10%
+   therefore clear the devices entirely.
+
+   Two gradients intersected, so all four edges feather. `mask-composite`
+   is the standard property and must not be paired with the legacy
+   `-webkit-mask-composite`, whose different keyword set overrides it and
+   leaves the corners wrong; browsers without it simply show the mat. */
+@supports (mask-composite: intersect) {
+  .uses__visual {
+    mask-image:
+      linear-gradient(to right, transparent 0, #000 8%, #000 92%, transparent 100%),
+      linear-gradient(to bottom, transparent 0, #000 10%, #000 90%, transparent 100%);
+    mask-composite: intersect;
+  }
+}
+
+/* ---------- The switcher ----------
+   No card: the tabs and the rail sit directly on the section. With the
+   arrows gone the only affordances are the tab cards themselves, the
+   hairlines between them and the rail underneath, which is enough —
+   the raised active card already reads as a selected state.
+
+   --uses-pad tracks .container's own inline padding; it is what the
+   narrow-screen strip below negates to bleed to the viewport edge. */
+.uses__switcher {
+  --uses-pad: clamp(1.25rem, 4vw, 2.5rem);
+
+  display: grid;
+  gap: clamp(1.25rem, 2.5vw, 1.9rem);
+}
+
+/* ---------- Tabs ---------- */
+.uses__tabs {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.uses__tab {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  align-content: start;
+  gap: var(--ws-space-3);
+  margin: 0;
+  padding: clamp(1rem, 2vw, 1.4rem) clamp(0.75rem, 1.6vw, 1.25rem);
+  border: 1px solid transparent;
+  border-radius: var(--ws-radius-md);
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: center;
+  cursor: pointer;
+  /* On the narrow snap strip a tap-and-drag on a label otherwise starts a
+     text selection instead of scrolling the row. */
+  user-select: none;
+  -webkit-user-select: none;
+  transition: background-color var(--ws-dur-base) var(--ws-ease-out),
+              border-color var(--ws-dur-base) var(--ws-ease-out);
+}
+
+/* Hairline between neighbours, suppressed either side of the active
+   card so its raised panel never collides with a divider. */
+.uses__tab + .uses__tab::before {
+  content: "";
+  position: absolute;
+  left: -0.5px;
+  top: 12%;
+  bottom: 12%;
+  width: 1px;
+  background: var(--ws-line);
+  transition: opacity var(--ws-dur-base) var(--ws-ease-out);
+}
+
+.uses__tab.is-active::before,
+.uses__tab.is-active + .uses__tab::before { opacity: 0; }
+
+.uses__tab.is-active {
+  background: rgba(255, 255, 255, 0.045);
+  border-color: var(--ws-line);
+}
+
+.uses__tab:hover:not(.is-active) { background: rgba(255, 255, 255, 0.025); }
+
+.uses__tab:focus-visible {
+  outline: 2px solid var(--ws-accent);
+  outline-offset: 3px;
+}
+
+.uses__icon {
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  border-radius: var(--ws-radius-pill);
+  background: rgba(255, 255, 255, 0.045);
+  color: var(--ws-accent);
+  transition: background-color var(--ws-dur-base) var(--ws-ease-out);
+}
+
+.uses__tab.is-active .uses__icon { background: rgba(224, 150, 91, 0.12); }
+
+.uses__icon svg { width: 26px; height: 26px; }
+
+/* Deliberately off the shared type scale. --ws-step-1 tops out at
+   1.4rem, which wraps "Online meetings" onto two lines in a quarter of
+   the row at 1024-1200 and leaves the tab heights ragged. This ramp
+   keeps all four titles on one line from 1000px up. */
+.uses__tab-title {
+  font-size: clamp(1rem, 0.7rem + 0.5vw, 1.25rem);
+  font-weight: 650;
+  letter-spacing: -0.015em;
+  line-height: 1.2;
+  color: var(--ws-text);
+  transition: color var(--ws-dur-base) var(--ws-ease-out);
+}
+
+.uses__tab.is-active .uses__tab-title { color: var(--ws-accent); }
+
+.uses__tab-body {
+  max-width: 22ch;
+  font-size: var(--ws-step--1);
+  line-height: 1.5;
+  color: var(--ws-text-tertiary);
+  text-wrap: pretty;
+}
+
+/* ---------- Position rail ----------
+   Four equal quarters. The fill is exactly one quarter wide, so its
+   centre lands on the dot it belongs to — the indicator and the dots
+   are the same geometry rather than two things kept in sync by eye. */
+.uses__rail {
+  position: relative;
+  height: 14px;
+}
+
+.uses__rail::before {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  top: 50%;
+  height: 2px;
+  translate: 0 -50%;
+  border-radius: var(--ws-radius-pill);
+  background: rgba(255, 255, 255, 0.10);
+}
+
+.uses__rail-fill {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 25%;
+  height: 2px;
+  translate: calc(var(--uses-i, 0) * 100%) -50%;
+  border-radius: var(--ws-radius-pill);
+  background: var(--ws-accent);
+  transition: translate var(--ws-dur-base) var(--ws-ease-out);
+}
+
+.uses__rail-dot {
+  position: absolute;
+  top: 50%;
+  width: 9px;
+  height: 9px;
+  border-radius: var(--ws-radius-pill);
+  background: rgba(255, 255, 255, 0.28);
+  /* centre of the i-th quarter */
+  left: calc((var(--i) * 2 + 1) * 12.5%);
+  translate: -50% -50%;
+  transition: background-color var(--ws-dur-base) var(--ws-ease-out),
+              scale var(--ws-dur-base) var(--ws-ease-out);
+}
+
+.uses__rail-dot.is-active {
+  background: var(--ws-accent);
+  scale: 1.35;
+  box-shadow: 0 0 14px rgba(224, 150, 91, 0.55);
+}
+
+/* ---------- Narrow screens ----------
+   Four tab cards will not fit, and collapsing to a 2x2 grid puts the
+   controls a long way from the plate they drive. Instead the row scrolls
+   horizontally with snap points, keeping all four discoverable. */
+@media (max-width: 860px) {
+  .uses__tabs {
+    grid-template-columns: repeat(4, minmax(15rem, 1fr));
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    /* let the strip bleed past the container as it scrolls */
+    margin-inline: calc(-1 * var(--uses-pad));
+    padding-inline: var(--uses-pad);
+  }
+
+  .uses__tabs::-webkit-scrollbar { display: none; }
+
+  .uses__tab { scroll-snap-align: center; }
+}
+
+@media (max-width: 520px) {
+  .uses__tabs { grid-template-columns: repeat(4, minmax(13rem, 1fr)); }
+  .uses__icon { width: 48px; height: 48px; }
+  .uses__icon svg { width: 22px; height: 22px; }
+}

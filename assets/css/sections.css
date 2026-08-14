@@ -1,0 +1,1087 @@
+/* ============================================================
+   sections.css — layout for the 10 homepage sections
+   Phase 2. Static only; Phase 3 layers motion on top.
+   ============================================================ */
+
+.section { padding-block: clamp(4rem, 10vw, 8rem); }
+.section--tight { padding-block: clamp(3rem, 7vw, 5.5rem); }
+
+/* Runs straight into whatever band follows it, with no gap between them. */
+@media (min-width: 1100px) { .section--flush-end { padding-bottom: 0; } }
+
+.section__inner { display: grid; gap: clamp(2.5rem, 5vw, 4rem); }
+
+/* ============ 01 · Hero — Mac → iPhone → hearing device ============
+   The static rules below describe the FINAL frame of the Phase 3
+   choreography: question, full signal flow (Mac → iPhone → implant),
+   payoff copy and CTA, all visible. This is what no-JS and
+   prefers-reduced-motion visitors get, and what remains if the motion
+   layer (hero-motion.css + scroll-progress.js) is deleted.
+   Motion NEVER changes layout — it only interpolates opacity/transform
+   toward this state. */
+
+.hero { position: relative; }
+
+.hero__pin {
+  position: relative;
+  overflow: hidden;
+  padding-block: clamp(3rem, 8vw, 5.5rem) clamp(3rem, 7vw, 5rem);
+}
+
+/* Warm ambient falloff behind the stage */
+.hero__pin::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 44%;
+  width: min(1100px, 130%);
+  aspect-ratio: 1.6;
+  translate: -50% -50%;
+  background: radial-gradient(ellipse,
+              rgba(224, 150, 91, 0.15) 0%,
+              rgba(224, 150, 91, 0.05) 36%,
+              transparent 68%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.hero__layout {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: clamp(1.6rem, 3.6vh, 2.6rem);
+  justify-items: center;
+}
+
+.hero__question {
+  font-size: var(--ws-step-4);
+  font-weight: 700;
+  letter-spacing: -0.035em;
+  line-height: 1.06;
+  text-align: center;
+  max-width: 21ch;
+}
+
+/* ---- The flow: Mac → signal → iPhone → signal → implant ---- */
+.hero__flow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(8px, 1.6vw, 22px);
+  width: 100%;
+}
+
+.hero__node { position: relative; flex: none; }
+
+.hero__node--mac { width: min(430px, 42vw); }
+
+.hero__node--phone { width: min(118px, 11vw); }
+
+.hero__node--phone .hero__glow {
+  position: absolute;
+  inset: -45% -55%;
+  background: radial-gradient(circle, rgba(242, 164, 100, 0.15), transparent 62%);
+  opacity: 0.9;
+  pointer-events: none;
+}
+
+.hero__node--phone .device { position: relative; }
+
+.hero__node--implant { width: min(186px, 17vw); }
+
+.hero__node--implant .ws-implant {
+  display: block;
+  width: 100%;
+  height: auto;
+  /* Sink the artwork slightly so the coil sits near the signal line */
+  transform: translateY(9%);
+}
+
+/* Waveform signal segments (bars use the logo's motif) */
+.sig {
+  flex: none;
+  width: clamp(78px, 9vw, 138px);
+  height: auto;
+  overflow: visible;
+}
+
+.sig line {
+  stroke: rgba(242, 164, 100, 0.30);
+  stroke-width: 1.3;
+  stroke-linecap: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 0;
+}
+
+.sig rect { fill: url(#sigfade); }
+
+/* Second segment rises gently into the coil */
+.sig--2 { transform: translateY(-12px) rotate(-5deg); }
+
+/* ---- 640–1099px fit correction ----
+   Between the mobile cluster and the point where the Mac/iPhone/device
+   widths hit their pixel caps, the row's intrinsic width exceeds the
+   container's content box — so .hero__pin's overflow:hidden was silently
+   shaving the Mac's left edge and the hearing device's ear hook (up to
+   56px total at 640px). The row is imagery, not text, so it may use the
+   full stage width including the container gutters; the signal runs also
+   get a lower floor so they stop being the binding constraint. */
+@media (min-width: 640px) and (max-width: 1099px) {
+  .hero__flow {
+    width: calc(100% + 2 * clamp(1.25rem, 4vw, 2.5rem));
+    margin-inline: calc(-1 * clamp(1.25rem, 4vw, 2.5rem));
+  }
+
+  .sig { width: clamp(64px, 9vw, 138px); }
+}
+
+/* ---- Payoff ---- */
+.hero__payoff {
+  display: grid;
+  gap: var(--ws-space-4);
+  justify-items: center;
+  text-align: center;
+  max-width: 54rem;
+  margin-inline: auto;
+}
+
+.hero__answer {
+  display: grid;
+  gap: var(--ws-space-2);
+  justify-items: center;
+}
+
+.hero__now {
+  font-size: var(--ws-step-2);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--ws-accent);
+}
+
+.hero__wordmark {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  font-size: var(--ws-step-2);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+}
+
+.hero__wordmark img { width: clamp(38px, 5vw, 52px); height: auto; }
+
+.hero__claim {
+  font-size: var(--ws-step-1);
+  font-weight: 600;
+  color: var(--ws-text);
+}
+
+.hero__payoff .lede { max-width: 46rem; }
+
+/* ---- Payoff headline ----
+   Two stacked uppercase lines: the subject in plain white, the promise in
+   the brand orange. Uppercase at this weight needs the tracking pulled in
+   or the caps drift apart; line-height sits under 1 so the two lines read
+   as one block. */
+.hero__headline {
+  display: grid;
+  font-size: var(--ws-step-4);
+  font-weight: 700;
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  text-wrap: balance;
+}
+
+.hero__headline-line--accent {
+  /* Solid accent first, so a browser without background-clip:text — or one
+     that fails the gradient — still gets a readable orange line. */
+  color: var(--ws-accent);
+  background: linear-gradient(100deg, var(--ws-orange-300) 0%,
+                                      var(--ws-orange-500) 46%,
+                                      var(--ws-orange-600) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* ---- Payoff trust line ----
+   Replaces the fineprint sentence: two short facts, icon-led, split by a
+   hairline. Small text, so it holds at --ws-text-tertiary, above the AA
+   floor. */
+.hero__meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.9rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: var(--ws-step-0);
+  color: var(--ws-text-tertiary);
+}
+
+.hero__meta li {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.hero__meta li + li {
+  padding-left: 0.9rem;
+  border-left: 1px solid var(--ws-line);
+}
+
+.hero__meta svg {
+  width: 1.05em;
+  height: 1.05em;
+  flex: none;
+  opacity: 0.85;
+}
+
+.hero__cta {
+  display: grid;
+  gap: var(--ws-space-3);
+  justify-items: center;
+  margin-top: var(--ws-space-2);
+}
+
+/* ---- Mobile: deliberate cluster, not a shrunken row ----
+   Mac on top; iPhone lower-left overlapping it; implant lower-right so
+   its coil (upper-left of the artwork) faces the incoming signal.
+   Signal 1 runs down-left Mac → iPhone; signal 2 runs left → right
+   iPhone → coil. Everything is contained in an aspect-ratio box, so
+   nothing can overflow the viewport. */
+@media (max-width: 639px) {
+  .hero__flow {
+    display: block;
+    position: relative;
+    width: min(88vw, 340px, 46vh);
+    aspect-ratio: 340 / 372;
+    margin-inline: auto;
+  }
+
+  .hero__node--mac { position: absolute; left: 4%; top: 0; width: 84%; }
+
+  .sig--1 {
+    position: absolute;
+    left: 17%;
+    top: 27%;
+    width: 27%;
+    transform: rotate(152deg);
+  }
+
+  .hero__node--phone {
+    position: absolute;
+    left: 3%;
+    top: 38%;
+    width: 27%;
+    z-index: 2;
+  }
+
+  .sig--2 {
+    position: absolute;
+    left: 33%;
+    top: 57%;
+    width: 25%;
+    transform: rotate(-8deg);
+  }
+
+  .hero__node--implant {
+    position: absolute;
+    right: 1%;
+    top: 44%;
+    width: 46%;
+    z-index: 1;
+  }
+
+  .hero__node--implant .ws-implant { transform: none; }
+}
+
+/* ============ 02 · The problem ============ */
+.problem__grid {
+  display: grid;
+  gap: var(--ws-space-6);
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 640px) { .problem__grid { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 1000px) { .problem__grid { grid-template-columns: repeat(4, 1fr); } }
+
+.problem__item { display: grid; gap: var(--ws-space-3); align-content: start; }
+
+.problem__item h3 { font-size: var(--ws-step-0); font-weight: 650; }
+.problem__item p { font-size: var(--ws-step--1); color: var(--ws-text-tertiary); }
+
+.problem__icon { width: 34px; height: 34px; color: var(--ws-accent); }
+.problem__icon svg { width: 100%; height: 100%; }
+
+/* ============ 03 · Choose how you listen ============ */
+.modes { display: grid; gap: var(--ws-space-8); grid-template-columns: 1fr; }
+
+@media (min-width: 940px) { .modes { grid-template-columns: repeat(2, 1fr); } }
+
+.mode { display: grid; gap: var(--ws-space-6); align-content: start; }
+
+.mode__head { display: flex; align-items: center; gap: var(--ws-space-3); flex-wrap: wrap; }
+.mode__head h3 { font-size: var(--ws-step-2); }
+
+.mode__claim { font-size: var(--ws-step-1); font-weight: 650; color: var(--ws-text); }
+
+/* On narrow screens the Mac and phone side by side leave the Mac too
+   small to read — and the QR code is the whole point of the Wi-Fi card.
+   Stack them so the Mac gets full width. */
+.mode__shots {
+  display: grid;
+  grid-template-columns: 1fr;
+  justify-items: center;
+  align-items: end;
+  gap: var(--ws-space-4);
+}
+
+.mode__shots .device--phone { max-width: 116px; }
+
+@media (min-width: 560px) {
+  .mode__shots { grid-template-columns: minmax(0, 1fr) auto; justify-items: stretch; }
+  .mode__shots .device--phone { max-width: 104px; }
+}
+
+.mode__list { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--ws-space-3); }
+
+.mode__list li {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--ws-space-3);
+  font-size: var(--ws-step--1);
+  color: var(--ws-text-secondary);
+}
+
+.mode__list li::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  margin-top: 0.55em;
+  border-radius: 50%;
+  background: var(--ws-accent);
+}
+
+.mode__uses { display: flex; flex-wrap: wrap; gap: var(--ws-space-2); }
+
+.mode__use {
+  padding: 0.35em 0.8em;
+  border: 1px solid var(--ws-line);
+  border-radius: var(--ws-radius-pill);
+  font-size: 0.78rem;
+  color: var(--ws-text-tertiary);
+}
+
+/* ============ 04 · Inside the app ============ */
+.inside {
+  display: grid;
+  gap: clamp(2rem, 5vw, 3.5rem);
+  grid-template-columns: 1fr;
+  align-items: center;
+}
+
+@media (min-width: 880px) { .inside { grid-template-columns: 1fr minmax(0, 300px); } }
+
+.inside__list { display: grid; gap: var(--ws-space-3); }
+
+.inside__item {
+  display: grid;
+  gap: var(--ws-space-2);
+  width: 100%;
+  padding: var(--ws-space-5) var(--ws-space-6);
+  border: 1px solid var(--ws-line);
+  border-radius: var(--ws-radius-md);
+  background: transparent;
+  color: inherit;
+  text-align: left;
+  font: inherit;
+  cursor: pointer;
+  transition: border-color var(--ws-dur-fast) var(--ws-ease-out),
+              background-color var(--ws-dur-fast) var(--ws-ease-out);
+}
+
+.inside__item:hover { border-color: var(--ws-line-strong); }
+
+.inside__item[aria-pressed="true"] {
+  border-color: var(--ws-orange-700);
+  background: rgba(224, 150, 91, 0.07);
+}
+
+.inside__item h3 { font-size: var(--ws-step-0); font-weight: 650; }
+.inside__item p { font-size: var(--ws-step--1); color: var(--ws-text-tertiary); }
+
+.inside__figure { justify-self: center; width: 100%; max-width: 260px; }
+
+/* ============ 05 · Try it with your setup ============ */
+.tryit {
+  display: grid;
+  gap: clamp(2rem, 4vw, 3.25rem);
+  justify-items: center;
+  text-align: center;
+}
+
+.tryit .section-head { gap: clamp(1rem, 2vw, 1.6rem); }
+
+/* The question is the whole section — nothing competes with it, so it runs
+   a step above a normal h2 and keeps its two lines tight. */
+.tryit__title {
+  font-size: var(--ws-step-4);
+  line-height: 1.05;
+  letter-spacing: -0.035em;
+}
+
+/* The line break is authored, not balanced: "Not sure if your setup /
+   is compatible?" is the phrasing that reads best. Below the two-column
+   breakpoint it is dropped and the text wraps on its own. */
+.tryit__title br { display: none; }
+
+@media (min-width: 860px) { .tryit__title br { display: inline; } }
+
+.tryit__lede { max-width: none; }
+.tryit__lede b { font-weight: 700; color: var(--ws-accent); }
+
+/* Plain-text spec line under the CTA. No pills — the button is the only
+   thing in this section that should look pressable. */
+.tryit__specs {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 0.6rem 1.1rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: var(--ws-step-0);
+  color: var(--ws-text-tertiary);
+}
+
+.tryit__specs li { display: flex; align-items: center; gap: 1.1rem; }
+
+.tryit__specs li + li::before {
+  content: "·";
+  color: var(--ws-text-muted);
+}
+
+/* ============ 06 · Free -> Pro ============ */
+.trial { display: grid; gap: clamp(2rem, 5vw, 3rem); grid-template-columns: 1fr; }
+
+@media (min-width: 1000px) { .trial { grid-template-columns: 1.15fr 1fr; align-items: stretch; } }
+
+/* Centre the two day-cards against the taller price panel, otherwise the
+   left column reads as top-heavy with dead space beneath it. */
+.timeline { display: grid; gap: var(--ws-space-6); align-content: center; }
+
+.timeline__row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--ws-space-4);
+}
+
+@media (min-width: 620px) { .timeline__row { grid-template-columns: repeat(2, 1fr); } }
+
+.day {
+  display: grid;
+  gap: var(--ws-space-4);
+  padding: var(--ws-space-6);
+  border: 1px solid var(--ws-line);
+  border-radius: var(--ws-radius-lg);
+}
+
+.day--now { border-color: var(--ws-orange-700); background: rgba(224, 150, 91, 0.06); }
+
+.day__label {
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ws-text-muted);
+}
+
+.day--now .day__label { color: var(--ws-accent); }
+
+.day__rows { display: grid; gap: var(--ws-space-3); }
+
+.day__row {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: var(--ws-space-3);
+  font-size: var(--ws-step--1);
+}
+
+.day__state { display: inline-grid; place-items: center; width: 20px; height: 20px; }
+.day__state svg { width: 100%; height: 100%; }
+
+.day__state--on { color: var(--ws-state-connected); }
+.day__state--locked { color: var(--ws-text-muted); }
+
+.price { display: grid; gap: var(--ws-space-5); align-content: start; }
+
+.price__amount { display: flex; align-items: baseline; gap: 0.4rem; }
+.price__amount b { font-size: var(--ws-step-3); font-weight: 700; letter-spacing: -0.03em; }
+.price__amount span { color: var(--ws-text-tertiary); font-size: var(--ws-step--1); }
+
+.price__note { display: grid; gap: var(--ws-space-2); font-size: var(--ws-step--1); color: var(--ws-text-tertiary); }
+
+.price__how {
+  display: grid;
+  gap: var(--ws-space-2);
+  padding-top: var(--ws-space-4);
+  border-top: 1px solid var(--ws-line);
+  font-size: var(--ws-step--1);
+  color: var(--ws-text-tertiary);
+}
+
+/* ---- Plan cards ----
+   Two side-by-side cards. Pro carries the orange frame, badge and tint;
+   Free stays neutral grey so only one card is highlighted — two
+   competing orange frames would flatten the choice. */
+.plans {
+  display: grid;
+  gap: clamp(1.25rem, 3vw, 2rem);
+  grid-template-columns: 1fr;
+  max-width: 60rem;
+  margin-inline: auto;
+}
+
+@media (min-width: 860px) { .plans { grid-template-columns: repeat(2, 1fr); } }
+
+/* The cards are tall and narrow by construction — the grid is
+   fit-content, so each is only as wide as two short label lines need
+   (~313px) while the content stacks to five rows. At that proportion
+   36px of padding is a lot of the card's own width; trimming it is the
+   cheapest height there is to give back. */
+.plan {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ws-space-5);
+  padding: clamp(1.25rem, 2.4vw, 1.75rem);
+  border: 1px solid var(--ws-line);
+  border-radius: var(--ws-radius-lg);
+}
+
+.plan--free {
+  border-color: var(--ws-line-strong);
+}
+
+.plan--pro {
+  border-color: var(--ws-orange-700);
+  background: rgba(224, 150, 91, 0.11);
+}
+
+.plan__head {
+  display: grid;
+  justify-items: center;
+  gap: var(--ws-space-2);
+  text-align: center;
+}
+
+.plan__badge {
+  display: inline-flex;
+  padding: 0.45em 1.2em;
+  border: 1px solid var(--ws-line-strong);
+  border-radius: var(--ws-radius-pill);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ws-text);
+}
+
+/* Only Pro's badge is orange; Free keeps the neutral base above. */
+.plan--pro .plan__badge {
+  border-color: var(--ws-orange-700);
+  color: var(--ws-accent);
+}
+
+/* step-3, NOT step-4. step-4 is the display size — the hero's own
+   question is set in it — and at 67px against a 46px h2 the price was
+   the loudest thing in the section, louder than the heading that
+   introduces it. A price is the headline of its CARD, not of the page.
+   Matched to the h2 it still reads as the card's headline, and the
+   section reads as one thing again instead of two competing sizes. */
+.plan__price {
+  font-size: var(--ws-step-3);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+
+.plan__features {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--ws-line);
+}
+
+.plan__features li {
+  display: flex;
+  align-items: center;
+  gap: var(--ws-space-4);
+  padding: var(--ws-space-4) 0;
+  border-bottom: 1px solid var(--ws-line);
+}
+
+/* Ringed glyph. The ring is a hairline so the icon reads as a marker,
+   not as a second button. */
+.plan__icon {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  width: 2.75rem;
+  height: 2.75rem;
+  border: 1px solid var(--ws-line);
+  border-radius: 50%;
+  /* Accent orange, not the product's "connected" green: inside a plan card
+     the glyph labels a feature, it does not report a live state. */
+  color: var(--ws-accent);
+}
+
+.plan__icon svg { width: 1.4rem; height: 1.4rem; }
+
+.plan__feature { display: grid; gap: 0.15rem; }
+.plan__feature b { font-weight: 650; }
+
+.plan__state {
+  font-size: var(--ws-step--1);
+  color: var(--ws-accent);
+}
+
+.plan__note {
+  display: flex;
+  align-items: center;
+  gap: var(--ws-space-4);
+  padding: var(--ws-space-4);
+  border-radius: var(--ws-radius-md);
+  background: rgba(255, 255, 255, 0.035);
+  font-size: var(--ws-step--1);
+  color: var(--ws-text-tertiary);
+}
+
+.plan__note b {
+  display: block;
+  font-weight: 500;
+  color: var(--ws-text-secondary);
+}
+
+.plan__note-icon { display: inline-grid; place-items: center; flex: none; color: var(--ws-accent); }
+.plan__note-icon svg { width: 1.6rem; height: 1.6rem; }
+
+/* Buttons align across both cards regardless of note length. */
+.plan .btn { margin-top: auto; }
+
+.plans__how {
+  display: grid;
+  justify-items: center;
+  gap: var(--ws-space-2);
+  margin-top: clamp(1.5rem, 3vw, 2.25rem);
+  text-align: center;
+  font-size: var(--ws-step--1);
+  color: var(--ws-text-tertiary);
+}
+
+.plans__how p { display: flex; align-items: center; gap: 0.5rem; }
+.plans__how svg { width: 1.05em; height: 1.05em; flex: none; }
+
+/* ============ 07 · Getting started ============ */
+.getstarted { display: grid; gap: var(--ws-space-6); grid-template-columns: 1fr; }
+
+@media (min-width: 820px) { .getstarted { grid-template-columns: repeat(3, 1fr); } }
+
+.component { display: grid; gap: var(--ws-space-3); align-content: start; padding: var(--ws-space-6); }
+
+.component__n {
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--ws-accent);
+}
+
+.component h3 { font-size: var(--ws-step-0); font-weight: 650; }
+.component p { font-size: var(--ws-step--1); color: var(--ws-text-tertiary); }
+
+/* ============ 08 · Founder ============ */
+/* TWO COMPOSITIONS SHARE THIS CLASS. The checkpoint prototype's founder is
+   full-bleed: a photograph running off the left edge with the copy beside
+   it. index.html's is a plain two-column text block inside a .container —
+   the story on the left, "What's next" on the right, no portrait at all.
+   Anything tuned for the photograph has to be scoped with
+   :has(.founder__figure) or it silently reflows a section it was never
+   about. Where :has is unsupported, both fall back to the text layout,
+   which is the safe one.
+
+   --ws-gutter mirrors .container's padding-inline; --founder-edge lands the
+   copy on the container's right CONTENT edge, flush with the text of every
+   other section. */
+.founder {
+  --ws-gutter: clamp(1.25rem, 4vw, 2.5rem);
+  --founder-edge: max(var(--ws-gutter), calc((100vw - var(--ws-container)) / 2 + var(--ws-gutter)));
+
+  display: grid;
+  gap: clamp(2rem, 5vw, 3.5rem);
+  grid-template-columns: 1fr;
+  padding-inline: var(--ws-gutter);
+}
+
+/* WHAT CAPS THE PHOTOGRAPH: the lede's line breaks are hand-set, and its
+   longest line — "because I needed a simpler way to hear my Mac." — is
+   466px. Every point of column the photo takes comes off the copy, and the
+   moment the copy drops under 466 that line breaks into a fourth, wrecking
+   a stanza that was written to be three.
+
+   1.5fr is the widest the photo goes while the copy still clears 466 — but
+   only from ~1256px up. Below that the two columns are simply too narrow to
+   pay for it, so the ratio stays where it was: at 1120 the wider photo cost
+   the lede its third line and left "Mac." alone on a fourth. The band is
+   gated at 1280 rather than 1256 to keep the number a real breakpoint and
+   leave 10px of slack.
+
+   1.6fr is not on the table: it looks better at 1440 and breaks both 1280
+   and 1366. If the lede is ever reworded, re-measure its longest line
+   before touching either number — that measurement is the only thing
+   holding this layout together. */
+@media (min-width: 1100px) {
+  .founder {
+    grid-template-columns: 1.25fr 1fr;
+    align-items: center;
+    gap: clamp(2rem, 4vw, 3.5rem);
+    padding-inline: 0 var(--founder-edge);
+  }
+}
+
+/* ---- The photograph variant only ----
+   Both of these are paid for by the same 40px: pulling the right edge out
+   to the container's BOX edge is what buys the photo its extra column
+   without pushing the lede under 466. Neither belongs to index.html's
+   text-only founder, which sits inside a .container and does have
+   neighbours to line up with. */
+.founder:has(.founder__figure) {
+  --founder-edge: max(var(--ws-gutter), calc((100vw - var(--ws-container)) / 2));
+}
+
+@media (min-width: 1280px) {
+  .founder:has(.founder__figure) { grid-template-columns: 1.5fr 1fr; }
+}
+
+.founder__body { display: grid; gap: clamp(1.1rem, 2.4vw, 1.9rem); max-width: var(--ws-measure); }
+.founder__body p { color: var(--ws-text-secondary); }
+
+/* ---- Portrait + leader line ----
+   The photograph is 1536x1024. Pinning the figure to that ratio means the
+   SVG overlay (viewBox 0 0 1536 1024) shares the image's coordinate space
+   exactly, so the dot and the elbow stay welded to the processor without a
+   single hard-coded pixel offset. */
+.founder__figure {
+  position: relative;
+  margin: 0;
+  aspect-ratio: 3 / 2;
+  border-radius: var(--ws-radius-lg);
+  overflow: hidden;
+  /* The callout is sized in cqw, so it keeps the same proportion of the
+     photograph at every width instead of cramping as the column narrows. */
+  container-type: inline-size;
+}
+
+/* Bled to the viewport edge and sat down on the band that follows: the left
+   side is a gradient into the page background and the bottom edge is the
+   band's own top edge, so a radius on either would cut a visible notch.
+   Only the top-right corner is rounded.
+
+   align-self:end is what lands the photo on the band. The row is as tall as
+   the copy column, which is the taller of the two, so leaving the figure
+   centred parked it ~40px short of the seam. */
+@media (min-width: 1100px) {
+  .founder__figure {
+    align-self: end;
+    border-radius: 0 var(--ws-radius-lg) 0 0;
+  }
+}
+
+/* The photo's left edge is near-black already, so it dissolves into the
+   page rather than ending on a visible box edge. */
+.founder__figure::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  /* Both stops are the page colour: this scrim's whole job is to fade
+     the portrait into the page, so it has to track --ws-bg-850. */
+  background: linear-gradient(90deg, var(--ws-bg-850) 0%, transparent 26%),
+              linear-gradient(0deg, rgba(0, 0, 0, 0.55) 0%, transparent 22%);
+}
+
+.founder__figure img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+.founder__leader {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  pointer-events: none;
+  fill: var(--ws-accent);
+  stroke: var(--ws-accent);
+  stroke-width: 2.2;
+}
+
+/* Without non-scaling-stroke the width is in viewBox units (image pixels),
+   which the figure scales down to well under a pixel — the line vanishes. */
+.founder__leader path {
+  fill: none;
+  stroke-width: 1.4px;
+  stroke-opacity: 0.75;
+}
+
+.founder__callout {
+  position: absolute;
+  left: 4%;
+  top: 63.3%;
+  translate: 0 -50%;
+  z-index: 3;
+  width: 24cqw;
+  margin: 0;
+}
+
+.founder__callout-label {
+  font-size: clamp(0.58rem, 1.68cqw, 0.72rem);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ws-accent);
+  margin-bottom: 0.6em;
+  white-space: nowrap;
+}
+
+.founder__callout-text {
+  font-size: clamp(0.7rem, 1.95cqw, 0.85rem);
+  line-height: 1.5;
+  color: var(--ws-text-secondary);
+}
+
+/* ---- Right column ---- */
+.founder__title {
+  font-size: var(--ws-step-4);
+  line-height: 1.02;
+  letter-spacing: -0.035em;
+}
+
+/* Solid accent underneath, so the word still reads if background-clip:text
+   is unavailable. */
+.founder__em {
+  color: var(--ws-accent);
+  background: linear-gradient(96deg, var(--ws-orange-500) 0%, var(--ws-orange-300) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.founder__lede {
+  font-size: var(--ws-step-1);
+  line-height: 1.5;
+}
+
+/* The three "nots" — what the product removes, stated as a row of absences. */
+.founder__nots {
+  display: flex;
+  flex-wrap: wrap;
+  gap: clamp(1.1rem, 2.4vw, 2.2rem);
+  margin: 0;
+  padding-top: clamp(1.1rem, 2.4vw, 1.9rem);
+  border-top: 1px solid var(--ws-line);
+  list-style: none;
+}
+
+/* The row is the last thing in the copy column, and the section's own bottom
+   padding is zero here so the portrait can sit on the band — without this it
+   would end flush against the seam. */
+@media (min-width: 1100px) {
+  .founder__nots { padding-bottom: clamp(2rem, 4.5vw, 3.5rem); }
+}
+
+.founder__nots li {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: var(--ws-step--1);
+  line-height: 1.35;
+  color: var(--ws-text-secondary);
+}
+
+.founder__not-icon {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  width: 2.6rem;
+  height: 2.6rem;
+  border: 1px solid var(--ws-line);
+  border-radius: 50%;
+  color: var(--ws-text-tertiary);
+}
+
+.founder__not-icon svg { width: 1.3rem; height: 1.3rem; }
+
+/* Scoped to beat `.founder__body p`, which would otherwise dim it. */
+.founder__body .founder__pull {
+  font-size: var(--ws-step-2);
+  font-weight: 650;
+  line-height: 1.22;
+  letter-spacing: -0.02em;
+  color: var(--ws-text);
+}
+
+.founder__pull span { color: var(--ws-accent); }
+
+.platforms { display: grid; gap: var(--ws-space-4); }
+
+.platform {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: var(--ws-space-4);
+  padding: var(--ws-space-4) var(--ws-space-5);
+  border: 1px solid var(--ws-line);
+  border-radius: var(--ws-radius-md);
+}
+
+.platform__icon { width: 22px; height: 22px; color: var(--ws-text-secondary); }
+.platform__icon svg { width: 100%; height: 100%; }
+.platform__name { font-weight: 650; font-size: var(--ws-step-0); }
+
+.platform__status { font-size: 0.74rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ws-text-muted); }
+.platform--live .platform__status { color: var(--ws-state-connected); }
+
+/* ============ 08b · What's next ============
+   A raised full-bleed band: the founder's portrait ends against it, which
+   is what makes the roadmap read as a closing note to that story. */
+.whatsnext {
+  background: var(--ws-bg-900);
+  border-top: 1px solid var(--ws-line);
+  padding-block: clamp(2.25rem, 5vw, 3.5rem);
+}
+
+.whatsnext__inner {
+  display: grid;
+  gap: clamp(1.75rem, 4vw, 3rem);
+  grid-template-columns: 1fr;
+  align-items: center;
+}
+
+@media (min-width: 1100px) {
+  .whatsnext__inner { grid-template-columns: minmax(16rem, auto) 1fr; }
+  .roadmap { justify-content: end; }
+}
+
+.whatsnext__head { display: grid; gap: var(--ws-space-2); }
+.whatsnext__head h3 { font-size: var(--ws-step-2); letter-spacing: -0.025em; }
+.whatsnext__sub { font-size: var(--ws-step-2); letter-spacing: -0.025em; color: var(--ws-text-tertiary); }
+
+/* ---- The rail ----
+   One node per stop, painted before its card: green for shipped, orange for
+   the one in progress, neutral for the rest. The nodes carry the sequence,
+   so the cards themselves stay identical apart from the live one. */
+.roadmap {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.9rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* flex: none is load-bearing. Without it every stop keeps the default
+   flex-shrink: 1, so when the row is a few pixels too wide for its
+   column the three stops SQUEEZE before they wrap — and each one
+   squeezes by a different amount, because each card's natural width is
+   set by its own longest label. The status lines then wrap inside some
+   cards and not others, the cards end up different heights, and
+   align-items: center on .roadmap staggers them against each other.
+
+   It only ever showed up in translation: the English labels fit with
+   little room to spare, so nothing shrank. Longer ones in any other
+   language pushed the row over the edge. Pinned to their natural width,
+   a stop that no longer fits moves to the next line whole, which is the
+   behaviour flex-wrap was there for in the first place. */
+.roadmap__stop { display: flex; align-items: center; gap: 0.9rem; flex: none; }
+
+.roadmap__node {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  width: 1.15rem;
+  height: 1.15rem;
+  border: 1px solid var(--ws-line-strong);
+  border-radius: 50%;
+}
+
+.roadmap__node::before {
+  content: "";
+  width: 0.42rem;
+  height: 0.42rem;
+  border-radius: 50%;
+  background: var(--ws-text-muted);
+}
+
+/* Shipped: the real "Connected" green from the product UI, filled solid so
+   it reads as a state rather than another accent. */
+.roadmap__stop--live .roadmap__node {
+  border-color: transparent;
+  background: var(--ws-state-connected);
+  box-shadow: 0 0 14px rgba(118, 214, 125, 0.5);
+}
+
+.roadmap__stop--live .roadmap__node::before { display: none; }
+
+.roadmap__stop--next .roadmap__node { border-color: var(--ws-orange-700); }
+.roadmap__stop--next .roadmap__node::before { background: var(--ws-accent); }
+
+.roadmap__card {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 0.8rem 1.15rem;
+  border: 1px solid var(--ws-line);
+  border-radius: var(--ws-radius-md);
+  background: var(--ws-bg-850);
+}
+
+.roadmap__stop--live .roadmap__card {
+  border-color: rgba(118, 214, 125, 0.42);
+  box-shadow: 0 0 26px rgba(118, 214, 125, 0.12);
+}
+
+.roadmap__icon { display: inline-grid; place-items: center; flex: none; width: 1.6rem; height: 1.6rem; color: var(--ws-text); }
+.roadmap__icon svg { width: 100%; height: 100%; }
+
+.roadmap__text { display: grid; gap: 0.15rem; }
+.roadmap__name { font-size: var(--ws-step-0); font-weight: 650; }
+
+.roadmap__status {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ws-text-muted);
+}
+
+.roadmap__stop--live .roadmap__status { color: var(--ws-state-connected); }
+.roadmap__stop--next .roadmap__status { color: var(--ws-accent); }
+
+/* ============ 10 · Final CTA ============ */
+.final {
+  position: relative;
+  display: grid;
+  gap: var(--ws-space-6);
+  justify-items: center;
+  text-align: center;
+  padding: clamp(3rem, 8vw, 5.5rem) clamp(1.5rem, 4vw, 3rem);
+  border: 1px solid var(--ws-line);
+  border-radius: var(--ws-radius-xl);
+  overflow: hidden;
+  background: linear-gradient(180deg, rgba(224, 150, 91, 0.09), rgba(255, 255, 255, 0.01));
+}
+
+.final h2 { max-width: 18ch; }

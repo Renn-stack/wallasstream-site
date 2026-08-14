@@ -1,0 +1,132 @@
+/* ============================================================
+   help.css : Help Center
+
+   Page-local layer, on top of tokens/base/components/sections.
+   Everything structural (page shell, accordions, panels, buttons)
+   comes from the shared system; this file only styles what lives
+   INSIDE an answer, which no other page needs:
+
+     · .hlp-block   : a labelled group inside one answer
+                      ("Wi-Fi mode", "USB mode", "Try this")
+     · .hlp-steps   : the numbered actions in that group
+     · .hlp-note    : the why-line under an action
+     · .hlp-warn    : the one thing you must not forget
+
+   The accordions themselves are the .faq component from
+   components.css, so this page and faq.html can never drift.
+   ============================================================ */
+
+/* ---------- Labelled group inside an answer ---------- */
+.hlp-block { display: grid; gap: var(--ws-space-3); }
+
+/* Groups are separated by a rule rather than by whitespace alone:
+   "Wi-Fi mode" and "USB mode" are alternatives, not a sequence, and
+   a visible break stops the second list reading as steps 3 to 5 of the
+   first. */
+.hlp-block + .hlp-block {
+  margin-top: var(--ws-space-6);
+  padding-top: var(--ws-space-6);
+  border-top: 1px solid var(--ws-line);
+}
+
+.hlp-block__label {
+  margin: 0;
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ws-accent);
+}
+
+/* ---------- Numbered actions ---------- */
+/* A real <ol>, so assistive tech announces "3 items" and the order is
+   carried by the markup rather than by the numerals being drawn. */
+.hlp-steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: var(--ws-space-3);
+  counter-reset: hlp;
+}
+
+.hlp-step {
+  counter-increment: hlp;
+  display: grid;
+  grid-template-columns: 1.7rem 1fr;
+  gap: 0.75rem;
+  align-items: start;
+}
+
+.hlp-step::before {
+  content: counter(hlp);
+  display: grid;
+  place-items: center;
+  width: 1.7rem;
+  height: 1.7rem;
+  border: 1px solid var(--ws-line-strong);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.04);
+  font-size: 0.78rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--ws-text);
+  /* Optically centres the numeral against the first line of text
+     rather than against the top of the box. */
+  margin-top: 0.05rem;
+}
+
+.hlp-step__text { display: grid; gap: 0.35rem; }
+
+.hlp-step__title { margin: 0; color: var(--ws-text); font-weight: 600; }
+
+/* The reason behind the action. Quieter than the action itself so the
+   list can still be skimmed as a list. */
+.hlp-note {
+  margin: 0;
+  font-size: var(--ws-step--1);
+  color: var(--ws-text-tertiary);
+}
+
+/* ---------- Warning ---------- */
+.hlp-warn {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.7rem;
+  margin-top: var(--ws-space-2);
+  padding: var(--ws-space-4) var(--ws-space-5);
+  border: 1px solid var(--ws-orange-700);
+  border-radius: var(--ws-radius-md);
+  background: rgba(224, 150, 91, 0.06);
+  color: var(--ws-text-secondary);
+  font-size: var(--ws-step--1);
+}
+
+.hlp-warn svg { width: 1.15rem; height: 1.15rem; flex: none; color: var(--ws-accent); }
+.hlp-warn p { margin: 0; }
+
+/* ---------- "Still need help" card ---------- */
+.hlp-support { display: grid; gap: var(--ws-space-5); }
+
+.hlp-support__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: var(--ws-space-2);
+  color: var(--ws-text-secondary);
+}
+
+.hlp-support__list li {
+  display: grid;
+  grid-template-columns: 1.1rem 1fr;
+  gap: 0.65rem;
+  align-items: start;
+}
+
+.hlp-support__list svg {
+  width: 1.1rem;
+  height: 1.1rem;
+  margin-top: 0.25rem;
+  color: var(--ws-accent);
+}
