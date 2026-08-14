@@ -1,0 +1,30 @@
+# Vercel CLI does not read .gitignore. Without this file a local
+# "vercel deploy" would publish everything in the working directory,
+# including local tooling and credentials. Keep this in sync with
+# .gitignore so local deploys match the ones triggered from GitHub.
+
+# Credentials and local tooling
+.env*
+.claude/
+.agents/
+skills-lock.json
+node_modules/
+
+# Local review artifacts and design benches
+_archive/
+_*.html
+*-bench.html
+*-prototype.html
+usb-diagram.html
+wifi-diagram.html
+favicons/_originales/
+
+# Working masters and source imagery the site does not serve
+assets/references/
+assets/use-case-visuals/*.png
+assets/hero-cinematic/hero-master.mp4
+assets/hero-cinematic/hero-cine-corrected.mov
+assets/hero-cinematic/Orange_*.mp4
+assets/hero-cinematic/frames/
+assets/hero-cinematic/refs/
+assets/hero-cinematic/cp/

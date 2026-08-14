@@ -12,6 +12,9 @@ _archive/
 node_modules/
 npm-debug.log*
 
+# Vercel CLI local link and build output
+.vercel/
+
 # Local review artifacts (never deploy): _implant-preview.html etc.
 _*.html
 favicons/_originales/
@@ -47,3 +50,5 @@ assets/use-case-visuals/*.png
 .claude/
 .agents/
 skills-lock.json
+.vercel
+.env*
