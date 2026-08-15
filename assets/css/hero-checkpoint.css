@@ -8,7 +8,7 @@
    change is a plain CSS transition off that attribute. The video is
    played, not scrubbed.
 
-     data-cp="0"      opening question over black + "Scroll to send audio"
+     data-cp="0"      the opening question, over black
      data-payoff="on" set at 6.00s of video: the whole payoff, headline
                       through CTA, over the still-playing plate
      data-cp="1"      the video has landed on its final frame
@@ -19,8 +19,10 @@
    data-cp — it comes up two seconds before the plate stops, so the copy
    is already settled by the time the frame comes to rest.
 
-   Gated on html.js-hero-cp, which the script adds only on a desktop
-   viewport with motion allowed. Without it this file changes nothing
+   Gated on html.js-hero-cp, which the script adds wherever motion is
+   allowed. It runs at every width now: see the max-width: 899px block
+   near the end, which drops the pinned stage so the plate can sit in
+   normal flow on a phone. Without the class this file changes nothing
    and the complete static SVG hero from sections.css runs in normal
    document flow.
    ============================================================ */
@@ -202,61 +204,11 @@
    the instant the first gesture starts playback. */
 .js-hero-cp .hero--cp[data-q="off"] .hero__question { opacity: 0; }
 
-/* ---- Interaction hints ----
-   One per waiting state, bottom-centre, understated. aria-hidden: they
-   describe a pointer gesture, and keyboard/AT users have their own path
-   (arrow keys, and focus jumps straight to the payoff). */
-.hero__hints {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: clamp(28px, 5dvh, 56px);
-  z-index: 4;
-  display: none;
-  justify-content: center;
-  pointer-events: none;
-}
+/* A "Scroll to send audio" hint with a drifting chevron lived here,
+   bottom-centre over the plate. Removed on request: it floated over the
+   film like a control without being one. Scroll still starts the plate;
+   nothing announces it now. */
 
-.js-hero-cp .hero--cp .hero__hints { display: grid; }
-
-.hero__hint {
-  grid-area: 1 / 1;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.55rem;
-  font-size: var(--ws-step--1);
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.62);
-  opacity: 0;
-  transition: opacity 0.5s ease;
-}
-
-.hero--cp[data-q="on"] .hero__hint[data-for="0"] { opacity: 1; }
-
-/* While a cinematic transition is playing, hints stay down */
-.hero--cp[data-busy] .hero__hint { opacity: 0 !important; }
-
-/* A thin chevron. No mouse glyph, no bounce — a 3px drift, nothing more. */
-.hero__chev {
-  width: 12px;
-  height: 12px;
-  border-right: 1.5px solid currentColor;
-  border-bottom: 1.5px solid currentColor;
-  rotate: 45deg;
-  opacity: 0.75;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .hero__chev { animation: ws-chev 3.2s ease-in-out infinite; }
-}
-
-@keyframes ws-chev {
-  0%, 100% { transform: translateY(-2px); opacity: 0.5; }
-  50%      { transform: translateY(2px);  opacity: 0.9; }
-}
 
 
 /* A rewind lived here — the plate faded through black and cut back to
@@ -434,8 +386,7 @@
   .js-hero-cp .hero--cp[data-payoff="on"] .hero__cine::after,
   .js-hero-cp .hero--cp[data-cp="1"] .hero__cine::after { opacity: 0; }
 
-  .js-hero-cp .hero--cp .hero__flow,
-  .js-hero-cp .hero--cp .hero__hints { display: none; }
+  .js-hero-cp .hero--cp .hero__flow { display: none; }
 
   .js-hero-cp .hero--cp .hero__question,
   .js-hero-cp .hero--cp .hero__payoff,
@@ -444,11 +395,51 @@
     left: auto;
     top: auto;
     translate: none;
-    width: auto;
     visibility: visible;
     opacity: 1;
     text-align: center;
     justify-items: center;
+  }
+
+  /* The copy needs a column to sit in. Above, it is positioned against
+     the pin and gets its measure from `width: min(19ch, 86vw)` and
+     `width: min(52vw, 44rem)`; unpinned, both of those are meaningless
+     and dropping them outright left every line running the full width of
+     the phone. */
+  .js-hero-cp .hero--cp .hero__layout {
+    display: grid;
+    height: auto;
+    gap: clamp(1.25rem, 5vw, 2rem);
+    padding-inline: clamp(1.25rem, 6vw, 2rem);
+    justify-items: center;
+  }
+
+  .js-hero-cp .hero--cp .hero__question { width: min(17ch, 100%); }
+
+  .js-hero-cp .hero--cp .hero__payoff {
+    width: 100%;
+    max-width: 34rem;
+    margin-inline: auto;
+    gap: clamp(0.9rem, 3vw, 1.4rem);
+  }
+
+  .js-hero-cp .hero--cp .hero__cta { width: auto; }
+
+  /* THE TYPE HAD DESKTOP FLOORS. Both display sizes bottom out at about
+     2.4rem, which is 38px on a 390px phone: the question was set for a
+     4.4rem stage and the headline is uppercase, so "DIRECTLY TO YOU."
+     wanted roughly 381px of line inside about 335px of usable width.
+     These floors are sized for the narrow column instead: 28px and 26px
+     at 390px, where that headline measures about 255px. */
+  .js-hero-cp .hero--cp .hero__question {
+    font-size: clamp(1.85rem, 7.2vw, 2.6rem);
+    /* A 40px shadow buys legibility over the plate. Nothing sits over
+       the plate here, so it is just a smear on black. */
+    text-shadow: none;
+  }
+
+  .js-hero-cp .hero--cp .hero__headline {
+    font-size: clamp(1.7rem, 6.6vw, 2.4rem);
   }
 
   /* The question leads the section instead of leaving when the plate
@@ -474,8 +465,7 @@
     height: auto;
     overflow: visible;
   }
-  .js-hero-cp .hero--cp .hero__cine,
-  .js-hero-cp .hero--cp .hero__hints { display: none; }
+  .js-hero-cp .hero--cp .hero__cine { display: none; }
   .js-hero-cp .hero--cp .hero__flow { display: flex; }
   .js-hero-cp .hero--cp .hero__question,
   .js-hero-cp .hero--cp .hero__payoff,
