@@ -7,9 +7,14 @@
   "scripts": {
     "build": "node build.mjs",
     "build:dist": "node build.mjs --dist",
-    "check": "node build.mjs --check"
+    "check": "node build.mjs --check",
+    "dev": "wrangler dev",
+    "deploy": "npm run build:dist && wrangler deploy"
   },
   "engines": {
     "node": ">=18"
+  },
+  "devDependencies": {
+    "wrangler": "^4"
   }
 }

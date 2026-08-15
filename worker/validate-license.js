@@ -1,17 +1,17 @@
-// functions/api/validate-license.js
+// worker/validate-license.js
 //
 // Valida licencias de Lemon Squeezy sin exponer la API Key al cliente.
-// Cloudflare Pages sirve este archivo en /api/validate-license.
 //
-// Portado desde la función serverless de Vercel que vivía en
-// api/validate-license.js. La forma de la petición y de la respuesta se
-// mantiene idéntica: la app de Mac ya publicada depende de ella, así que
-// ninguna clave del JSON puede cambiar de nombre ni desaparecer.
+// PORTADO DESDE functions/api/validate-license.js, que era una Pages
+// Function. Un Worker con static assets no ejecuta el directorio functions/:
+// esa convención es exclusiva de Pages. El handler vive ahora aquí y lo
+// invoca worker/index.js cuando la ruta es /api/validate-license.
 //
-// Diferencias con la versión de Vercel, todas de plataforma:
-//   - las variables de entorno llegan en context.env, no en process.env
-//   - el cuerpo se lee con request.json() en vez de req.body
-//   - se devuelve un Response en vez de usar res.status().json()
+// LA FORMA DE LA PETICIÓN Y DE LA RESPUESTA NO CAMBIA. La app de Mac ya
+// publicada depende de ella, así que ninguna clave del JSON puede cambiar de
+// nombre ni desaparecer. Lo único que cambió respecto de la Pages Function es
+// la firma: recibe (request, env) en vez de un context, porque en un Worker
+// los bindings llegan como segundo argumento del fetch handler.
 //
 // Uso desde la app Mac:
 //
@@ -20,18 +20,26 @@
 //      Body: { "license_key": "XXXX", "instance_name": "Mac de Renata" }
 //
 //   2) Validar (arranques siguientes):
-//      POST https://www.wallasstream.com/api/validate-license
 //      Body: { "license_key": "XXXX", "instance_id": "abc-123", "action": "validate" }
 //
 //   3) Desactivar (al cambiar de Mac):
-//      POST https://www.wallasstream.com/api/validate-license
 //      Body: { "license_key": "XXXX", "instance_id": "abc-123", "action": "deactivate" }
 //
-// Secrets requeridos en Cloudflare Pages (Settings > Variables and Secrets),
-// y hay que definirlos tanto en Production como en Preview:
-//   - LEMON_SQUEEZY_API_KEY        (API key de Lemon Squeezy)
-//   - LEMON_SQUEEZY_STORE_ID       (329547)
-//   - LEMON_SQUEEZY_PRODUCT_ID     (997040 en test, cambiará en live)
+// Secrets requeridos, ahora del Worker y no de Pages:
+//   npx wrangler secret put LEMON_SQUEEZY_API_KEY
+//   npx wrangler secret put LEMON_SQUEEZY_STORE_ID
+//   npx wrangler secret put LEMON_SQUEEZY_PRODUCT_IDS
+//
+// LEMON_SQUEEZY_PRODUCT_IDS ES UNA LISTA separada por comas, no un solo id.
+// El producto se vende como dos productos distintos en Lemon Squeezy, uno por
+// idioma, y ambos dan derecho a la misma app:
+//
+//   997040,1265170        (997040 = English, 1265170 = Spanish)
+//
+// Sustituye a LEMON_SQUEEZY_PRODUCT_ID, en singular. Ese secret ya no se lee:
+// si sigue definido en el Worker no hace nada, y si es el único que existe la
+// función responde 500 de configuración en vez de validar contra un producto
+// que nadie configuró.
 
 const CORS = {
     'Access-Control-Allow-Origin': '*',
@@ -46,9 +54,7 @@ function json(body, status = 200) {
     });
 }
 
-export async function onRequest(context) {
-    const { request, env } = context;
-
+export async function validateLicense(request, env) {
     if (request.method === 'OPTIONS') {
         return new Response(null, { status: 200, headers: CORS });
     }
@@ -80,10 +86,20 @@ export async function onRequest(context) {
             }, 400);
         }
 
-        // Config desde variables de entorno
+        // Config desde los secrets del Worker
         const LEMON_API_KEY = env.LEMON_SQUEEZY_API_KEY;
         const EXPECTED_STORE_ID = env.LEMON_SQUEEZY_STORE_ID;
-        const EXPECTED_PRODUCT_ID = env.LEMON_SQUEEZY_PRODUCT_ID;
+
+        // Lista, no valor único. Se recorta cada id porque "997040, 1265170"
+        // escrito con el espacio de después de la coma es lo natural al pegarlo
+        // en el prompt de `wrangler secret put`, y un id con espacio delante
+        // nunca casaría. Los vacíos se descartan, así que una coma suelta o
+        // final no crea un id "" que haría match con una respuesta sin
+        // product_id.
+        const EXPECTED_PRODUCT_IDS = String(env.LEMON_SQUEEZY_PRODUCT_IDS || '')
+            .split(',')
+            .map((id) => id.trim())
+            .filter(Boolean);
 
         if (!LEMON_API_KEY) {
             console.error('LEMON_SQUEEZY_API_KEY not configured');
@@ -93,8 +109,12 @@ export async function onRequest(context) {
             }, 500);
         }
 
-        if (!EXPECTED_STORE_ID || !EXPECTED_PRODUCT_ID) {
-            console.error('LEMON_SQUEEZY_STORE_ID or LEMON_SQUEEZY_PRODUCT_ID not configured');
+        // Una lista vacía tiene que ser un error de configuración, NO una lista
+        // contra la que no casa nada. Si se colara como lista vacía, toda
+        // licencia legítima sería rechazada con "no es de Wallas' Stream Pro" y
+        // el fallo parecería del cliente en vez de del despliegue.
+        if (!EXPECTED_STORE_ID || EXPECTED_PRODUCT_IDS.length === 0) {
+            console.error('LEMON_SQUEEZY_STORE_ID or LEMON_SQUEEZY_PRODUCT_IDS not configured');
             return json({
                 valid: false,
                 error: 'Server configuration error.'
@@ -163,8 +183,13 @@ export async function onRequest(context) {
             });
         }
 
-        if (productId !== String(EXPECTED_PRODUCT_ID)) {
-            console.warn(`Product ID mismatch: got ${productId}, expected ${EXPECTED_PRODUCT_ID}`);
+        // Basta con que coincida con UNO. Las ediciones en inglés y en español
+        // son productos separados en Lemon Squeezy y las dos dan derecho a la
+        // misma app, así que la comparación pasa de igualdad a pertenencia.
+        // productId ya viene por String(), y una respuesta sin product_id queda
+        // en '', que no está en la lista: se rechaza, igual que antes.
+        if (!EXPECTED_PRODUCT_IDS.includes(productId)) {
+            console.warn(`Product ID mismatch: got ${productId}, expected one of ${EXPECTED_PRODUCT_IDS.join(', ')}`);
             return json({
                 valid: false,
                 error: 'This license is not for Wallas\' Stream Pro.'

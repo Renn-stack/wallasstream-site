@@ -1,0 +1,54 @@
+{
+  // ============================================================
+  // Wallas' Stream — Worker with static assets AND server code
+  // ============================================================
+  // Before this file existed the project deployed as a static-assets-only
+  // Worker. Adding `main` is the whole conversion: the same dist/ is still
+  // uploaded and served, and now there is a script behind it that can hold
+  // secrets and answer /api/validate-license.
+  //
+  // NAME MUST MATCH THE EXISTING WORKER. `wrangler deploy` addresses a
+  // Worker by this name. If it does not match the one already serving
+  // wallasstream.com, the deploy creates a SECOND Worker and the domain
+  // keeps pointing at the old one, so the site would look unchanged and
+  // the new endpoint would 404. Check the name in the Cloudflare dashboard
+  // before the first deploy.
+  "name": "wallasstream-site",
+
+  "main": "worker/index.js",
+
+  // Set to the date of this conversion. If wrangler warns that it is ahead
+  // of the installed runtime, lower it rather than removing it: an absent
+  // compatibility_date makes every deploy pick up runtime changes silently.
+  "compatibility_date": "2026-08-01",
+
+  "assets": {
+    // Built by `npm run build:dist`, which expands the HTML partials and
+    // copies the deployable site. _headers and _redirects are inside it,
+    // which is where Workers requires them to be, and build.mjs already
+    // puts them there.
+    "directory": "./dist",
+
+    // Needed by worker/index.js to hand non-API requests back to the
+    // asset server instead of answering them itself.
+    "binding": "ASSETS",
+
+    // NOT "single-page-application". This is a multi-page static site: a
+    // wrong path must 404, not silently serve the homepage under the
+    // wrong URL, which would put duplicate content on every 404 and
+    // confuse indexing. There is no 404.html in the site today, so
+    // "none" is the honest setting; switch to "404-page" if one is added.
+    "not_found_handling": "none",
+
+    // Only the API runs code first. Everything else is served straight
+    // from assets without invoking the Worker at all.
+    "run_worker_first": ["/api/*"]
+  },
+
+  // Logs for the licence endpoint. Without this the console.error and
+  // console.warn calls in validate-license.js go nowhere, and a store or
+  // product ID mismatch would be invisible.
+  "observability": {
+    "enabled": true
+  }
+}

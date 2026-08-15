@@ -16,8 +16,31 @@ node_modules
 # uploading it alongside the files it already contains, doubles the deploy.
 dist
 
-# macOS directory metadata. Never part of a deploy.
+# ---- Internal dotfiles: repo plumbing, never part of the site ----
+# A deploy uploaded .gitignore to production and it was downloadable at
+# https://www.wallasstream.com/.gitignore. No key leaked, but it names the
+# files that hold them, and none of this is content the site serves.
+#
+# NOT WRITTEN AS A BLANKET "ANYTHING STARTING WITH A DOT". .well-known is a
+# dotted directory that MUST be served: it carries the
+# apple-app-site-association file, and dropping it silently breaks the app
+# handoff from the site. The matcher in build.mjs has no negation, so a
+# catch-all pattern could not spare it. Hence the explicit list.
 .DS_Store
+.gitignore
+.gitattributes
+.gitmodules
+.assetsignore
+.editorconfig
+.npmrc
+.nvmrc
+.node-version
+.tool-versions
+.prettierrc*
+.eslintrc*
+.github
+.vscode
+.idea
 
 # Credentials and local tooling
 .env*
@@ -35,7 +58,19 @@ REDESIGN-PLAN.md
 
 # Pages compiles functions/ into the /api routes and does not serve it as
 # files. Listing it here only stops the source being uploaded alongside.
+# Now inert either way: a Worker with assets never reads this directory.
 functions
+
+# THE WORKER'S OWN SOURCE. This is code that runs, not a file the site
+# serves, and it must never be uploaded as an asset: at dist/worker/ it
+# would be publicly downloadable, and anything under /api/ in the assets
+# would shadow the endpoint the Mac app calls. Wrangler bundles main from
+# the repo, not from the assets directory, so excluding it costs nothing.
+worker
+wrangler.jsonc
+
+# Local secrets for `wrangler dev`. Never uploaded, never committed.
+.dev.vars*
 
 # Local review artifacts and design benches
 _archive

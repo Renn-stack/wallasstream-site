@@ -2,7 +2,7 @@
    use-cases.js — "Ways to listen" carousel
    Loaded by index.html.
 
-   Zero dependencies, ~1.6KB. The whole animation is one CSS custom
+   Zero dependencies. The whole animation is one CSS custom
    property (--uc-i) on the track; this file only decides which index
    is current and keeps ARIA in step. If the file never loads, the
    markup still shows slide 1 in full with its copy readable — the
@@ -101,6 +101,98 @@
     if (document.activeElement === prev && prev.disabled && next) next.focus();
     else if (document.activeElement === next && next.disabled && prev) prev.focus();
   });
+
+  /* ---------- Drag / swipe ----------
+     Below 760px the arrows are hidden and the dots are an 8px target, so
+     on a phone the swipe IS the control — without it the section is a
+     still picture. Pointer Events cover touch, pen and mouse in one path.
+
+     AXIS LOCK: the first few pixels decide. A gesture that is more
+     vertical than horizontal is handed straight back to the page, so a
+     scroll that happens to start on the card still scrolls. Only once the
+     gesture is committed to the horizontal do we capture the pointer and
+     start moving the rail — and `touch-action: pan-y` on the track tells
+     the browser the same thing before any JS runs. */
+  var drag = null;
+
+  /* One slide plus one gap, read from layout rather than from the CSS
+     custom properties: the width is a min()/clamp() chain that resolves
+     differently at every breakpoint. */
+  function slideStep() {
+    var cs = getComputedStyle(track);
+    var gap = parseFloat(cs.columnGap || cs.gap) || 0;
+    return slides[0].getBoundingClientRect().width + gap;
+  }
+
+  function endDrag(e) {
+    if (!drag || (e && e.pointerId !== drag.id)) return;
+    var d = drag;
+    drag = null;
+    if (!d.locked) return;
+
+    if (track.hasPointerCapture(d.id)) track.releasePointerCapture(d.id);
+    track.classList.remove("is-dragging");
+
+    /* Either a long enough pull or a quick flick commits the move; a
+       flick is how the gesture reads when the finger never travels far. */
+    var far  = Math.abs(d.dx) > d.step * 0.14;
+    var fast = Math.abs(d.vx) > 0.45;
+
+    if ((far || fast) && d.dx !== 0) index = Math.max(0, Math.min(LAST, index + (d.dx < 0 ? 1 : -1)));
+    render();   /* also snaps the rail back when nothing was committed */
+  }
+
+  track.addEventListener("pointerdown", function (e) {
+    if (!e.isPrimary || e.button !== 0) return;
+    if (e.target.closest("button, a")) return;
+    drag = {
+      id: e.pointerId,
+      x0: e.clientX,
+      y0: e.clientY,
+      lastX: e.clientX,
+      lastT: e.timeStamp,
+      dx: 0,
+      vx: 0,
+      locked: false,
+      step: slideStep()
+    };
+  });
+
+  track.addEventListener("pointermove", function (e) {
+    if (!drag || e.pointerId !== drag.id) return;
+
+    var dx = e.clientX - drag.x0;
+    var dy = e.clientY - drag.y0;
+
+    if (!drag.locked) {
+      if (Math.abs(dx) < 8 && Math.abs(dy) < 8) return;
+      if (Math.abs(dx) <= Math.abs(dy)) { drag = null; return; }   /* vertical: not ours */
+      drag.locked = true;
+      drag.x0 = e.clientX;             /* re-zero so the card does not jump by the slop */
+      track.setPointerCapture(drag.id);
+      track.classList.add("is-dragging");
+      dx = 0;
+    }
+
+    /* Resistance at the ends: the rail gives a little, so the gesture is
+       answered, but it never looks like there is a fourth slide. */
+    if ((dx > 0 && index === 0) || (dx < 0 && index === LAST)) dx *= 0.3;
+
+    var dt = Math.max(1, e.timeStamp - drag.lastT);
+    drag.vx = (e.clientX - drag.lastX) / dt;
+    drag.lastX = e.clientX;
+    drag.lastT = e.timeStamp;
+    drag.dx = dx;
+
+    track.style.setProperty("--uc-i", String(index - dx / drag.step));
+  });
+
+  track.addEventListener("pointerup", endDrag);
+  track.addEventListener("pointercancel", endDrag);
+
+  /* Native image dragging would hijack a mouse drag before the first
+     pointermove ever lands. */
+  track.addEventListener("dragstart", function (e) { e.preventDefault(); });
 
   render();
 })();

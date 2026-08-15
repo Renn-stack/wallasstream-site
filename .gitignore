@@ -54,3 +54,7 @@ skills-lock.json
 # Wrangler local state, and any environment file. Never commit these.
 .wrangler/
 .env*
+
+# Local Cloudflare secrets for `wrangler dev`. Real keys: never commit.
+.dev.vars
+.dev.vars.*
