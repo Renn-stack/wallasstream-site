@@ -31,13 +31,17 @@
  * time without being touched now.
  */
 
-import { readFileSync, writeFileSync, readdirSync, existsSync } from "node:fs";
-import { join, dirname } from "node:path";
+import {
+  readFileSync, writeFileSync, readdirSync, existsSync,
+  mkdirSync, copyFileSync, rmSync, statSync,
+} from "node:fs";
+import { join, dirname, relative, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const ROOT = dirname(fileURLToPath(import.meta.url));
 const PARTIALS_DIR = join(ROOT, "partials");
 const CHECK_ONLY = process.argv.includes("--check");
+const DIST = process.argv.includes("--dist");
 
 if (!existsSync(PARTIALS_DIR)) {
   console.error("build: partials/ directory not found");
@@ -105,4 +109,98 @@ if (CHECK_ONLY) {
   console.log(
     `build: ${injected} region(s) expanded across ${pages.length} page(s); ${changed} file(s) written.`
   );
+}
+
+/* ============================================================
+   --dist: collect the deployable site into dist/
+
+   WHY THIS EXISTS: hosts that serve the repo root have bitten this
+   project twice. Vercel needed outputDirectory "." and then ran a build
+   that had no output directory to find; Cloudflare uploaded the root as
+   assets and choked on the 144 MiB workerd inside the node_modules its
+   own builder had installed. A directory holding exactly the site, and
+   nothing else, removes that whole class of failure: point the host at
+   dist/ and there is nothing else there to go wrong.
+
+   .assetsignore is the single source of truth for what is NOT the site.
+   That list is already proven in production: every path in it answers
+   404 on the live site while every page answers 200. Deriving dist/ from
+   the same file keeps one list instead of two that can drift apart.
+
+   functions/ is in that list and so never reaches dist/. That is right:
+   Cloudflare Pages reads functions/ from the project root to compile the
+   /api routes, not from the output directory.
+   ============================================================ */
+
+function loadIgnorePatterns() {
+  const file = join(ROOT, ".assetsignore");
+  if (!existsSync(file)) return [];
+  return readFileSync(file, "utf8")
+    .split("\n")
+    .map((l) => l.trim())
+    .filter((l) => l && !l.startsWith("#"));
+}
+
+/** Translate one ignore pattern into a test against a repo-relative path. */
+function makeMatcher(pattern) {
+  const clean = pattern.replace(/\/+$/, "");
+  const toRe = (glob) =>
+    new RegExp("^" + glob.replace(/[.+^${}()|[\]\\]/g, "\\$&").replace(/\*/g, "[^/]*") + "$");
+
+  if (clean.includes("/")) {
+    const re = toRe(clean);
+    // Matches the path itself and anything under it.
+    return (p) => re.test(p) || p.startsWith(clean + "/");
+  }
+  const re = toRe(clean);
+  // A bare name matches that entry at any depth, plus its contents.
+  return (p) => p.split("/").some((seg) => re.test(seg));
+}
+
+if (DIST && !CHECK_ONLY) {
+  const matchers = loadIgnorePatterns().map(makeMatcher);
+  // Never copy these regardless of what the ignore file says.
+  const always = ["dist", ".git", "node_modules"];
+  const ignored = (rel) =>
+    always.some((a) => rel === a || rel.startsWith(a + "/")) ||
+    matchers.some((m) => m(rel));
+
+  const OUT = join(ROOT, "dist");
+  rmSync(OUT, { recursive: true, force: true });
+
+  let files = 0;
+  let bytes = 0;
+  const skipped = [];
+
+  const walk = (dir) => {
+    for (const entry of readdirSync(dir)) {
+      const abs = join(dir, entry);
+      const rel = relative(ROOT, abs).split(sep).join("/");
+      if (ignored(rel)) {
+        if (!rel.includes("/")) skipped.push(rel);
+        continue;
+      }
+      if (statSync(abs).isDirectory()) {
+        walk(abs);
+      } else {
+        mkdirSync(join(OUT, dirname(rel)), { recursive: true });
+        copyFileSync(abs, join(OUT, rel));
+        files++;
+        bytes += statSync(abs).size;
+      }
+    }
+  };
+  walk(ROOT);
+
+  const mb = (bytes / 1024 / 1024).toFixed(1);
+  console.log(`build --dist: ${files} file(s), ${mb} MB -> dist/`);
+  console.log(`build --dist: skipped at root: ${skipped.sort().join(", ")}`);
+
+  // A deploy with no home page is the one failure worth catching here.
+  for (const required of ["index.html", "es.html", "_headers", "_redirects"]) {
+    if (!existsSync(join(OUT, required))) {
+      console.error(`build --dist: MISSING ${required} in dist/`);
+      process.exit(1);
+    }
+  }
 }

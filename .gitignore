@@ -12,6 +12,9 @@ _archive/
 node_modules/
 npm-debug.log*
 
+# Collected deploy output of `npm run build:dist`. Generated, never committed.
+dist/
+
 # Local review artifacts (never deploy): _implant-preview.html etc.
 _*.html
 favicons/_originales/

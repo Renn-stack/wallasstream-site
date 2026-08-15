@@ -12,6 +12,13 @@
 # Build-time dependencies. The site itself has none.
 node_modules
 
+# The collected output of `npm run build:dist`. Copying it into itself, or
+# uploading it alongside the files it already contains, doubles the deploy.
+dist
+
+# macOS directory metadata. Never part of a deploy.
+.DS_Store
+
 # Credentials and local tooling
 .env*
 .claude

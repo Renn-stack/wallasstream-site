@@ -6,6 +6,7 @@
   "type": "module",
   "scripts": {
     "build": "node build.mjs",
+    "build:dist": "node build.mjs --dist",
     "check": "node build.mjs --check"
   },
   "engines": {
