@@ -502,7 +502,7 @@ es geometría SVG sin texto, así que no tiene versión traducida.
             <div class="dl-step__body">
               <h3 class="dl-step__title">Descarga Wallas&rsquo; Stream para Mac</h3>
               <p>La app principal, la que transmite el audio de tu Mac. Compatible con Intel y Apple Silicon.</p>
-              <a class="btn btn--primary" href="downloads/Wallas%20Stream%201.0.0.dmg">
+              <a class="btn btn--primary" data-mac-only href="downloads/Wallas%20Stream%201.0.0.dmg">
                 Descargar la app para Mac
                 <svg class="btn__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -510,6 +510,7 @@ es geometría SVG sin texto, así que no tiene versión traducida.
                 </svg>
               </a>
               <p class="dl-step__file">Wallas Stream 1.0.0 &middot; .dmg &middot; macOS</p>
+              <p class="dl-step__note" hidden data-mac-only-note>Estos instaladores son im&aacute;genes de disco de macOS. Abre esta p&aacute;gina en tu Mac para descargarlos.</p>
             </div>
           </li>
 
@@ -519,7 +520,7 @@ es geometría SVG sin texto, así que no tiene versión traducida.
             <div class="dl-step__body">
               <h3 class="dl-step__title">Descarga Wallas Audio</h3>
               <p>El controlador de audio virtual que dirige el sonido de tu Mac hacia Wallas&rsquo; Stream. Es necesario para que el audio llegue a tu dispositivo.</p>
-              <a class="btn btn--outline" href="downloads/Wallas%20Audio%201.0.0.dmg">
+              <a class="btn btn--outline" data-mac-only href="downloads/Wallas%20Audio%201.0.0.dmg">
                 Descargar Wallas Audio
                 <svg class="btn__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -527,6 +528,7 @@ es geometría SVG sin texto, así que no tiene versión traducida.
                 </svg>
               </a>
               <p class="dl-step__file">Wallas Audio 1.0.0 &middot; .dmg &middot; macOS</p>
+              <p class="dl-step__note" hidden data-mac-only-note>Estos instaladores son im&aacute;genes de disco de macOS. Abre esta p&aacute;gina en tu Mac para descargarlos.</p>
             </div>
           </li>
 
@@ -702,5 +704,6 @@ es geometría SVG sin texto, así que no tiene versión traducida.
 
   <script src="assets/js/nav.js" defer></script>
   <script src="assets/js/home.js" defer></script>
+  <script src="assets/js/mac-only.js" defer></script>
 </body>
 </html>

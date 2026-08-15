@@ -152,6 +152,42 @@
   color: var(--ws-text-muted);
 }
 
+/* ---------- Not a Mac: the installers stand down ----------
+   Both files are macOS disk images, so on a phone the download is a dead
+   end. mac-only.js adds .js-not-mac to <html> once it has established
+   the visitor is NOT on a Mac, and only then. It also strips the href,
+   which is what actually disables the control; everything here is the
+   visible half of that.
+
+   The note is `hidden` in the markup so it costs nothing to the people
+   who can use the button, and so that each language keeps its own
+   sentence in its own page rather than inside a script. */
+.dl-step__note {
+  margin-top: var(--ws-space-3);
+  font-size: var(--ws-step--1);
+  line-height: 1.5;
+  color: var(--ws-accent);
+}
+
+.js-not-mac .dl-step__note[hidden] { display: block; }
+
+.js-not-mac [data-mac-only] {
+  opacity: 0.42;
+  cursor: not-allowed;
+  /* Belt and braces. The href is already gone, so this only stops the
+     hover states from suggesting the button still does something. */
+  pointer-events: none;
+}
+
+/* pointer-events: none would take the focus ring with it on some
+   engines, and the control stays focusable on purpose: a screen reader
+   user has to be able to land on it to hear that it is disabled. */
+.js-not-mac [data-mac-only]:focus-visible {
+  pointer-events: auto;
+  outline: 2px solid var(--ws-accent);
+  outline-offset: 3px;
+}
+
 /* ---------- Step 5: the two connection modes ---------- */
 .dl-modes {
   display: grid;

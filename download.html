@@ -498,7 +498,7 @@ come from partials/. Run `npm run build` after editing those.
             <div class="dl-step__body">
               <h3 class="dl-step__title">Download Wallas&rsquo; Stream for Mac</h3>
               <p>The main app that streams your Mac&rsquo;s audio. Compatible with Intel and Apple Silicon.</p>
-              <a class="btn btn--primary" href="downloads/Wallas%20Stream%201.0.0.dmg">
+              <a class="btn btn--primary" data-mac-only href="downloads/Wallas%20Stream%201.0.0.dmg">
                 Download the Mac app
                 <svg class="btn__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -506,6 +506,7 @@ come from partials/. Run `npm run build` after editing those.
                 </svg>
               </a>
               <p class="dl-step__file">Wallas Stream 1.0.0 &middot; .dmg &middot; macOS</p>
+              <p class="dl-step__note" hidden data-mac-only-note>These installers are macOS disk images. Open this page on your Mac to download them.</p>
             </div>
           </li>
 
@@ -515,7 +516,7 @@ come from partials/. Run `npm run build` after editing those.
             <div class="dl-step__body">
               <h3 class="dl-step__title">Download Wallas Audio</h3>
               <p>The virtual audio driver that routes your Mac&rsquo;s sound into Wallas&rsquo; Stream. Required for audio to reach your device.</p>
-              <a class="btn btn--outline" href="downloads/Wallas%20Audio%201.0.0%20(English).dmg">
+              <a class="btn btn--outline" data-mac-only href="downloads/Wallas%20Audio%201.0.0%20(English).dmg">
                 Download Wallas Audio
                 <svg class="btn__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -523,6 +524,7 @@ come from partials/. Run `npm run build` after editing those.
                 </svg>
               </a>
               <p class="dl-step__file">Wallas Audio 1.0.0 (English) &middot; .dmg &middot; macOS</p>
+              <p class="dl-step__note" hidden data-mac-only-note>These installers are macOS disk images. Open this page on your Mac to download them.</p>
             </div>
           </li>
 
@@ -698,5 +700,6 @@ come from partials/. Run `npm run build` after editing those.
 
   <script src="assets/js/nav.js" defer></script>
   <script src="assets/js/home.js" defer></script>
+  <script src="assets/js/mac-only.js" defer></script>
 </body>
 </html>
