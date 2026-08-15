@@ -247,6 +247,67 @@
    carousel is functional without this block. It exists to drop the
    entrance offsets and the inactive-plate scale outright, rather than
    playing them instantly. */
+/* ---- Narrow screens: the copy comes out from over the picture ----
+   This file had no width breakpoint, and the numbers it was built on
+   collapse on a phone. At 390px the gutter clamp bottoms out at 80px a
+   side, so --uc-slide-w is 230px and the 16:9 card is 129px tall. The
+   copy is width: min(31%, 420px), which is 71px of that, and the title's
+   own clamp floor is 28px. A 28px headline in a 71px column: "Quédate
+   sin cables." set one word per line, taller than the card it sits in,
+   spilling past the edge and through the dots.
+
+   Laying the copy over a photograph needs width the phone does not have.
+   So the card becomes a card: the picture keeps its 16:9 and its whole
+   frame, and the text sits underneath it where it has the full width.
+   The scrim goes with the overlay, since there is nothing to darken.
+
+   The arrows go too. At this size they were larger than the gap they sat
+   in and covered the photograph from both sides; the dots remain, and
+   they are the control that reads on a phone anyway. */
+@media (max-width: 760px) {
+  .uc {
+    --uc-gap: 14px;
+    --uc-slide-w: calc(100% - 2 * clamp(16px, 5vw, 28px));
+  }
+
+  .uc__slide {
+    aspect-ratio: auto;
+    max-height: none;
+    display: grid;
+    grid-template-rows: auto auto;
+  }
+
+  .uc__img {
+    position: static;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9;
+  }
+
+  .uc__scrim { display: none; }
+
+  .uc__copy {
+    position: static;
+    translate: none;
+    width: auto;
+    padding: clamp(0.95rem, 4.5vw, 1.4rem);
+    gap: var(--ws-space-3);
+  }
+
+  .uc__title { font-size: clamp(1.3rem, 5.6vw, 1.7rem); }
+
+  .uc__nav { display: none; }
+
+  /* Out of the card and under it: over a photo the dots had contrast to
+     sit on, over the copy they would land on the text. */
+  .uc__dots {
+    position: static;
+    translate: none;
+    justify-content: center;
+    margin-top: var(--ws-space-5);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   /* Drop the entrance OFFSET everywhere, but keep opacity scoped to the
      active slide — a blanket opacity:1 also reveals the copy on the

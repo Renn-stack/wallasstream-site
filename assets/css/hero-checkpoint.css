@@ -359,13 +359,20 @@
    reduced motion or without JavaScript gets, and on this site that is
    not a hypothetical audience. */
 @media (max-width: 899px) {
+  /* THE CLIPPING STAYS. Only the height is released. An earlier pass here
+     set overflow: visible on both of these and it put a horizontal
+     scrollbar on every phone: .hero__pin::before is the warm ambient
+     radial at width: min(1100px, 130%), which on a 390px screen is 507px
+     centred, hanging 58px past each edge. overflow: hidden was the only
+     thing holding it in. The symptom is easy to misread as a hero
+     problem, because the topbar is sticky and therefore only ever spans
+     the viewport: scrolled right, it ends before the content does. */
   .js-hero-cp .hero--cp {
     height: auto;
-    overflow: visible;
     margin-top: 0;
   }
 
-  .js-hero-cp .hero--cp .hero__pin { height: auto; overflow: visible; }
+  .js-hero-cp .hero--cp .hero__pin { height: auto; }
 
   /* The navbar belongs to the document again: with no pinned stage there
      is no cinematic act for it to stay out of. */

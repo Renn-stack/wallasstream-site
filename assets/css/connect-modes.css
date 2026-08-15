@@ -658,6 +658,51 @@
    ambient loop, the scan sweep, the connector's swing — and clears the
    delays base.css does not touch. Nothing is lost: the section's point
    is WHICH devices connect and what they end up showing. */
+/* ---- Narrow screens: the copy leads, the stage follows ----
+   This file had no width breakpoint at all. .cm__full stayed a two
+   column grid of `minmax(230px, 28%) 1fr` at every size, so on a 390px
+   phone the copy took its 230px floor and left the stage about 110px
+   after the gap: the machine was drawn into a sliver and cut off.
+
+   Stacked instead, in the reading order the section already implies:
+   the tag, the title and the sentence, and then the demonstration of
+   what the sentence just said.
+
+   TWO THINGS HAVE TO GIVE FOR THAT TO WORK. The track's height is fixed
+   at --cm-h so the two panels can cross-fade in one grid cell without
+   reflowing the page; stacked, that becomes a ceiling, so it is released
+   here and the cell takes the height of the taller panel instead.
+
+   And .cm__stage carries `height: 100%`, which resolves to nothing once
+   the track is auto: every child of the stage is absolutely positioned,
+   so the box would collapse to zero and the devices would vanish. The
+   aspect-ratio gives it a box of its own. 4/3 is set by what has to fit:
+   the Mac is min(84%, 520px) of the stage and its own box is 1000/758,
+   so at a 350px stage the machine is 294 wide by 223 tall, and the
+   phone hangs at bottom: 10%. */
+@media (max-width: 760px) {
+  .cm__track { height: auto; }
+
+  .cm__full {
+    position: relative;
+    inset: auto;
+    grid-template-columns: 1fr;
+    align-items: start;
+    gap: clamp(1.5rem, 6vw, 2.25rem);
+    padding-block: clamp(0.5rem, 3vw, 1rem);
+  }
+
+  .cm__stage {
+    height: auto;
+    aspect-ratio: 4 / 3;
+  }
+
+  /* Centred rather than hard left: with the copy above it instead of
+     beside it, there is no column edge for the machine to line up with. */
+  .cm__copy { justify-items: center; text-align: center; }
+  .cm__body { max-width: 38ch; margin-inline: auto; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .cm__drag.is-scanning .cm__sweep,
   .cm__panel.is-active::before,

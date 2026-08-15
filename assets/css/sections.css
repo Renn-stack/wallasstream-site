@@ -815,6 +815,25 @@
 
 .founder__figure img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
+/* ---- Below the two-column layout: nudge the portrait right ----
+   The photograph is 1536x1024 and the figure is locked to the same 3/2,
+   so object-fit has nothing to crop and object-position would do
+   nothing. The shift has to be a real translate.
+
+   IT MUST MOVE THE OVERLAY TOO. .founder__leader is inset:0 over this
+   box with a viewBox of 0 0 1536 1024, which is what welds its dot to
+   the processor at any size. Move the photograph alone and the dot stays
+   behind, pointing at the woman's hair. Both are moved by the same 6%.
+
+   Safe to overflow: the figure is overflow:hidden, so the right edge is
+   clipped inside the frame rather than widening the document. The gap
+   this opens on the left lands on the page's own black, which is where
+   the ::after scrim was already fading that edge to. */
+@media (max-width: 1099px) {
+  .founder__figure img,
+  .founder__leader { translate: 6% 0; }
+}
+
 .founder__leader {
   position: absolute;
   inset: 0;
