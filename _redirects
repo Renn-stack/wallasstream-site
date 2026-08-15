@@ -1,22 +1,22 @@
 # Cloudflare routing.
-# Format: <from> <to> <status>. First match wins, so the 200 rewrites that
-# give the Spanish pages their pretty URLs come before anything else.
+# Format: <from> <to> <status>. First match wins.
 #
-# Cloudflare Pages already serves /contact from contact.html and already
-# redirects /contact.html to /contact on its own, so the English pages need
-# no rules here. Only the Spanish slugs and the legacy URLs do.
+# There are NO 200 rewrites here, on purpose. Cloudflare Pages does not
+# honour a rewrite whose target is an .html file: it applies its own clean
+# URL redirect to the extensionless form instead. A rule like
+#
+#     /es    /indexES.html    200
+#
+# came back as "307 -> /indexES", and the 301 that sent /indexES on to /es
+# closed the circle. Every Spanish page sat in a redirect loop.
+#
+# So the filename IS the slug now: es.html, contacto.html, preguntas.html,
+# ayuda.html, aviso-legal.html, descargar.html. Pages serves each at its
+# clean path with a plain 200, exactly as it already did for the English
+# pages, and this file is left with nothing but the legacy redirects.
 
-# Spanish pretty URLs. Status 200 rewrites: the URL stays as written and
-# Pages serves the *ES.html file behind it.
-/es             /indexES.html      200
-/contacto       /contactES.html    200
-/preguntas      /faqES.html        200
-/ayuda          /helpES.html       200
-/aviso-legal    /legalES.html      200
-/descargar      /downloadES.html   200
-
-# Old Spanish URLs kept working and pointed at the new slugs, so anything
-# already indexed or bookmarked lands on the right page instead of a 404.
+# The old Spanish URLs, kept working so anything indexed or bookmarked
+# lands on the right page instead of a 404.
 /indexES.html      /es             301
 /contactES.html    /contacto       301
 /faqES.html        /preguntas      301
@@ -24,7 +24,7 @@
 /legalES.html      /aviso-legal    301
 /downloadES.html   /descargar      301
 
-# Same again for the extensionless form Pages derives from those filenames.
+# Same again for the extensionless form those filenames used to produce.
 /indexES        /es                301
 /contactES      /contacto          301
 /faqES          /preguntas         301

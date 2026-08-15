@@ -1,5 +1,5 @@
 <!-- =========================
-FILE: faqES.html
+FILE: preguntas.html
 Versión en español de faq.html. Misma estructura, mismas clases y los
 mismos id de sección; solo cambian el texto y los destinos de los
 enlaces, que apuntan a las páginas ES.
@@ -46,7 +46,7 @@ Corre `npm run build` después de editar esos archivos.
 
   <!--#include nav-sub-es-->
 <!-- Barra de subpágina en español. Espejo de partials/nav-sub.html: los
-     enlaces de sección son absolutos a indexES.html porque un #listen
+     enlaces de sección son absolutos a /es porque un #listen
      suelto se resolvería contra la subpágina, que no tiene esa sección.
      El botón es "Desbloquear Pro" y no "Prueba gratis", porque la página
      de descarga ES la prueba gratis. -->
@@ -58,9 +58,9 @@ Corre `npm run build` después de editar esos archivos.
     </a>
 
     <nav class="nav" aria-label="Principal">
-      <a href="indexES.html#listen">Wi-Fi y cable</a>
-      <a href="indexES.html#pricing">Gratis vs Pro</a>
-      <a href="indexES.html#founder">Fundadora</a>
+      <a href="/es#listen">Wi-Fi y cable</a>
+      <a href="/es#pricing">Gratis vs Pro</a>
+      <a href="/es#founder">Fundadora</a>
       <a href="/preguntas">Preguntas</a>
       <a href="/contacto">Soporte</a>
     </nav>
@@ -84,9 +84,9 @@ Corre `npm run build` después de editar esos archivos.
      aria-label="Menú" aria-hidden="true">
   <button class="menu-close" id="menuClose" type="button" aria-label="Cerrar menú">&#10005;</button>
   <a href="/es">Inicio</a>
-  <a href="indexES.html#listen">Wi-Fi y cable</a>
-  <a href="indexES.html#pricing">Gratis vs Pro</a>
-  <a href="indexES.html#founder">Fundadora</a>
+  <a href="/es#listen">Wi-Fi y cable</a>
+  <a href="/es#pricing">Gratis vs Pro</a>
+  <a href="/es#founder">Fundadora</a>
   <a href="/preguntas">Preguntas frecuentes</a>
   <a href="/contacto">Soporte</a>
   <a href="/" data-lang="en" hreflang="en" lang="en">English</a>
@@ -256,7 +256,7 @@ Corre `npm run build` después de editar esos archivos.
 
   <!--#include footer-sub-es-->
 <!-- Pie de subpágina en español. Mismo contenido que partials/footer-es.html;
-     los enlaces de Producto apuntan a las secciones de indexES.html, que una
+     los enlaces de Producto apuntan a las secciones de /es, que una
      subpágina no puede alcanzar con un fragmento suelto. -->
 <footer class="site-footer" id="footer">
   <div class="container">
@@ -274,9 +274,9 @@ Corre `npm run build` después de editar esos archivos.
       <div class="footer-col">
         <h2>Producto</h2>
         <ul class="footer-links">
-          <li><a href="indexES.html#listen">Wi-Fi y cable</a></li>
-          <li><a href="indexES.html#pricing">Gratis vs Pro</a></li>
-          <li><a href="indexES.html#founder">Fundadora</a></li>
+          <li><a href="/es#listen">Wi-Fi y cable</a></li>
+          <li><a href="/es#pricing">Gratis vs Pro</a></li>
+          <li><a href="/es#founder">Fundadora</a></li>
         </ul>
       </div>
 
@@ -295,7 +295,7 @@ Corre `npm run build` después de editar esos archivos.
           <li><a href="/contacto">Contacto</a></li>
           <li><a href="/preguntas">Preguntas frecuentes</a></li>
           <li><a href="/aviso-legal">Aviso de privacidad</a></li>
-          <li><a href="legalES.html#terms">Términos de uso</a></li>
+          <li><a href="/aviso-legal#terms">Términos de uso</a></li>
           <li><a href="https://www.instagram.com/wallasstream?igsh=MXQxenIyZ3d1eG9sNg%3D%3D&amp;utm_source=qr" target="_blank" rel="noopener">Instagram</a></li>
           <li><a href="https://www.tiktok.com/@wallasstream" target="_blank" rel="noopener">TikTok</a></li>
         </ul>

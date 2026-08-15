@@ -14,7 +14,7 @@
   if (!btn || !address) return;
 
   var label = btn.textContent;
-  /* contactES.html sets data-copied so the confirmation is not the only
+  /* contacto.html sets data-copied so the confirmation is not the only
      English word on a Spanish page. */
   var copiedLabel = btn.getAttribute("data-copied") || "Copied";
   var timer;

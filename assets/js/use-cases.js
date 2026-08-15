@@ -18,7 +18,7 @@
   "use strict";
 
   /* The only user-facing English left in this file is the live-region
-     status. indexES.html is a separate document with lang="es", so the
+     status. es.html is a separate document with lang="es", so the
      root language is what decides which wording it announces. */
   var IS_ES = (document.documentElement.lang || "").slice(0, 2) === "es";
 
