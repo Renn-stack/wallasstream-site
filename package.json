@@ -7,6 +7,7 @@
   "scripts": {
     "build": "node build.mjs",
     "build:dist": "node build.mjs --dist",
+    "prepare": "node build.mjs --dist",
     "check": "node build.mjs --check",
     "dev": "wrangler dev",
     "deploy": "npm run build:dist && wrangler deploy"
