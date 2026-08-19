@@ -72,7 +72,7 @@ grupos etiquetados de Wi-Fi/USB, los pasos numerados y el aviso.
     <div class="topbar__actions">
       <a class="lang-link" href="/" data-lang="en" hreflang="en" lang="en"
          aria-label="View this page in English">EN</a>
-      <a class="btn btn--outline btn--sm" href="https://wallasstreamapp.lemonsqueezy.com/checkout/buy/a33f79d3-eb63-4ff5-914e-2e64658188bf">Desbloquear Pro</a>
+      <a class="btn btn--outline btn--sm lemonsqueezy-button" href="https://wallasstreamapp.lemonsqueezy.com/checkout/buy/a33f79d3-eb63-4ff5-914e-2e64658188bf?embed=1">Desbloquear Pro</a>
       <button class="hamburger" id="menuBtn" type="button"
               aria-label="Abrir menú" aria-expanded="false" aria-controls="mobileMenu">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
@@ -94,8 +94,18 @@ grupos etiquetados de Wi-Fi/USB, los pasos numerados y el aviso.
   <a href="/preguntas">Preguntas frecuentes</a>
   <a href="/contacto">Soporte</a>
   <a href="/" data-lang="en" hreflang="en" lang="en">English</a>
-  <a class="btn btn--outline" href="https://wallasstreamapp.lemonsqueezy.com/checkout/buy/a33f79d3-eb63-4ff5-914e-2e64658188bf">Desbloquear Pro</a>
+  <a class="btn btn--outline lemonsqueezy-button" href="https://wallasstreamapp.lemonsqueezy.com/checkout/buy/a33f79d3-eb63-4ff5-914e-2e64658188bf?embed=1">Desbloquear Pro</a>
 </div>
+
+<!-- Lo que convierte los dos botones de arriba en un checkout en
+     superposición. Vive AQUÍ, junto a ellos, y no en cada página: las diez
+     subpáginas reciben esta barra por build.mjs, así que el script llega con
+     el botón y no puede quedarse una sin él. index.html y es.html no lo
+     reciben por aquí, usan su propia barra y ya lo cargan al final del body.
+
+     Si el script no cargara, el enlace sigue siendo un enlace y lleva al
+     mismo checkout en una pestaña normal. Se degrada, no se rompe. -->
+<script src="https://assets.lemonsqueezy.com/lemon.js" defer></script>
 <!--#endinclude nav-sub-es-->
 
   <main id="main">
