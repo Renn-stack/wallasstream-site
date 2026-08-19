@@ -34,7 +34,13 @@
 // El producto se vende como dos productos distintos en Lemon Squeezy, uno por
 // idioma, y ambos dan derecho a la misma app:
 //
-//   997040,1265170        (997040 = English, 1265170 = Spanish)
+//   1299410,1299424       (1299410 = English, 1299424 = Spanish)
+//
+// SON LOS IDS DE LIVE. Los de test eran 997040 y 1265170, y no valen aquí:
+// test y live son entornos separados en Lemon Squeezy y quien decide en cuál
+// se busca es la API key, no esta lista. Con una key de live, una licencia de
+// test nunca llega hasta esta comprobación. Si algún día hay que volver a
+// probar en test, se cambian la key Y estos ids a la vez, no uno solo.
 //
 // Sustituye a LEMON_SQUEEZY_PRODUCT_ID, en singular. Ese secret ya no se lee:
 // si sigue definido en el Worker no hace nada, y si es el único que existe la
