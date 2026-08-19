@@ -12,6 +12,8 @@
      data-payoff="on" set at 6.00s of video: the whole payoff, headline
                       through CTA, over the still-playing plate
      data-cp="1"      the video has landed on its final frame
+     data-still="on"  that frame is now a JPEG on the stage and the
+                      <video> has stepped out — see the handover below
 
    The video plays 0 -> 7.95s uninterrupted: the plate shows the signal
    leaving the Mac, crossing the iPhone and arriving at the processor,
@@ -123,6 +125,25 @@
   object-position: center;
   display: block;
 }
+
+/* ---- THE FILM HANDS OVER TO A STILL ----
+   The plate ends on one held frame, and a paused <video> turned out to be
+   the wrong thing to hold it with: the frame can be lost from under the
+   element — a corrective seek that misses resolves to 0, a backgrounded
+   tab can have its decoder released — and what the element paints then is
+   frame 0, which is the black title card. The plate went black at the
+   exact moment the headline arrived.
+
+   So on landing, hero-checkpoint.js puts a JPEG of the film's own last
+   frame onto the stage's background and this takes the <video> out of the
+   picture. `contain` and `center` are the same on both, so the image
+   lands pixel-for-pixel where the frame was — there is nothing to see in
+   the swap, which is the point. The script only sets the attribute once
+   the image has decoded, so the black stage can never show between them.
+
+   display, not opacity: with the element gone the decoder is released
+   rather than sitting on a frame nothing is looking at. */
+.js-hero-cp .hero--cp[data-still="on"] .hero__cine video { display: none; }
 
 /* Flat left scrim, only once the payoff is up. No warm light anywhere —
    the coil must stay the brightest thing in the frame. */

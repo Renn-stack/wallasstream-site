@@ -38,6 +38,15 @@
    Reloading the page is what starts it over, which is why the latch is a
    plain variable and not storage.
 
+   THE LAST FRAME IS A STILL, NOT A PAUSED VIDEO. A <video> held on its
+   final frame is not a reliable way to keep that frame on screen: the
+   corrective seek onto it can miss and resolve to 0 — and frame 0 is the
+   black title card, so the plate blacked out at the exact moment the
+   payoff arrived — and decoders get released out from under a paused
+   element anyway. So the film hands over: on landing, a JPEG of its own
+   last frame goes onto the stage and the <video> steps out of the frame.
+   Same image, nothing left to decode. See land() and showStill().
+
    Deleting this file and hero-checkpoint.css leaves the complete static
    SVG hero in normal document flow.
    ============================================================ */
@@ -48,6 +57,7 @@
   if (!hero) return;
   var video = hero.querySelector(".hero__cine video");
   var payoff = hero.querySelector(".hero__payoff");
+  var stage = hero.querySelector(".hero__cine-stage");
   if (!video || !payoff) return;
 
   /* ---- tuning ----
@@ -75,6 +85,9 @@
   var moving = false;      /* the plate is running */
   var raf = 0;
   var deadline = 0;
+  var bail = 0;            /* payoff deadline, independent of the video */
+  var still = null;        /* the last-frame JPEG, once requested */
+  var stillReady = false;  /* ...and once it has decoded */
 
   /* A momentum debounce lived here — a quiet timer that swallowed the
      decaying tail of wheel events a trackpad flick emits, so one gesture
@@ -102,11 +115,34 @@
   /* ---- state ---- */
   function arrive(target) {
     cancelAnimationFrame(raf);
+    clearTimeout(bail);
     moving = false;
     state = target;
     hero.setAttribute("data-cp", String(target));
     hero.removeAttribute("data-busy");
     setPayoff(target === LAST);
+    if (target === LAST) showStill();
+  }
+
+  /* ---- the handover to the still ----
+     The plate's last state is one held frame, and a paused <video> is the
+     wrong thing to hold it with. The frame can be lost from under the
+     element — a seek that misses resolves to 0, a backgrounded tab can
+     have its decoder released — and what the element paints then is frame
+     0, the black title card. Losing the plate to black at the very moment
+     the headline arrives is the worst possible time for it.
+
+     So nothing depends on the element still holding the frame: the stage
+     takes the same frame as a JPEG background and the <video> goes
+     display:none over it. Nothing left to decode, nothing left to lose.
+
+     The swap waits for the image to have decoded, so it can never flash
+     the black stage between the two. If it has not (slow connection, the
+     file 404s) the video simply stays where it is, which is the old
+     behaviour rather than a new failure. */
+  function showStill() {
+    if (!stillReady || hero.getAttribute("data-still") === "on") return;
+    hero.setAttribute("data-still", "on");
   }
 
   function ready(cb) {
@@ -137,6 +173,18 @@
     deadline = performance.now() +
       ((to - CP[state]) / FWD_RATE) * 1000 + 2500;
 
+    /* The stall guard above only starts once the video is ready, so it
+       does not cover the case where `loadeddata` never arrives at all: a
+       download that stalls, a file that 404s, a decoder that gives up.
+       Left alone that strands the hero empty — the question has already
+       been told to leave and the payoff is waiting on a plate that is
+       never coming. The copy gets its own deadline instead, so the
+       headline and the CTA arrive on time whatever the film does. */
+    clearTimeout(bail);
+    bail = setTimeout(function () {
+      if (state !== target) arrive(target);
+    }, ((to - CP[state]) / FWD_RATE) * 1000 + 4000);
+
     playForward(to, target);
   }
 
@@ -162,8 +210,7 @@
       (function watch() {
         var t = video.currentTime;
         if (t >= to - 0.02 || performance.now() > deadline) {
-          video.pause();
-          try { video.currentTime = to; } catch (e) { /* ignore */ }
+          land(to);
           arrive(target);
           return;
         }
@@ -171,6 +218,26 @@
         raf = requestAnimationFrame(watch);
       })();
     });
+  }
+
+  /* ---- landing on the final frame ----
+     This was a bare `video.currentTime = to` straight after the pause,
+     and it is what made the plate disappear when the film ended.
+
+     The watchdog runs on every animation frame, so it catches the
+     playhead within about 16ms of the target and the pause alone leaves
+     it on the right frame. Assigning currentTime on top of that asks for
+     a seek that was not needed — and a seek the decoder cannot satisfy
+     does not stay put, it resolves to 0. Frame 0 is the black title
+     card, so a missed seek blacked the whole plate out.
+
+     Seek only when the playhead is genuinely off target, which in
+     practice is only the stall guard's path. Either way the still takes
+     over from here, so nothing downstream depends on this landing. */
+  function land(to) {
+    video.pause();
+    if (Math.abs(video.currentTime - to) <= 0.1) return;
+    try { video.currentTime = to; } catch (e) { /* ignore */ }
   }
 
   /* Fallback if play() is refused: drive the playhead by hand. */
@@ -189,7 +256,7 @@
         var t = video.currentTime + sign * dt * rate;
         var done = sign > 0 ? (t >= to - 0.02) : (t <= to + 0.02);
         if (done || now > deadline) {
-          try { video.currentTime = to; } catch (e) { /* ignore */ }
+          land(to);
           arrive(target);
           return;
         }
@@ -281,6 +348,7 @@
        but if a policy refuses anyway, play()'s promise rejects and
        scrubForward drives the playhead by hand to the same finish. */
     var warm = function () {
+      warmStill();
       if (video.getAttribute("src")) return;
       var wide = window.innerWidth * (window.devicePixelRatio || 1) > 1600;
       video.setAttribute("src", video.getAttribute(
@@ -294,19 +362,59 @@
     if (document.readyState === "complete") warm();
     else window.addEventListener("load", warm, { once: true });
 
+    /* Re-enabled after a disable() — reduced motion turned back off —
+       with the plate already spent: put the final frame back rather than
+       dropping the visitor onto the black stage. */
+    if (state === LAST) showStill();
+
     window.addEventListener("scroll", onScroll, { passive: true });
     hero.addEventListener("focusin", onFocusIn);
+  }
+
+  /* The still is fetched alongside the video and pinned onto the stage as
+     a background, so by the time the film lands the swap is a single
+     attribute and the image is already decoded — no flash of black stage
+     between the last frame and the frame that replaces it.
+
+     The URL lives on the <video> next to the video's own, so both pages
+     that use this hero resolve it the same relative way, and setting it
+     from here rather than from the stylesheet keeps it to one fetch.
+
+     If it never loads, showStill() never fires and the paused video stays
+     on screen: the behaviour this file had before, not a new failure. */
+  function warmStill() {
+    if (!stage) return;
+    var url = video.getAttribute("data-still");
+    if (!url) return;
+    /* Re-entrant: disable() clears the background, so a visitor who turns
+       reduced motion off again gets it put back rather than re-fetched. */
+    if (stillReady) {
+      stage.style.backgroundImage = 'url("' + url + '")';
+      return;
+    }
+    if (still) return;                      /* already in flight */
+    still = new Image();
+    still.onload = function () {
+      stillReady = true;
+      stage.style.backgroundImage = 'url("' + url + '")';
+      /* the plate may already have landed while this was in flight */
+      if (state === LAST) showStill();
+    };
+    still.src = url;
   }
 
   function disable() {
     if (!enabled) return;
     enabled = false;
     cancelAnimationFrame(raf);
+    clearTimeout(bail);
     moving = false;
     document.documentElement.classList.remove("js-hero-cp");
     document.documentElement.classList.remove("js-hero-cp-out");
     window.removeEventListener("scroll", onScroll);
     hero.removeEventListener("focusin", onFocusIn);
+    hero.removeAttribute("data-still");
+    if (stage) stage.style.backgroundImage = "";
     video.pause();
   }
 

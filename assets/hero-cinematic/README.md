@@ -6,6 +6,7 @@
 | `hero-cine-1920.mp4` | 1573 KB | plate, viewports where innerWidth × DPR > 1600 |
 | `hero-cine-1280.mp4` | 719 KB | plate, narrower desktops |
 | `hero-cine-poster.jpg` | 20 KB | CSS background on the stage; covers pre-decode |
+| `hero-cine-v2-end.jpg` | 49 KB | the plate's LAST frame (t = 7.95s). The film hands over to it when it lands, so the held final frame does not depend on a paused `<video>` still holding a decoded frame — see hero-checkpoint.js. Regenerate it from the same master whenever the plate changes, or the hero will end on the wrong image:<br>`ffmpeg -ss 7.95 -i hero-cine-v2-1920.mp4 -frames:v 1 -q:v 6 hero-cine-v2-end.jpg` |
 
 ## Sources — DO NOT DEPLOY
 | File | Size | Notes |
