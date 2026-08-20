@@ -141,7 +141,11 @@
      file 404s) the video simply stays where it is, which is the old
      behaviour rather than a new failure. */
   function showStill() {
-    if (!stillReady || hero.getAttribute("data-still") === "on") return;
+    if (!stillReady || !stage || hero.getAttribute("data-still") === "on") return;
+    /* Background first, attribute second, both in the same task: the image
+       is already decoded, so the browser paints the two together and there
+       is never a frame with the video gone and nothing behind it. */
+    stage.style.backgroundImage = 'url("' + still.src + '")';
     hero.setAttribute("data-still", "on");
   }
 
@@ -371,32 +375,36 @@
     hero.addEventListener("focusin", onFocusIn);
   }
 
-  /* The still is fetched alongside the video and pinned onto the stage as
-     a background, so by the time the film lands the swap is a single
-     attribute and the image is already decoded — no flash of black stage
-     between the last frame and the frame that replaces it.
+  /* The still is FETCHED here and PAINTED nowhere. That separation is the
+     whole point of this function.
+
+     It used to pin the image onto the stage as soon as it decoded, so that
+     the later handover would be a single attribute. But the <video> is
+     preload="none" and carries no src until the page has loaded, so for a
+     moment there is nothing covering the stage — and a 50KB JPEG decodes
+     long before a 1.1MB video paints its first frame. The result on every
+     load was the film's LAST frame appearing, being covered by the video's
+     black frame 0, and only then playing. The end of the story flashed up
+     before the beginning.
+
+     So the image is only decoded into the browser's cache here, and
+     showStill() assigns it at the moment of the handover. Assigning a
+     cached image costs no fetch and paints in the same frame as the
+     attribute that hides the video, so there is still nothing to see in
+     the swap.
 
      The URL lives on the <video> next to the video's own, so both pages
-     that use this hero resolve it the same relative way, and setting it
-     from here rather than from the stylesheet keeps it to one fetch.
+     that use this hero resolve it the same relative way.
 
      If it never loads, showStill() never fires and the paused video stays
      on screen: the behaviour this file had before, not a new failure. */
   function warmStill() {
-    if (!stage) return;
+    if (!stage || stillReady || still) return;   /* done, or already in flight */
     var url = video.getAttribute("data-still");
     if (!url) return;
-    /* Re-entrant: disable() clears the background, so a visitor who turns
-       reduced motion off again gets it put back rather than re-fetched. */
-    if (stillReady) {
-      stage.style.backgroundImage = 'url("' + url + '")';
-      return;
-    }
-    if (still) return;                      /* already in flight */
     still = new Image();
     still.onload = function () {
       stillReady = true;
-      stage.style.backgroundImage = 'url("' + url + '")';
       /* the plate may already have landed while this was in flight */
       if (state === LAST) showStill();
     };
