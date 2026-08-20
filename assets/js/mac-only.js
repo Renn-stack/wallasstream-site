@@ -1,8 +1,8 @@
 /* ============================================================
-   mac-only.js — hold the .dmg back from machines that cannot run it
+   mac-only.js — hold the installers back from machines that cannot run them
    Loaded by download.html and descargar.html.
 
-   The two installers are macOS disk images. On a phone they are a dead
+   The installers only run on macOS. On a phone they are a dead
    end: the file downloads, nothing can open it, and the visitor is left
    thinking the product is broken rather than that they are on the wrong
    device. So the buttons stand down and a line already written into the
