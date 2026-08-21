@@ -764,18 +764,32 @@
   }
 }
 
-/* ---- The photograph variant only ----
-   Both of these are paid for by the same 40px: pulling the right edge out
-   to the container's BOX edge is what buys the photo its extra column
-   without pushing the lede under 466. Neither belongs to index.html's
-   text-only founder, which sits inside a .container and does have
-   neighbours to line up with. */
-.founder:has(.founder__figure) {
-  --founder-edge: max(var(--ws-gutter), calc((100vw - var(--ws-container)) / 2));
-}
+/* ---- The photograph variant sits in the rail, like every other section ----
+   THE PHOTOGRAPH USED TO BLEED OFF THE LEFT EDGE. That is what made this
+   section read as shoved to the left: at 1893px it ran 0 to 1546 while the
+   navbar, "What's next" and everything else ran 388 to 1510. Nothing was
+   broken — it was a deliberate full-bleed — but a band that starts at the
+   window's edge cannot look centred next to neighbours that start at the
+   rail, and the eye reads the difference as a mistake.
 
-@media (min-width: 1280px) {
-  .founder:has(.founder__figure) { grid-template-columns: 1.5fr 1fr; }
+   So it goes in the rail: same max-width, same gutters, centred. The right
+   edge now lands on the container's content edge like the rest, which also
+   closes the 40px overhang the bleeding version needed.
+
+   WHAT IT COSTS, because it is not free: inside 1200px the photograph is
+   591px wide instead of 758. The ratio has to come back to 1.25fr too. The
+   lede's longest hand-broken line is 466px and the copy column is what pays
+   for any width the photo takes: 1.5fr would leave it 426 and break the
+   stanza into four lines, 1.35fr leaves 453 and still breaks it. 1.25fr
+   leaves 473. Seven pixels of slack is thin, so re-measure that line before
+   touching this ratio or the gap. */
+@media (min-width: 1100px) {
+  .founder:has(.founder__figure) {
+    max-width: var(--ws-container);
+    margin-inline: auto;
+    padding-inline: var(--ws-gutter);
+    grid-template-columns: 1.25fr 1fr;
+  }
 }
 
 .founder__body { display: grid; gap: clamp(1.1rem, 2.4vw, 1.9rem); max-width: var(--ws-measure); }
@@ -820,24 +834,35 @@
    align-self:end is what lands the photo on the band. The row is as tall as
    the copy column, which is the taller of the two, so leaving the figure
    centred parked it ~40px short of the seam. */
+/* Both corners and both sides now. The single rounded top-right corner, and
+   the align-self:end that sat the photo down on the seam with the next band,
+   only made sense while the left edge ran off the window and the bottom ran
+   into the band. In the rail the figure is a card with four edges, so it
+   gets the radius on all of them and centres against the copy like any
+   other two-column section. */
 @media (min-width: 1100px) {
   .founder__figure {
-    align-self: end;
-    border-radius: 0 var(--ws-radius-lg) 0 0;
+    align-self: center;
+    border-radius: var(--ws-radius-lg);
   }
 }
 
-/* The photo's left edge is near-black already, so it dissolves into the
-   page rather than ending on a visible box edge. */
+/* THE LEFT FADE IS GONE. It existed to dissolve a bleeding edge into the
+   page: with the photo running off the window there was no edge to show, so
+   26% of the frame was washed to the page colour to hide the fact. In the
+   rail the left edge is a rounded corner that is meant to be seen, and the
+   wash would only be a dark smear across the subject's hair, fighting the
+   radius it sits inside.
+
+   The bottom vignette stays. That one is not hiding anything: it grounds
+   the portrait and seats the callout, and it reads the same in a card as it
+   did in a bleed. */
 .founder__figure::after {
   content: "";
   position: absolute;
   inset: 0;
   pointer-events: none;
-  /* Both stops are the page colour: this scrim's whole job is to fade
-     the portrait into the page, so it has to track --ws-bg-850. */
-  background: linear-gradient(90deg, var(--ws-bg-850) 0%, transparent 26%),
-              linear-gradient(0deg, rgba(0, 0, 0, 0.55) 0%, transparent 22%);
+  background: linear-gradient(0deg, rgba(0, 0, 0, 0.55) 0%, transparent 22%);
 }
 
 .founder__figure img { width: 100%; height: 100%; object-fit: cover; display: block; }
