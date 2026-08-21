@@ -609,6 +609,18 @@
   letter-spacing: -0.04em;
 }
 
+/* "USD" qualifies the number, it is not part of it. Sized in em so it
+   tracks the price at every breakpoint, and set in the tertiary colour so
+   the figure still reads as one price instead of two words. The parent's
+   -0.04em tracking is undone: it is tuned for big digits, not for a
+   3-letter uppercase word. */
+.plan__currency {
+  font-size: 0.32em;
+  font-weight: 650;
+  letter-spacing: 0.08em;
+  color: var(--ws-text-tertiary);
+}
+
 .plan__features {
   display: grid;
   margin: 0;
@@ -768,6 +780,21 @@
 
 .founder__body { display: grid; gap: clamp(1.1rem, 2.4vw, 1.9rem); max-width: var(--ws-measure); }
 .founder__body p { color: var(--ws-text-secondary); }
+
+/* WHY THE MEASURE CAP COMES OFF IN THE TWO-COLUMN LAYOUT: on a wide
+   display the right column is wider than 62ch (~520px), so the cap left
+   dead space between the copy and the container's right edge — 80px at
+   1920, over 200px at 2560. The photograph bleeds off the left edge, so
+   that gap sat entirely on the right and the whole section read as shoved
+   to the left of the page.
+
+   Dropping the cap here is safe: every line in this column is hand-broken
+   (the title, the lede) or a flex row (the "nots"), so no line grows with
+   the box. The grid ratio is what limits the column now, and the copy's
+   right edge lands on the container edge like every other section. */
+@media (min-width: 1100px) {
+  .founder__body { max-width: none; }
+}
 
 /* ---- Portrait + leader line ----
    The photograph is 1536x1024. Pinning the figure to that ratio means the
