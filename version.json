@@ -1,9 +1,9 @@
 {
-  "version": "1.0.3",
+  "version": "1.0.4",
   "minVersion": "1.0.0",
-  "downloadURL": "https://www.wallasstream.com/downloads/Wallas%20Stream%201.0.3.dmg",
-  "releaseNotes": "• Licencias Pro: activa tu clave desde la app y desbloquea el modo Cable USB\n• Prueba gratuita de 7 días al instalar, sin registro\n• Actualizaciones automáticas dentro de la app\n• Ahora en español, inglés, alemán y francés\n• Correcciones de textos y mejoras de estabilidad",
-  "publishDate": "2026-08-19",
+  "downloadURL": "https://www.wallasstream.com/downloads/Wallas%20Stream%201.0.4.dmg",
+  "releaseNotes": "• Ahora la app también te avisa cuando hay una versión nueva de Wallas Audio\n• Correcciones menores",
+  "publishDate": "2026-08-20",
   "driver": {
     "version": "1.1.0",
     "downloadURL": "https://www.wallasstream.com/downloads/Wallas%20Audio%201.1.0.pkg",
