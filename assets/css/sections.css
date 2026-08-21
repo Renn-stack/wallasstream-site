@@ -776,20 +776,40 @@
    edge now lands on the container's content edge like the rest, which also
    closes the 40px overhang the bleeding version needed.
 
-   WHAT IT COSTS, because it is not free: inside 1200px the photograph is
-   591px wide instead of 758. The ratio has to come back to 1.25fr too. The
-   lede's longest hand-broken line is 466px and the copy column is what pays
-   for any width the photo takes: 1.5fr would leave it 426 and break the
-   stanza into four lines, 1.35fr leaves 453 and still breaks it. 1.25fr
-   leaves 473. Seven pixels of slack is thin, so re-measure that line before
-   touching this ratio or the gap. */
+   THE RAIL IS 1400, DELIBERATELY WIDER THAN --ws-container. Squeezed into
+   the site's own 1200 the photograph came out 591px wide, well down from
+   the 758 it had while bleeding, and it read as small. The ceiling is set
+   by the lede: its longest hand-broken line is 466px, and the copy column
+   pays for every pixel the photo takes. At 1200 the arithmetic is brutal —
+   1.5fr leaves the copy 426 and breaks the stanza into four lines, 1.35fr
+   leaves 453 and still breaks it, and only 1.25fr fits, at 473, with seven
+   pixels to spare.
+
+   At 1400 the same 1.5fr leaves the copy 506, forty pixels clear, and the
+   photograph is 758 again: exactly the size it was before, now centred.
+
+   What that buys is worth naming: this band is 100px wider per side than
+   its neighbours, so its edges do NOT line up with "What's next" or the
+   navbar. It is still symmetric and still centred, which was the actual
+   complaint — a band that started at the window's edge could never look
+   centred. A wider centred band reads as an editorial choice; a
+   left-anchored one reads as a bug.
+
+   Re-measure that lede line before touching either number. */
 @media (min-width: 1100px) {
   .founder:has(.founder__figure) {
-    max-width: var(--ws-container);
+    max-width: 1400px;
     margin-inline: auto;
     padding-inline: var(--ws-gutter);
     grid-template-columns: 1.25fr 1fr;
   }
+}
+
+/* 1.5fr only once the rail is wide enough to pay for it. Below ~1300 the
+   copy drops under the lede's 466 and the stanza breaks, so the narrower
+   ratio holds until then. */
+@media (min-width: 1320px) {
+  .founder:has(.founder__figure) { grid-template-columns: 1.5fr 1fr; }
 }
 
 .founder__body { display: grid; gap: clamp(1.1rem, 2.4vw, 1.9rem); max-width: var(--ws-measure); }
