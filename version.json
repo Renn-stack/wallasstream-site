@@ -3,5 +3,11 @@
   "minVersion": "1.0.0",
   "downloadURL": "https://www.wallasstream.com/downloads/Wallas%20Stream%201.0.3.dmg",
   "releaseNotes": "• Licencias Pro: activa tu clave desde la app y desbloquea el modo Cable USB\n• Prueba gratuita de 7 días al instalar, sin registro\n• Actualizaciones automáticas dentro de la app\n• Ahora en español, inglés, alemán y francés\n• Correcciones de textos y mejoras de estabilidad",
-  "publishDate": "2026-08-19"
+  "publishDate": "2026-08-19",
+  "driver": {
+    "version": "1.1.0",
+    "downloadURL": "https://www.wallasstream.com/downloads/Wallas%20Audio%201.1.0.pkg",
+    "releaseNotes": "• Wallas Audio ya no muestra control de volumen: el nivel se ajusta desde tu iPhone\n• El controlador aparece con su icono y su nombre correctos\n• Correcciones en el enrutado de audio",
+    "publishDate": "2026-08-20"
+  }
 }
