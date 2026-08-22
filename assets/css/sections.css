@@ -621,6 +621,23 @@
   color: var(--ws-text-tertiary);
 }
 
+/* THE FIRST QUESTION A PRICE RAISES IS "HOW OFTEN". A bare $59.99 is read
+   as a subscription until something says otherwise, and the line that says
+   otherwise cannot be three rows further down in a note: by then the reader
+   has already decided what kind of price this is.
+
+   So it sits directly under the figure, close enough to be read as part of
+   it. In the accent because it is the answer to the question, not a
+   footnote to it. Uppercase and tracked out so it never competes with the
+   number it qualifies. */
+.plan__period {
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ws-accent);
+}
+
 .plan__features {
   display: grid;
   margin: 0;
