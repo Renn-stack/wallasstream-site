@@ -1,0 +1,14 @@
+<?xml version="1.0" standalone="yes"?>
+<rss xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" version="2.0">
+    <channel>
+        <title>Wallas' Stream</title>
+        <item>
+            <title>1.0.6</title>
+            <pubDate>Sat, 22 Aug 2026 17:33:03 -0600</pubDate>
+            <sparkle:version>7</sparkle:version>
+            <sparkle:shortVersionString>1.0.6</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>11.0</sparkle:minimumSystemVersion>
+            <enclosure url="https://www.wallasstream.com/WallasStream-1.0.6.zip" length="2400270" type="application/octet-stream" sparkle:edSignature="+dnkm7MDIGkhIlfJdk2FZj1CKlmE3An6C+Icb/ow6E1aSTzx1eOwQOyMg35zF1Ohhxs88xy8G1q9+GuxkyfeDA=="/>
+        </item>
+    </channel>
+</rss>

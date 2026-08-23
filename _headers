@@ -9,6 +9,13 @@
 /apple-app-site-association
   Content-Type: application/json
 
+# Sparkle's update feed. Same reasoning as the association file above: a
+# cached copy is a release nobody is told about, and the feed is 772 bytes,
+# so revalidating it costs nothing worth saving.
+/appcast.xml
+  Content-Type: application/xml
+  Cache-Control: public, max-age=0, must-revalidate
+
 # Images are content-addressed by name and change rarely: cache for 30 days.
 /assets/img/*
   Cache-Control: public, max-age=2592000
