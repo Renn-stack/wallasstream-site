@@ -1,9 +1,9 @@
 {
-  "version": "1.0.5",
+  "version": "1.0.6",
   "minVersion": "1.0.0",
-  "downloadURL": "https://www.wallasstream.com/downloads/Wallas%20Stream%201.0.5.dmg",
-  "releaseNotes": "• La app ahora también te avisa cuando hay una versión nueva de Wallas Audio\n• Ahora también en portugués\n• Correcciones menores",
-  "publishDate": "2026-08-20",
+  "downloadURL": "https://www.wallasstream.com/Wallas%20Stream%201.0.6.dmg",
+  "releaseNotes": "• La app ahora se actualiza sola: esta es la última vez que tienes que arrastrarla a Aplicaciones",
+  "publishDate": "2026-08-22",
   "driver": {
     "version": "1.1.0",
     "downloadURL": "https://www.wallasstream.com/downloads/Wallas%20Audio%201.1.0.pkg",
