@@ -1,6 +1,6 @@
 {
   // ============================================================
-  // Wallas' Stream — Worker with static assets AND server code
+  // Wallas Stream — Worker with static assets AND server code
   // ============================================================
   // Before this file existed the project deployed as a static-assets-only
   // Worker. Adding `main` is the whole conversion: the same dist/ is still

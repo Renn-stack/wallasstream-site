@@ -117,7 +117,7 @@ export async function validateLicense(request, env) {
 
         // Una lista vacía tiene que ser un error de configuración, NO una lista
         // contra la que no casa nada. Si se colara como lista vacía, toda
-        // licencia legítima sería rechazada con "no es de Wallas' Stream Pro" y
+        // licencia legítima sería rechazada con "no es de Wallas Stream Pro" y
         // el fallo parecería del cliente en vez de del despliegue.
         if (!EXPECTED_STORE_ID || EXPECTED_PRODUCT_IDS.length === 0) {
             console.error('LEMON_SQUEEZY_STORE_ID or LEMON_SQUEEZY_PRODUCT_IDS not configured');
@@ -185,7 +185,7 @@ export async function validateLicense(request, env) {
             console.warn(`Store ID mismatch: got ${storeId}, expected ${EXPECTED_STORE_ID}`);
             return json({
                 valid: false,
-                error: 'This license does not belong to Wallas\' Stream.'
+                error: 'This license does not belong to Wallas Stream.'
             });
         }
 
@@ -198,7 +198,7 @@ export async function validateLicense(request, env) {
             console.warn(`Product ID mismatch: got ${productId}, expected one of ${EXPECTED_PRODUCT_IDS.join(', ')}`);
             return json({
                 valid: false,
-                error: 'This license is not for Wallas\' Stream Pro.'
+                error: 'This license is not for Wallas Stream Pro.'
             });
         }
 

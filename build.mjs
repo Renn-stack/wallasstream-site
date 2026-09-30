@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * build.mjs — minimal HTML partials for Wallas' Stream
+ * build.mjs — minimal HTML partials for Wallas Stream
  *
  * Zero dependencies. Node 18+.
  *

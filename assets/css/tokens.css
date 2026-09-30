@@ -1,12 +1,12 @@
 /* ============================================================
-   tokens.css — Wallas' Stream design tokens
+   tokens.css — Wallas Stream design tokens
    Phase 1 foundation. Defines the system; Phase 2 applies it.
 
    Colour values are SAMPLED from real sources, not invented:
      orange-500  #E0965B  = dominant accent in the approved mockup
                             (assets/references/mockup/, hue 27deg)
      orange-400  #F2A464  = the real "Silence in silence" state in
-                            Wallas' Stream for iPhone (hue 27deg)
+                            Wallas Stream for iPhone (hue 27deg)
      connected   #76D67D  = the real "Connected" state in the product UI
 
    The website accent and the app's Silence-in-silence orange share
@@ -26,7 +26,7 @@
   --ws-accent-on:     #0B0B0B;  /* text ON an orange fill — 8.14:1, AA-pass */
 
   /* ---- Product state colours ----
-     RESERVED. These represent real states in the Wallas' Stream apps.
+     RESERVED. These represent real states in the Wallas Stream apps.
      Never use --ws-state-connected as a website accent. */
   --ws-state-connected: #76D67D;  /* real "Connected" green from the iOS UI */
 

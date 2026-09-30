@@ -1,4 +1,4 @@
-# Wallas' Stream — Homepage Redesign Implementation Plan
+# Wallas Stream — Homepage Redesign Implementation Plan
 
 **Status:** Awaiting approval for Phase 1. Nothing implemented. No media generated. No Higgsfield calls made.
 **Revision:** 2 — incorporates the approved 15-beat storyboard, the four scope decisions, and `/assets/references/`.
@@ -127,7 +127,7 @@ Your 15 storyboard beats consolidate to **11 sections** with the narrative fully
 |---|---|---|---|
 | **01** | **Hero — "What if?" → The Signal → "Now you can."** | 01 + 02 | **Merged.** One continuous cinematic act. |
 | **02** | **The Problem** | 03 | Unchanged |
-| **03** | **How Wallas' Stream works** (incl. *why the iPhone*) | 04 + 08 | **Merged.** |
+| **03** | **How Wallas Stream works** (incl. *why the iPhone*) | 04 + 08 | **Merged.** |
 | **04** | **Choose how you listen — Wi-Fi (Free) · Cable (Pro)** | 05 + 06 + 07 | **Merged.** Biggest consolidation. |
 | **05** | **Inside the app** | 09 | Unchanged |
 | **06** | **Try it with your setup** | 10 | Unchanged — kept deliberately separate |
@@ -153,7 +153,7 @@ Plus persistent nav and footer (footer retains the legal notice and Cochlear™ 
 | **05** | Inside the app | HTML/CSS selector, crossfade between real iOS screenshots in an SVG iPhone frame | `ios-connected`, `ios-meeting-mode`, `ios-stats`, `ios-silenceinsilence-mode` | Capped at 4 items per your "do not overload" note. Green appears here as the genuine connected state. |
 | **06** | Try it with your setup | HTML/CSS | Optional: cut-out implant photo | Honest compatibility framing. No universal-compatibility claim anywhere. |
 | **07** | Free → Pro | **Scroll-scrubbed SVG timeline** on `scroll-progress.js` | — | Day 1–7 both ✓ → Day 8 Wi-Fi ✓ FREE / Cable 🔒 PRO. "Free stays free." $19.99 one-time. Existing Lemon Squeezy link + deferred `lemon.js`. |
-| **08** | Getting started | HTML/CSS, 3 cards | — | **Wallas' Stream for Mac · Wallas Audio · Wallas' Stream for iPhone.** Never "Virtual Audio Driver". Links to Setup Guide rather than inlining install steps. |
+| **08** | Getting started | HTML/CSS, 3 cards | — | **Wallas Stream for Mac · Wallas Audio · Wallas Stream for iPhone.** Never "Virtual Audio Driver". Links to Setup Guide rather than inlining install steps. |
 | **09** | Founder + What's next | HTML/CSS, two columns | Founder photo *(missing, optional)* | Merge validated by the approved mockup, which already pairs these side by side. macOS/iOS available now; Windows/Android as direction, **no dates**. |
 | **10** | Questions people ask first | Native `<details>`/`<summary>` | — | Zero JS, free keyboard + screen-reader support. See §5.2. |
 | **11** | Final CTA | HTML/CSS + a compact reprise of the 01 signal SVG | — | "Hear your Mac your way." Returns to the Mac → iPhone → device system as briefed. |
@@ -217,7 +217,7 @@ That content does real work for section 06's honest positioning. "Try it with yo
 
 | # | Asset | Why | Fallback if unavailable |
 |---|---|---|---|
-| 1 | **SVG wordmark + mark** | The logo currently renders a 1080×1080 PNG at 28 px. Three competing files exist — `logo.png`, `WSLOGO.png`, `Wallas' Stream logo.png` — and I don't know which is canonical. | Ship the PNG at 2×; swap later. Not ideal for a premium brand. |
+| 1 | **SVG wordmark + mark** | The logo currently renders a 1080×1080 PNG at 28 px. Three competing files exist — `logo.png`, `WSLOGO.png`, `Wallas Stream logo.png` — and I don't know which is canonical. | Ship the PNG at 2×; swap later. Not ideal for a premium brand. |
 | 2 | **Sign-off on the traced implant SVG** | I'll produce it in Phase 3 from your three references. It must read as *your* device before it goes in the hero. | Review gate, not a deliverable from you. |
 
 ### Non-blocking but recommended
@@ -506,7 +506,7 @@ Section 03, step 3 uses an **abstract waveform glyph** where the hearing device 
 3. **Unbalanced trial timeline** — the day cards sat top-aligned against a much taller price panel. Now vertically centred.
 4. **Unreadable QR on mobile** — Mac and iPhone side by side in a 390 px column left the Mac ~214 px wide, making the QR illegible. They now stack below 560 px.
 5. **Tap targets under 24 px** — footer and nav links were 16–17 px tall. Now `min-height: 24px`, meeting WCAG 2.2 target size without relying on the spacing exception.
-6. **No-JS footer year** — an empty `<span id="year">` rendered as "©&nbsp;&nbsp;Wallas' Stream". Now carries a static fallback that JS overwrites.
+6. **No-JS footer year** — an empty `<span id="year">` rendered as "©&nbsp;&nbsp;Wallas Stream". Now carries a static fallback that JS overwrites.
 
 ### 13.5 Note on the supplied logo
 

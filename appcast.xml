@@ -1,7 +1,7 @@
 <?xml version="1.0" standalone="yes"?>
 <rss xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" version="2.0">
     <channel>
-        <title>Wallas' Stream</title>
+        <title>Wallas Stream</title>
         <item>
             <title>1.0.6</title>
             <pubDate>Sat, 22 Aug 2026 17:33:03 -0600</pubDate>
